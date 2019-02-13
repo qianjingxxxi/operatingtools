@@ -278,7 +278,6 @@ export default {
     async search(keyword) {
       const url = "https://restapi.amap.com/v3/assistant/inputtips";
       const params = new URLSearchParams();
-      const _this = this;
       params.append("keywords", keyword);
       // 开发者key
       params.append("key", "0474a745d094cec483b7f9f988ba8216");
@@ -287,10 +286,10 @@ export default {
       if (data.status === "1") {
         this.tips = data.tips;
         // console.log(_this.tipstoggle);
-        if (data.tips.length > 0 && _this.hasdata) {
-          _this.tipstoggle = true;
+        if (data.tips.length > 0 && this.hasdata) {
+          this.tipstoggle = true;
         } else {
-          _this.tipstoggle = false;
+          this.tipstoggle = false;
         }
       }
     },
@@ -337,14 +336,11 @@ export default {
           if (data.data.able_work_time[i] === "1") {
             this.checkState[i] = true;
           }
-          console.log(this.checkState);
         }
       }
     }
   },
   mounted() {
-    // console.log(this.$refs.calendar);
-
     // 限流，当用户停止输入0.8s后请求，如果连续输入的情况下不请求api
     this.debounce = _.debounce(() => this.search(this.keyword), 800);
   }
