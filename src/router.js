@@ -1,7 +1,14 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
-
+import Login from  "./views/Login.vue";
+import User from "./views/User.vue";
+import Resourcelib from "./views/Resourcelib.vue";
+import Workbench from "./views/Workbench.vue";
+import Setting from "./views/Setting.vue";
+import Changepassword from "./views/Changepassword.vue";
+import Resoutcelibdetails from "./views/Resoutcelibdetails.vue";
+import Resourcelibeditpage from "./views/Resourcelibeditpage.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -10,17 +17,59 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "home",
-      component: Home
+      name: "Login",
+      component: Login
     },
     {
-      path: "/about",
-      name: "about",
+      path: "/home",
+      name: "Home",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ "./views/About.vue")
+        import(/* webpackChunkName: "about" */ "./views/Home.vue")
+    },
+    {
+      path:"/resoutcelib",
+      name:'Resourcelib',
+      component:() =>
+        import("./views/Resourcelib.vue")
+    },
+    {
+      path:'/workbench',
+      name:'Workbench',
+      component:() =>
+        import("./views/Workbench.vue")
+    },
+    {
+      path:'/user',
+      name:'User',
+      component:() =>
+        import("./views/User.vue")
+    },
+    {
+      path:'/setting',
+      name:"Setting",
+      component:() =>
+        import("./views/Setting.vue")
+    },
+    {
+      path:'/changepassword',
+      name:'Changepassword',
+      component:() =>
+        import("./views/Changepassword.vue")
+    },
+    {
+      path:'/resoutcelibdetails',
+      name:'Resoutcelibdetails',
+      component:() =>
+        import("./views/Resoutcelibdetails.vue")
+    },
+    {
+      path:'/resourcelibeditpage',
+      name:'Resourcelibeditpage',
+      component:() =>
+        import("./views/Resourcelibeditpage.vue")
     }
   ]
 });
