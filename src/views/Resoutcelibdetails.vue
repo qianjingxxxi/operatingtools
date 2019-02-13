@@ -54,14 +54,12 @@
               <li>星期六</li>
               <li>星期日</li>
             </ul>
-            <el-checkbox-group class="job-check">
+            <el-checkbox-group class="job-check" v-model="calendar">
               <el-checkbox
-                label="0"
-                v-for="(jobtimes,index) in datas.able_work_time"
+                :label="index"
+                v-for="(jobcheck,index) in datas.able_work_time" 
                 v-bind:key="index"
-                disabled="disabled"
-                v-model="jobtime"
-                checked="jobtime"
+                :checked="checkState[index]"
               ></el-checkbox>
             </el-checkbox-group>
           </div>
@@ -103,11 +101,18 @@
 import axios from "axios";
 export default {
   data() {
+     // 初始化默认全不选中
+    let list = [];
+    for (let i = 1; i <= 21; i++) {
+      list.push(false);
+    }
     return {
       showjobtime: false,
       jobtime: false,
       datas: "",
-      tags: []
+      tags: [],
+      checkState:list,
+      calendar: [],
     };
   },
   methods: {
@@ -128,20 +133,16 @@ export default {
           if (res.data.code == 1001) {
             _self.datas = res.data.data;
             _self.tags = res.data.data.tag.split(",");
-            console.log(_self.datas.is_full_time);
+            // console.log(_self.datas.is_full_time);
             _self.datas.is_full_time == "1"
               ? (_self.showjobtime = false)
               : (_self.showjobtime = true);
             // console.log(_this.tags)
-            for(
-              let i=0;i<_self.datas.able_work_time.length;i++
-            ){
+            for(let i=0;i<_self.datas.able_work_time.length;i++){
+              console.log( _self.datas.able_work_time[i])
               if(_self.datas.able_work_time[i]=="1"){
-                _self.jobtime=true
-              }else{
-                _self.jobtime=false
+                  _self.checkState[i] = true;
               }
-              console.log( _self.jobtime)
             }
           } else {
             _self.$message.error(res.data.msg);

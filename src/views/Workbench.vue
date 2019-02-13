@@ -65,16 +65,7 @@
           <i>*</i>性格标签：
         </label>
         <el-checkbox-group class="selectlabel" v-model="checktag">
-          <el-checkbox label="老实"></el-checkbox>
-          <el-checkbox label="外向"></el-checkbox>
-          <el-checkbox label="热情"></el-checkbox>
-          <el-checkbox label="勤奋"></el-checkbox>
-          <el-checkbox label="滑头"></el-checkbox>
-          <el-checkbox label="自私"></el-checkbox>
-          <el-checkbox label="易怒"></el-checkbox>
-          <el-checkbox label="冷漠"></el-checkbox>
-          <el-checkbox label="迟钝"></el-checkbox>
-          <el-checkbox label="肯学习"></el-checkbox>
+          <el-checkbox :label="tag" :checked="tagToggle(tag)" v-for="(tag, index) in tagLabel" v-bind:key="index"></el-checkbox>
         </el-checkbox-group>
       </div>
       <span class="job-time">
@@ -104,28 +95,8 @@
               <li>星期日</li>
             </ul>
 
-            <el-checkbox-group class="job-check" v-model="jobtime" ref="calendar">
-              <el-checkbox label="0" :checked="checkState[0]"></el-checkbox>
-              <el-checkbox label="1" :checked="checkState[1]"></el-checkbox>
-              <el-checkbox label="2" :checked="checkState[2]"></el-checkbox>
-              <el-checkbox label="3" :checked="checkState[3]"></el-checkbox>
-              <el-checkbox label="4" :checked="checkState[4]"></el-checkbox>
-              <el-checkbox label="5" :checked="checkState[5]"></el-checkbox>
-              <el-checkbox label="6" :checked="checkState[6]"></el-checkbox>
-              <el-checkbox label="7" :checked="checkState[7]"></el-checkbox>
-              <el-checkbox label="8" :checked="checkState[8]"></el-checkbox>
-              <el-checkbox label="9" :checked="checkState[9]"></el-checkbox>
-              <el-checkbox label="10" :checked="checkState[10]"></el-checkbox>
-              <el-checkbox label="11" :checked="checkState[11]"></el-checkbox>
-              <el-checkbox label="12" :checked="checkState[12]"></el-checkbox>
-              <el-checkbox label="13" :checked="checkState[13]"></el-checkbox>
-              <el-checkbox label="14" :checked="checkState[14]"></el-checkbox>
-              <el-checkbox label="15" :checked="checkState[15]"></el-checkbox>
-              <el-checkbox label="16" :checked="checkState[16]"></el-checkbox>
-              <el-checkbox label="17" :checked="checkState[17]"></el-checkbox>
-              <el-checkbox label="18" :checked="checkState[18]"></el-checkbox>
-              <el-checkbox label="19" :checked="checkState[19]"></el-checkbox>
-              <el-checkbox label="20" :checked="checkState[20]"></el-checkbox>
+            <el-checkbox-group class="job-check" v-model="jobtime">
+              <el-checkbox :label="index" :checked="checkState[index]"  v-for="(jobcheck,index) in checkState" v-bind:key="index"></el-checkbox>
             </el-checkbox-group>
           </div>
         </div>
@@ -171,7 +142,10 @@ export default {
     for (let i = 1; i <= 21; i++) {
       list.push(false);
     }
-
+    let tagsbox=[]
+    for(let j=0;j<=10;j++){
+      tagsbox.push(false)
+    }
     return {
       sex: 0,
       workTime: 1,
@@ -187,11 +161,13 @@ export default {
       remark: "",
       jobtime: [],
       showjobtime: false,
-      tags: "",
-      compute: [],
+      tags: [],
+      compute: ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",],
       datas: "",
       hasdata: false,
-      checkState: list
+      checkState: list,
+      checkedtag:tagsbox,
+      tagLabel: ["老实", "外向","热情","勤奋","滑头", "自私","易怒","冷漠","迟钝","肯学习"]
     };
   },
   watch: {
@@ -217,24 +193,25 @@ export default {
     backpage() {
       this.$router.go(-1); //返回上一层
     },
+    tagToggle(tag) {
+      // console.log(this.tags)
+      //console.log(this.tags.indexOf(tag))
+      if(this.tags.indexOf(tag)!=-1){
+        console.log("aaaa")
+        return true
+      }
+      // return true;
+    },
     submitform() {
       let url = this.httpsBasic.httpsBasic + "interview/insert";
       let _this = this;
       this.tags = this.checktag.join(",");
       // 全职or兼职
-      this.compute = [];
-      for (let i = 0; i < 21; i++) {
-        if (this.workTime == 1) {
-          this.compute.push(1);
-        } else {
-          if (this.jobtime.indexOf(String(i)) == -1) {
-            this.compute.push(0);
-          } else {
-            this.compute.push(1);
-          }
-        }
-      }
-      // console.log(this.compute);
+        console.log(this.jobtime);
+        this.jobtime.forEach(v => {
+          this.compute[v] = '1';
+        });
+       console.log(this.compute);
       if (
         this.tags != "" &&
         this.name != "" &&
@@ -242,7 +219,8 @@ export default {
         this.keyword != "" &&
         this.wockexp != ""
       ) {
-        // console.log(this.jobtime);
+        console.log(this.tags);
+        console.log(this.tags);
         axios
           .post(url, {
             token: window.localStorage.getItem("operatingToken"),
@@ -260,7 +238,7 @@ export default {
           })
           .then(function(response) {
             if (response.data.code == 1001) {
-              //  _this.$router.push({ name: "Resourcelib"});
+               _this.$router.push({ name: "Resourcelib"});
               // _this.$router.push("resourcelib");
             } else {
               _this.$message.error(response.data.msg);
@@ -285,23 +263,26 @@ export default {
       const { data } = await axios.get(`${url}?${params.toString()}`);
       if (data.status === "1") {
         this.tips = data.tips;
-        // console.log(_this.tipstoggle);
-        if (data.tips.length > 0 && this.hasdata) {
+        if (data.tips.length > 0 && !this.hasdata) {
           this.tipstoggle = true;
         } else {
           this.tipstoggle = false;
         }
+        setTimeout( ()=> {
+            this.hasdata=false
+          },500)
       }
     },
     selectTips(index) {
-      this.tipstoggle = false;
+      this.hasdata = true;
 
       // console.log(this.tipstoggle);
       this.selectTip = this.tips[index];
+       this.keyword = this.tips[index]["name"];
       if (this.selectTip.location.length > 0) {
-        this.keyword = this.tips[index]["name"];
+       
       } else {
-        this.$message.error("请输入详细地址");
+        // this.$message.error("请输入详细地址");
         // this.keyword=""
       }
     },
@@ -315,8 +296,9 @@ export default {
       });
 
       if (data.code === 1001) {
+        console.log(data)
         this.$message.success("已有该管家信息");
-
+       this.tipstoggle = false;
         this.hasdata = true;
         // _self.datas = res.data.data;
         this.tel = data.data.phone; //电话
@@ -334,9 +316,16 @@ export default {
         const len = data.data.able_work_time.length;
         for (let i = 0; i < len; i++) {
           if (data.data.able_work_time[i] === "1") {
+            
             this.checkState[i] = true;
           }
-        }
+        }//可用时间
+        //  console.log(this.checktag)
+          // for(let j=0;j<this.tags.length;j++){
+           
+          //    console.log(this.tagToggle)
+          // }//性格标签
+       
       }
     }
   },
