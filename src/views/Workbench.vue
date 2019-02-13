@@ -105,27 +105,27 @@
             </ul>
 
             <el-checkbox-group class="job-check" v-model="jobtime" ref="calendar">
-              <el-checkbox label="0"></el-checkbox>
-              <el-checkbox label="1"></el-checkbox>
-              <el-checkbox label="2"></el-checkbox>
-              <el-checkbox label="3"></el-checkbox>
-              <el-checkbox label="4"></el-checkbox>
-              <el-checkbox label="5"></el-checkbox>
-              <el-checkbox label="6"></el-checkbox>
-              <el-checkbox label="7"></el-checkbox>
-              <el-checkbox label="8"></el-checkbox>
-              <el-checkbox label="9"></el-checkbox>
-              <el-checkbox label="10"></el-checkbox>
-              <el-checkbox label="11"></el-checkbox>
-              <el-checkbox label="12"></el-checkbox>
-              <el-checkbox label="13"></el-checkbox>
-              <el-checkbox label="14"></el-checkbox>
-              <el-checkbox label="15"></el-checkbox>
-              <el-checkbox label="16"></el-checkbox>
-              <el-checkbox label="17"></el-checkbox>
-              <el-checkbox label="18"></el-checkbox>
-              <el-checkbox label="19"></el-checkbox>
-              <el-checkbox label="20"></el-checkbox>
+              <el-checkbox label="0" :checked="checkState[0]"></el-checkbox>
+              <el-checkbox label="1" :checked="checkState[1]"></el-checkbox>
+              <el-checkbox label="2" :checked="checkState[2]"></el-checkbox>
+              <el-checkbox label="3" :checked="checkState[3]"></el-checkbox>
+              <el-checkbox label="4" :checked="checkState[4]"></el-checkbox>
+              <el-checkbox label="5" :checked="checkState[5]"></el-checkbox>
+              <el-checkbox label="6" :checked="checkState[6]"></el-checkbox>
+              <el-checkbox label="7" :checked="checkState[7]"></el-checkbox>
+              <el-checkbox label="8" :checked="checkState[8]"></el-checkbox>
+              <el-checkbox label="9" :checked="checkState[9]"></el-checkbox>
+              <el-checkbox label="10" :checked="checkState[10]"></el-checkbox>
+              <el-checkbox label="11" :checked="checkState[11]"></el-checkbox>
+              <el-checkbox label="12" :checked="checkState[12]"></el-checkbox>
+              <el-checkbox label="13" :checked="checkState[13]"></el-checkbox>
+              <el-checkbox label="14" :checked="checkState[14]"></el-checkbox>
+              <el-checkbox label="15" :checked="checkState[15]"></el-checkbox>
+              <el-checkbox label="16" :checked="checkState[16]"></el-checkbox>
+              <el-checkbox label="17" :checked="checkState[17]"></el-checkbox>
+              <el-checkbox label="18" :checked="checkState[18]"></el-checkbox>
+              <el-checkbox label="19" :checked="checkState[19]"></el-checkbox>
+              <el-checkbox label="20" :checked="checkState[20]"></el-checkbox>
             </el-checkbox-group>
           </div>
         </div>
@@ -160,11 +160,18 @@
 </template>
 
 <script>
+/* eslint-disable no-console */
+
 import axios from "axios";
-import { mapState } from "vuex";
 import _ from "lodash";
 export default {
   data() {
+    // 初始化默认全不选中
+    let list = [];
+    for (let i = 1; i <= 21; i++) {
+      list.push(false);
+    }
+
     return {
       sex: 0,
       workTime: 1,
@@ -183,13 +190,13 @@ export default {
       tags: "",
       compute: [],
       datas: "",
-      hasdata: false
+      hasdata: false,
+      checkState: list
     };
   },
   watch: {
     tel() {
-      if (this.tel.length == 11) {
-        console.log(1);
+      if (this.tel.length === 11) {
         this.getData();
       } else {
         // this.tel = ""; //电话
@@ -299,48 +306,40 @@ export default {
         // this.keyword=""
       }
     },
-    getData() {
+    async getData() {
       const url = this.httpsBasic.httpsBasic + "eguard/selectInfo";
-      const _self = this;
-      axios
-        .get(url, {
-          params: {
-            token: window.localStorage.getItem("operatingToken"),
-            phone: this.tel
-          }
-        })
-        .then(function(res) {
-          if (res.data.code == 1001) {
-            _self.$message.success("已有该管家信息");
+      const { data } = await axios.get(url, {
+        params: {
+          token: window.localStorage.getItem("operatingToken"),
+          phone: this.tel
+        }
+      });
 
-            _self.hasdata = true;
-            // _self.datas = res.data.data;
-            _self.tel = res.data.data.phone; //电话
-            _self.name = res.data.data.name; //姓名
-            _self.sex = parseFloat(res.data.data.sex); //性别
-            _self.keyword = res.data.data.address; //居住地
-            _self.wockexp = res.data.data.work_experience; //工作经历
-            _self.remark = res.data.data.remark; //备注
-            _self.checkchannel = parseFloat(res.data.data.origin); //渠道
-            _self.tags = res.data.data.tag.split(",");
-            // console.log(_self.checktag);
-            res.data.data.is_full_time == "1"
-              ? (_self.workTime = 1)
-              : (_self.workTime = 0);
-             console.log(res.data.data.able_work_time)
-            for(let i=0;i<res.data.data.able_work_time.length;i++){
-              if(res.data.data.able_work_time[i]=="1"){
-                console.log("aaaaa")
-              }else{
-                 console.log("ccccc")
-              }
-              console.log(i)
-              // console.log(res.data.data.able_work_time[i])
-            }
+      if (data.code === 1001) {
+        this.$message.success("已有该管家信息");
+
+        this.hasdata = true;
+        // _self.datas = res.data.data;
+        this.tel = data.data.phone; //电话
+        this.name = data.data.name; //姓名
+        this.sex = parseFloat(data.data.sex); //性别
+        this.keyword = data.data.address; //居住地
+        this.wockexp = data.data.work_experience; //工作经历
+        this.remark = data.data.remark; //备注
+        this.checkchannel = parseFloat(data.data.origin); //渠道
+        this.tags = data.data.tag.split(",");
+        // console.log(_self.checktag);
+        data.data.is_full_time === "1"
+                ? (this.workTime = 1)
+                : (this.workTime = 0);
+        const len = data.data.able_work_time.length;
+        for (let i = 0; i < len; i++) {
+          if (data.data.able_work_time[i] === "1") {
+            this.checkState[i] = true;
           }
-          console.log(res);
-        })
-        .catch(function(error) {});
+          console.log(this.checkState);
+        }
+      }
     }
   },
   mounted() {
@@ -348,11 +347,6 @@ export default {
 
     // 限流，当用户停止输入0.8s后请求，如果连续输入的情况下不请求api
     this.debounce = _.debounce(() => this.search(this.keyword), 800);
-  },
-  computed: {
-    ...mapState({
-      token: state => state.auth.token
-    })
   }
 };
 </script>
