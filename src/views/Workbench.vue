@@ -211,7 +211,6 @@ export default {
         this.jobtime.forEach(v => {
           this.compute[v] = '1';
         });
-       console.log(this.compute);
       if (
         this.tags != "" &&
         this.name != "" &&

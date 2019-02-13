@@ -126,7 +126,7 @@ export default {
         .get(url, {
           params: {
             token: window.localStorage.getItem("operatingToken"),
-            uuid: this.$route.params.uuid
+              uuid:this.$route.params.uuid
           }
         })
         .then(function(res) {
@@ -139,7 +139,7 @@ export default {
               : (_self.showjobtime = true);
             // console.log(_this.tags)
             for(let i=0;i<_self.datas.able_work_time.length;i++){
-              console.log( _self.datas.able_work_time[i])
+              // console.log( _self.datas.able_work_time[i])
               if(_self.datas.able_work_time[i]=="1"){
                   _self.checkState[i] = true;
               }

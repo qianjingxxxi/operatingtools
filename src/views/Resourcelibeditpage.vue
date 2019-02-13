@@ -11,20 +11,9 @@
     <section class="formData ignore">
       <div>
         <label>
-          <i></i>渠道：
-        </label>
-        <el-radio-group v-model="checkchannel">
-          <el-radio :label="0">平台简历</el-radio>
-          <el-radio :label="1">转介绍</el-radio>
-          <el-radio :label="2">自主开发</el-radio>
-          <el-radio :label="3">资源库</el-radio>
-        </el-radio-group>
-      </div>
-      <div>
-        <label>
           <i>*</i>联系电话：
         </label>
-        <el-input v-model="tel" placeholder="请输入联系电话">{{datas.phone}}</el-input>
+        <el-input v-model="tel" placeholder="请输入联系电话" value></el-input>
       </div>
       <div>
         <label>
@@ -76,16 +65,12 @@
           <i>*</i>性格标签：
         </label>
         <el-checkbox-group class="selectlabel" v-model="checktag">
-          <el-checkbox label="老实"></el-checkbox>
-          <el-checkbox label="外向"></el-checkbox>
-          <el-checkbox label="热情"></el-checkbox>
-          <el-checkbox label="勤奋"></el-checkbox>
-          <el-checkbox label="滑头"></el-checkbox>
-          <el-checkbox label="自私"></el-checkbox>
-          <el-checkbox label="易怒"></el-checkbox>
-          <el-checkbox label="冷漠"></el-checkbox>
-          <el-checkbox label="迟钝"></el-checkbox>
-          <el-checkbox label="肯学习"></el-checkbox>
+          <el-checkbox
+            :label="tag"
+            :checked="tagToggle(tag)"
+            v-for="(tag, index) in tagLabel"
+            v-bind:key="index"
+          ></el-checkbox>
         </el-checkbox-group>
       </div>
       <span class="job-time">
@@ -98,44 +83,30 @@
         </el-radio-group>
 
         <div class="part-time-job" v-if="!workTime">
-          <ul class="job-week">
+          <ul>
             <li></li>
-            <li>星期一</li>
-            <li>星期二</li>
-            <li>星期三</li>
-            <li>星期四</li>
-            <li>星期五</li>
-            <li>星期六</li>
-            <li>星期日</li>
+            <li>上午</li>
+            <li>下午</li>
+            <li>晚上</li>
           </ul>
           <div class="job-section">
-            <ul>
-              <li>上午</li>
-              <li>下午</li>
-              <li>晚上</li>
+            <ul class="job-week">
+              <li>星期一</li>
+              <li>星期二</li>
+              <li>星期三</li>
+              <li>星期四</li>
+              <li>星期五</li>
+              <li>星期六</li>
+              <li>星期日</li>
             </ul>
-            <el-checkbox-group class="job-check" v-model="jobtime" ref="calendar">
-              <el-checkbox label="0"></el-checkbox>
-              <el-checkbox label="1"></el-checkbox>
-              <el-checkbox label="2"></el-checkbox>
-              <el-checkbox label="3"></el-checkbox>
-              <el-checkbox label="4"></el-checkbox>
-              <el-checkbox label="5"></el-checkbox>
-              <el-checkbox label="6"></el-checkbox>
-              <el-checkbox label="7"></el-checkbox>
-              <el-checkbox label="8"></el-checkbox>
-              <el-checkbox label="9"></el-checkbox>
-              <el-checkbox label="10"></el-checkbox>
-              <el-checkbox label="11"></el-checkbox>
-              <el-checkbox label="12"></el-checkbox>
-              <el-checkbox label="13"></el-checkbox>
-              <el-checkbox label="14"></el-checkbox>
-              <el-checkbox label="15"></el-checkbox>
-              <el-checkbox label="16"></el-checkbox>
-              <el-checkbox label="17"></el-checkbox>
-              <el-checkbox label="18"></el-checkbox>
-              <el-checkbox label="19"></el-checkbox>
-              <el-checkbox label="20"></el-checkbox>
+
+            <el-checkbox-group class="job-check" v-model="jobtime">
+              <el-checkbox
+                :label="index"
+                :checked="checkState[index]"
+                v-for="(jobcheck,index) in checkState"
+                v-bind:key="index"
+              ></el-checkbox>
             </el-checkbox-group>
           </div>
         </div>
@@ -151,6 +122,17 @@
           v-model="remark"
         ></el-input>
       </div>
+      <div class="qudao">
+        <label>
+          <i></i>渠道：
+        </label>
+        <el-radio-group v-model="checkchannel">
+          <el-radio :label="0">平台简历</el-radio>
+          <el-radio :label="1">转介绍</el-radio>
+          <el-radio :label="2">自主开发</el-radio>
+          <!-- <el-radio :label="3">资源库</el-radio> -->
+        </el-radio-group>
+      </div>
       <el-row class="submitBtn borderNone">
         <el-button type="primary" @click="submitform">提交</el-button>
       </el-row>
@@ -159,11 +141,21 @@
 </template>
 
 <script>
+/* eslint-disable no-console */
+
 import axios from "axios";
-import { mapState } from "vuex";
 import _ from "lodash";
 export default {
   data() {
+    // 初始化默认全不选中
+    let list = [];
+    for (let i = 1; i <= 21; i++) {
+      list.push(false);
+    }
+    let tagsbox=[]
+    for(let j=0;j<=10;j++){
+      tagsbox.push(false)
+    }
     return {
       sex: 0,
       workTime: 1,
@@ -179,16 +171,28 @@ export default {
       remark: "",
       jobtime: [],
       showjobtime: false,
-      tags: "",
-      datas: ""
+      tags: [],
+      compute: ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",],
+      datas: "",
+      hasdata: false,
+      checkState: list,
+      checkedtag:tagsbox,
+      tagLabel: ["老实", "外向","热情","勤奋","滑头", "自私","易怒","冷漠","迟钝","肯学习"]
     };
   },
   watch: {
     tel() {
-      if (this.tel.length == 11) {
-        let url = this.httpsBasic.httpsBasic + "";
-        console.log(1);
-      }
+      // if (this.tel.length === 11) {
+      //   this.getData();
+      // } else {
+      //   // this.tel = ""; //电话
+      //   this.name = ""; //姓名
+      //   this.sex = 0; //性别
+      //   this.keyword = ""; //居住地
+      //   this.wockexp = ""; //工作经历
+      //   this.remark = ""; //备注
+      //   this.checkchannel = 0; //渠道
+      // }
     },
     keyword: function() {
       this.debounce();
@@ -199,10 +203,23 @@ export default {
     backpage() {
       this.$router.go(-1); //返回上一层
     },
+    tagToggle(tag) {
+      // console.log(this.tags)
+      //console.log(this.tags.indexOf(tag))
+      if(this.tags.indexOf(tag)!=-1){
+        // console.log("aaaa")
+        return true
+      }
+      // return true;
+    },
     submitform() {
-      let url = this.httpsBasic.httpsBasic + "interview/insert";
+      let url = this.httpsBasic.httpsBasic + "eguard/update";
       let _this = this;
       this.tags = this.checktag.join(",");
+      // 全职or兼职
+        this.jobtime.forEach(v => {
+          this.compute[v] = '1';
+        });
       if (
         this.tags != "" &&
         this.name != "" &&
@@ -210,7 +227,6 @@ export default {
         this.keyword != "" &&
         this.wockexp != ""
       ) {
-        // console.log(this.jobtime);
         axios
           .post(url, {
             token: window.localStorage.getItem("operatingToken"),
@@ -218,47 +234,27 @@ export default {
             phone: this.tel,
             name: this.name,
             sex: this.sex,
-            address: this.selectTip.location,
+            address: this.keyword,
+            address_l_l: this.selectTip.location,
             work_experience: this.wockexp,
             tag: this.tags,
             remark: this.remark,
             is_full_time: this.workTime,
-            able_work_time: [
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1,
-              1
-            ]
+            able_work_time: this.compute,
+           uuid: this.$route.params.uuid
           })
           .then(function(response) {
             if (response.data.code == 1001) {
-              //  _this.$router.push({ name: "Resourcelib"});
+               _this.$router.push({ name: "Resourcelib"});
               // _this.$router.push("resourcelib");
             } else {
               _this.$message.error(response.data.msg);
             }
-            console.log(response);
+            // console.log(response);
           })
           .catch(function(error) {
-            console.log(error);
+            _this.$message.error(error);
+            // console.log(error);
           });
       } else {
         _this.$message.warning("资料未填写完整");
@@ -267,7 +263,6 @@ export default {
     async search(keyword) {
       const url = "https://restapi.amap.com/v3/assistant/inputtips";
       const params = new URLSearchParams();
-      const _this = this;
       params.append("keywords", keyword);
       // 开发者key
       params.append("key", "0474a745d094cec483b7f9f988ba8216");
@@ -275,60 +270,116 @@ export default {
       const { data } = await axios.get(`${url}?${params.toString()}`);
       if (data.status === "1") {
         this.tips = data.tips;
-        if (data.tips.length > 0) {
-          _this.tipstoggle = true;
+        if (data.tips.length > 0 && !this.hasdata) {
+          this.tipstoggle = true;
         } else {
-          _this.tipstoggle = false;
+          this.tipstoggle = false;
         }
+        setTimeout( ()=> {
+            this.hasdata=false
+          },500)
       }
     },
     selectTips(index) {
-      this.tipstoggle = false;
+      this.hasdata = true;
 
-      console.log(this.tipstoggle);
+      // console.log(this.tipstoggle);
       this.selectTip = this.tips[index];
+       this.keyword = this.tips[index]["name"];
       if (this.selectTip.location.length > 0) {
-        this.keyword = this.tips[index]["name"];
+       
       } else {
-        this.$message.error("请输入详细地址");
+        // this.$message.error("请输入详细地址");
         // this.keyword=""
       }
-      console.log(this.selectTip.location.length);
     },
-    getData() {
+    async getDefaultData(){
+    const url = this.httpsBasic.httpsBasic + "eguard/selectInfo";
+          const { data } = await axios.get(url, {
+            params: {
+              token: window.localStorage.getItem("operatingToken"),
+              uuid: this.$route.params.uuid
+            }
+          });
+          //  console.log(data)
+          if (data.code === 1001) {
+          this.tipstoggle = false;
+            this.hasdata = true;
+            // _self.datas = res.data.data;
+            this.tel = data.data.phone; //电话
+            this.name = data.data.name; //姓名
+            this.sex = parseFloat(data.data.sex); //性别
+            this.keyword = data.data.address; //居住地
+            this.wockexp = data.data.work_experience; //工作经历
+            this.remark = data.data.remark; //备注
+            this.checkchannel = parseFloat(data.data.origin); //渠道
+            this.tags = data.data.tag.split(",");
+            // console.log(_self.checktag);
+            data.data.is_full_time === "1"
+                    ? (this.workTime = 1)
+                    : (this.workTime = 0);
+            const len = data.data.able_work_time.length;
+            for (let i = 0; i < len; i++) {
+              if (data.data.able_work_time[i] === "1") {
+                
+                this.checkState[i] = true;
+              }
+            }//可用时间
+            //  console.log(this.checktag)
+              // for(let j=0;j<this.tags.length;j++){
+              
+              //    console.log(this.tagToggle)
+              // }//性格标签
+          
+          }
+    },
+    async getData() {
       const url = this.httpsBasic.httpsBasic + "eguard/selectInfo";
-      const _self = this;
-      axios
-        .get(url, {
-          params: {
-            token: window.localStorage.getItem("operatingToken"),
-            uuid: this.$route.params.uuid
+      const { data } = await axios.get(url, {
+        params: {
+          token: window.localStorage.getItem("operatingToken"),
+          phone: this.tel
+        }
+      });
+
+      if (data.code === 1001) {
+        // console.log(data)
+        this.$message.success("已有该管家信息");
+       this.tipstoggle = false;
+        this.hasdata = true;
+        // _self.datas = res.data.data;
+        this.tel = data.data.phone; //电话
+        this.name = data.data.name; //姓名
+        this.sex = parseFloat(data.data.sex); //性别
+        this.keyword = data.data.address; //居住地
+        this.wockexp = data.data.work_experience; //工作经历
+        this.remark = data.data.remark; //备注
+        this.checkchannel = parseFloat(data.data.origin); //渠道
+        this.tags = data.data.tag.split(",");
+        // console.log(_self.checktag);
+        data.data.is_full_time === "1"
+                ? (this.workTime = 1)
+                : (this.workTime = 0);
+        const len = data.data.able_work_time.length;
+        for (let i = 0; i < len; i++) {
+          if (data.data.able_work_time[i] === "1") {
+            
+            this.checkState[i] = true;
           }
-        })
-        .then(function(res) {
-          if (res.data.code == 1001) {
-            _self.datas = res.data.data;
-            console.log(_self.datas)
-          } else {
-            _self.$message.error(res.data.msg);
-          }
-          console.log(res);
-        })
-        .catch(function(error) {
-          _self.$message.error(error);
-        });
+        }//可用时间
+        //  console.log(this.checktag)
+          // for(let j=0;j<this.tags.length;j++){
+           
+          //    console.log(this.tagToggle)
+          // }//性格标签
+       
+      }
     }
   },
   mounted() {
-    // console.log(this.$refs.calendar);
-    this.getData();
+    this.getDefaultData() 
     // 限流，当用户停止输入0.8s后请求，如果连续输入的情况下不请求api
     this.debounce = _.debounce(() => this.search(this.keyword), 800);
-  },
-  computed: {
-    ...mapState({
-      token: state => state.auth.token
-    })
   }
 };
 </script>
@@ -360,14 +411,14 @@ export default {
   width: 72%;
 }
 .job-check {
-  width: 95%;
+  width: 100% !important;
 }
 .formData .job-check .el-checkbox {
   width: 13.9%;
   border: 1px solid #dcdfe6;
   line-height: 30px;
   text-align: center;
-  margin: -1px 0 0 -1px;
+  margin: -1px -1px 0 0;
 }
 .formData .job-check .el-checkbox__label {
   font-size: 0 !important;
@@ -383,6 +434,13 @@ export default {
 .el-message {
   top: 0;
   justify-content: center;
+}
+#app .ignore > .qudao label {
+  width: 22%;
+  line-height: 22px;
+}
+.el-checkbox {
+  margin-right: 15px;
 }
 /* .selectcheckbox .el-radio{margin-bottom: 6px} */
 </style>
