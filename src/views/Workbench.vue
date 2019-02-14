@@ -197,7 +197,7 @@ export default {
       // console.log(this.tags)
       //console.log(this.tags.indexOf(tag))
       if(this.tags.indexOf(tag)!=-1){
-        console.log("aaaa")
+        // console.log("aaaa")
         return true
       }
       // return true;
@@ -207,7 +207,6 @@ export default {
       let _this = this;
       this.tags = this.checktag.join(",");
       // 全职or兼职
-        console.log(this.jobtime);
         this.jobtime.forEach(v => {
           this.compute[v] = '1';
         });
@@ -218,8 +217,8 @@ export default {
         this.keyword != "" &&
         this.wockexp != ""
       ) {
-        console.log(this.tags);
-        console.log(this.tags);
+        // this.compute=this.compute.join(',')
+        // console.log(this.compute);
         axios
           .post(url, {
             token: window.localStorage.getItem("operatingToken"),
@@ -237,7 +236,7 @@ export default {
           })
           .then(function(response) {
             if (response.data.code == 1001) {
-               _this.$router.push({ name: "Resourcelib"});
+               _this.$router.push({ name: "Resourcelib"});  
               // _this.$router.push("resourcelib");
             } else {
               _this.$message.error(response.data.msg);
@@ -295,7 +294,7 @@ export default {
       });
 
       if (data.code === 1001) {
-        console.log(data)
+        // console.log(data)
         this.$message.success("已有该管家信息");
        this.tipstoggle = false;
         this.hasdata = true;

@@ -126,7 +126,7 @@ export default {
         .get(url, {
           params: {
             token: window.localStorage.getItem("operatingToken"),
-              uuid:this.$route.params.uuid
+            uuid: this.$route.params.uuid
           }
         })
         .then(function(res) {
