@@ -10,7 +10,7 @@
     </header>
     <hr>
     <!-- content -->
-    <section class="container">
+    <section class="container fontsize">
       <div class="resoutcelibinfo">
         <a class="detailsHeader">
           <img src="../assets/details.png" alt>

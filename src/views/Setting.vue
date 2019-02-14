@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="fontsize">
     <!-- 标题栏 -->
     <header>
       <a @click="backpage">
