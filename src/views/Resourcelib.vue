@@ -57,6 +57,8 @@
 }
 .el-button {
   padding: 6px 14px;
+}
+.fontsize .el-button{
   font-size: 12px;
 }
 .el-message-box {
@@ -69,7 +71,7 @@
   bottom: 0;
   height: 150px;
 }
-.no-data-text {
+.fontsize .no-data-text {
   font-size: 12px;
 }
 ._v-content > datalist:nth-child(2) {
@@ -85,7 +87,7 @@
   width: 100%;
   z-index: 1;
 }
-.el-input {
+.fontsize .el-input {
   font-size: 12px;
 }
 .searchbox .el-input__inner {
