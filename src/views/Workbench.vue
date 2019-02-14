@@ -219,12 +219,12 @@ export default {
         this.getData();
       } else {
         // this.tel = ""; //电话
-        this.name = ""; //姓名
-        this.sex = 0; //性别
-        this.keyword = ""; //居住地
-        this.wockexp = ""; //工作经历
-        this.remark = ""; //备注
-        this.checkchannel = 0; //渠道
+        // this.name = ""; //姓名
+        // this.sex = 0; //性别
+        // this.keyword = ""; //居住地
+        // this.wockexp = ""; //工作经历
+        // this.remark = ""; //备注
+        // this.checkchannel = 0; //渠道
       }
     },
     keyword: function() {
