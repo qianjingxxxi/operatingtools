@@ -57,7 +57,7 @@ export default {
     axios
       .get(url)
       .then(function(response) {
-         console.log(response);
+        //  console.log(response);
         if (response.data.code == 1001) {
           _this.name = response.data.data.name;
           // console.log(_this.name);

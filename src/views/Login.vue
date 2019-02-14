@@ -45,7 +45,7 @@ export default {
           password: this.userPassword
         })
         .then(function(response) {
-          console.log(response)
+          // console.log(response)
           if (response.data.code == "1001") {
               _this.setToken({
               token: response.data.data.token,
@@ -60,7 +60,7 @@ export default {
                 window.localStorage.removeItem('operatingPassword')
             }
 
-            console.log(_this.token);
+            // console.log(_this.token);
 
             _this.$router.push("user");
           } else {
@@ -68,7 +68,7 @@ export default {
           }
         })
         .catch(function(error) {
-          console.log(error);
+          // console.log(error);
         });
     }
   },

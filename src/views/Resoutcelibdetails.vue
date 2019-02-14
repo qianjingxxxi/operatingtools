@@ -60,6 +60,7 @@
                 v-for="(jobcheck,index) in datas.able_work_time" 
                 v-bind:key="index"
                 :checked="checkState[index]"
+                disabled="disabled"
               ></el-checkbox>
             </el-checkbox-group>
           </div>

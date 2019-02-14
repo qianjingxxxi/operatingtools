@@ -169,7 +169,7 @@ export default {
         } else {
             _this.$message.error(response.data.msg);
           }
-           console.log(response);
+          //  console.log(response);
         })
         .catch(function(error) {
           _this.$message.error(error);
