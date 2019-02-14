@@ -144,10 +144,20 @@ export default {
                   _self.checkState[i] = true;
               }
             }
-          } else {
+          }else if(response.data.code == 1010){
+            _this.$alert('登录失效或过期，请重新登录', '登录失效', {
+              confirmButtonText: '确定',
+              callback: action => {
+                _this.$message({
+                  type: '',
+                  message: _this.$router.push({ name: "Login"})
+                });
+              }
+            })
+        } else {
             _self.$message.error(res.data.msg);
           }
-          console.log(res);
+          // console.log(res);
         })
         .catch(function(error) {
           _self.$message.error(error);

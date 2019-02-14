@@ -331,7 +331,17 @@ export default {
               //    console.log(this.tagToggle)
               // }//性格标签
           
-          }
+          }else if(response.data.code == 1010){
+            _this.$alert('登录失效或过期，请重新登录', '登录失效', {
+              confirmButtonText: '确定',
+              callback: action => {
+                _this.$message({
+                  type: '',
+                  message: _this.$router.push({ name: "Login"})
+                });
+              }
+            })
+        }
     },
     async getData() {
       const url = this.httpsBasic.httpsBasic + "eguard/selectInfo";
