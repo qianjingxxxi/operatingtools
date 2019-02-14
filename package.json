@@ -56,6 +56,7 @@
         "selectorBlackList": [
           ".ignore",
           ".loginfromnone",
+          ".fontsize",
           "weui",
           "vux",
           "el",
