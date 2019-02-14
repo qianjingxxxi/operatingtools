@@ -196,7 +196,9 @@ export default {
     },
     keyword: function() {
       this.debounce();
-    }
+    },
+
+    
   },
   methods: {
     selectChannel: () => console.log("a"),
@@ -204,11 +206,10 @@ export default {
       this.$router.go(-1); //返回上一层
     },
     tagToggle(tag) {
-      console.log(tag)
-      //console.log(this.tags.indexOf(tag))
       if(this.tags.indexOf(tag)!=-1){
-        // console.log("aaaa")
         return true
+      }else{
+        return false
       }
       // return true;
     },
@@ -324,7 +325,8 @@ export default {
               }
             }//可用时间
             this.tags = data.data.tag.split(",");
-              console.log(this.tags)
+            this.checktag=this.tags
+              // console.log(this.tags)
               // for(let j=0;j<this.tags.length;j++){
               
               //    console.log(this.tagToggle)
@@ -389,6 +391,7 @@ export default {
     this.getDefaultData() 
     // 限流，当用户停止输入0.8s后请求，如果连续输入的情况下不请求api
     this.debounce = _.debounce(() => this.search(this.keyword), 800);
+    
   }
 };
 </script>

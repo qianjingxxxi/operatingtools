@@ -65,7 +65,12 @@
           <i>*</i>性格标签：
         </label>
         <el-checkbox-group class="selectlabel" v-model="checktag">
-          <el-checkbox :label="tag" :checked="tagToggle(tag)" v-for="(tag, index) in tagLabel" v-bind:key="index"></el-checkbox>
+          <el-checkbox
+            :label="tag"
+            :checked="tagToggle(tag)"
+            v-for="(tag, index) in tagLabel"
+            v-bind:key="index"
+          ></el-checkbox>
         </el-checkbox-group>
       </div>
       <span class="job-time">
@@ -96,7 +101,12 @@
             </ul>
 
             <el-checkbox-group class="job-check" v-model="jobtime">
-              <el-checkbox :label="index" :checked="checkState[index]"  v-for="(jobcheck,index) in checkState" v-bind:key="index"></el-checkbox>
+              <el-checkbox
+                :label="index"
+                :checked="checkState[index]"
+                v-for="(jobcheck,index) in checkState"
+                v-bind:key="index"
+              ></el-checkbox>
             </el-checkbox-group>
           </div>
         </div>
@@ -142,9 +152,9 @@ export default {
     for (let i = 1; i <= 21; i++) {
       list.push(false);
     }
-    let tagsbox=[]
-    for(let j=0;j<=10;j++){
-      tagsbox.push(false)
+    let tagsbox = [];
+    for (let j = 0; j <= 10; j++) {
+      tagsbox.push(false);
     }
     return {
       sex: 0,
@@ -162,12 +172,45 @@ export default {
       jobtime: [],
       showjobtime: false,
       tags: [],
-      compute: ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",],
+      compute: [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
       datas: "",
       hasdata: false,
       checkState: list,
-      checkedtag:tagsbox,
-      tagLabel: ["老实", "外向","热情","勤奋","滑头", "自私","易怒","冷漠","迟钝","肯学习"]
+      checkedtag: tagsbox,
+      tagLabel: [
+        "老实",
+        "外向",
+        "热情",
+        "勤奋",
+        "滑头",
+        "自私",
+        "易怒",
+        "冷漠",
+        "迟钝",
+        "肯学习"
+      ]
     };
   },
   watch: {
@@ -194,22 +237,20 @@ export default {
       this.$router.go(-1); //返回上一层
     },
     tagToggle(tag) {
-      // console.log(this.tags)
-      //console.log(this.tags.indexOf(tag))
-      if(this.tags.indexOf(tag)!=-1){
-        // console.log("aaaa")
-        return true
+      if (this.tags.indexOf(tag) != -1) {
+        return true;
+      } else {
+        return false;
       }
-      // return true;
     },
     submitform() {
       let url = this.httpsBasic.httpsBasic + "interview/insert";
       let _this = this;
       this.tags = this.checktag.join(",");
       // 全职or兼职
-        this.jobtime.forEach(v => {
-          this.compute[v] = '1';
-        });
+      this.jobtime.forEach(v => {
+        this.compute[v] = "1";
+      });
       if (
         this.tags != "" &&
         this.name != "" &&
@@ -236,7 +277,7 @@ export default {
           })
           .then(function(response) {
             if (response.data.code == 1001) {
-               _this.$router.push({ name: "Resourcelib"});  
+              _this.$router.push({ name: "Resourcelib" });
               // _this.$router.push("resourcelib");
             } else {
               _this.$message.error(response.data.msg);
@@ -266,9 +307,9 @@ export default {
         } else {
           this.tipstoggle = false;
         }
-        setTimeout( ()=> {
-            this.hasdata=false
-          },500)
+        setTimeout(() => {
+          this.hasdata = false;
+        }, 500);
       }
     },
     selectTips(index) {
@@ -276,9 +317,8 @@ export default {
 
       // console.log(this.tipstoggle);
       this.selectTip = this.tips[index];
-       this.keyword = this.tips[index]["name"];
+      this.keyword = this.tips[index]["name"];
       if (this.selectTip.location.length > 0) {
-       
       } else {
         // this.$message.error("请输入详细地址");
         // this.keyword=""
@@ -296,7 +336,7 @@ export default {
       if (data.code === 1001) {
         // console.log(data)
         this.$message.success("已有该管家信息");
-       this.tipstoggle = false;
+        this.tipstoggle = false;
         this.hasdata = true;
         // _self.datas = res.data.data;
         this.tel = data.data.phone; //电话
@@ -307,23 +347,22 @@ export default {
         this.remark = data.data.remark; //备注
         this.checkchannel = parseFloat(data.data.origin); //渠道
         this.tags = data.data.tag.split(",");
+         this.checktag=this.tags
         // console.log(_self.checktag);
         data.data.is_full_time === "1"
-                ? (this.workTime = 1)
-                : (this.workTime = 0);
+          ? (this.workTime = 1)
+          : (this.workTime = 0);
         const len = data.data.able_work_time.length;
         for (let i = 0; i < len; i++) {
           if (data.data.able_work_time[i] === "1") {
-            
             this.checkState[i] = true;
           }
-        }//可用时间
+        } //可用时间
         //  console.log(this.checktag)
-          // for(let j=0;j<this.tags.length;j++){
-           
-          //    console.log(this.tagToggle)
-          // }//性格标签
-       
+        // for(let j=0;j<this.tags.length;j++){
+
+        //    console.log(this.tagToggle)
+        // }//性格标签
       }
     }
   },
