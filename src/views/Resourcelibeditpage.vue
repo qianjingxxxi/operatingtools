@@ -204,7 +204,7 @@ export default {
       this.$router.go(-1); //返回上一层
     },
     tagToggle(tag) {
-      // console.log(this.tags)
+      console.log(tag)
       //console.log(this.tags.indexOf(tag))
       if(this.tags.indexOf(tag)!=-1){
         // console.log("aaaa")
@@ -301,7 +301,7 @@ export default {
               uuid: this.$route.params.uuid
             }
           });
-          //  console.log(data)
+           console.log(data)
           if (data.code === 1001) {
           this.tipstoggle = false;
             this.hasdata = true;
@@ -313,7 +313,6 @@ export default {
             this.wockexp = data.data.work_experience; //工作经历
             this.remark = data.data.remark; //备注
             this.checkchannel = parseFloat(data.data.origin); //渠道
-            this.tags = data.data.tag.split(",");
             // console.log(_self.checktag);
             data.data.is_full_time === "1"
                     ? (this.workTime = 1)
@@ -321,11 +320,11 @@ export default {
             const len = data.data.able_work_time.length;
             for (let i = 0; i < len; i++) {
               if (data.data.able_work_time[i] === "1") {
-                
                 this.checkState[i] = true;
               }
             }//可用时间
-            //  console.log(this.checktag)
+            this.tags = data.data.tag.split(",");
+              console.log(this.tags)
               // for(let j=0;j<this.tags.length;j++){
               
               //    console.log(this.tagToggle)
