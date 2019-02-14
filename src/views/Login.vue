@@ -1,5 +1,5 @@
 <template>
-  <div class="loginForm ignore">
+  <div class="loginForm loginfromnone">
     <a class="logo">
       <img src="../assets/logo.png" alt="logo">
     </a>

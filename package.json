@@ -55,6 +55,7 @@
         "unitPrecision": 3,
         "selectorBlackList": [
           ".ignore",
+          ".loginfromnone",
           "weui",
           "vux",
           "el",
