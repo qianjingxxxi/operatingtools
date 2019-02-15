@@ -101,6 +101,9 @@
   background-position: 18px center;
   text-indent: 30px;
 }
+.ignore .address{
+    font-size: 12px!important
+}
 </style>
 
 <script>

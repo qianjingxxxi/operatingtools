@@ -49,9 +49,9 @@
     "plugins": {
       "autoprefixer": {},
       "postcss-px-to-viewport": {
-        "viewportWidth": 375,
+        "viewportWidth": 750,
         "minPixelValue": 1,
-        "viewportHeight": 667,
+        "viewportHeight": 1334,
         "viewportUnit": "vw",
         "unitPrecision": 2,
         "selectorBlackList": [
