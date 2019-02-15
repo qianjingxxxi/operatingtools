@@ -13,7 +13,7 @@
         <label>
           <i>*</i>联系电话：
         </label>
-        <el-input v-model="tel" placeholder="请输入联系电话" value></el-input>
+         <el-input v-model.number="tel"  type="number" placeholder="请输入联系电话" value></el-input>
       </div>
       <div>
         <label>
@@ -30,6 +30,12 @@
           <el-radio :label="1">女</el-radio>
         </el-radio-group>
       </span>
+      <div>
+        <label>
+          <i>*</i>年龄：
+        </label>
+        <el-input v-model.number="age" placeholder="请输入年龄" type="number"></el-input>
+      </div>
       <div>
         <label>
           <i>*</i>居住地：
@@ -152,9 +158,9 @@ export default {
     for (let i = 1; i <= 21; i++) {
       list.push(false);
     }
-    let tagsbox=[]
-    for(let j=0;j<=10;j++){
-      tagsbox.push(false)
+    let tagsbox = [];
+    for (let j = 0; j <= 10; j++) {
+      tagsbox.push(false);
     }
     return {
       sex: 0,
@@ -172,12 +178,47 @@ export default {
       jobtime: [],
       showjobtime: false,
       tags: [],
-      compute: ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",],
+      compute: [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
       datas: "",
       hasdata: false,
       checkState: list,
-      checkedtag:tagsbox,
-      tagLabel: ["老实", "外向","热情","勤奋","滑头", "自私","易怒","冷漠","迟钝","肯学习"]
+      checkedtag: tagsbox,
+      tagLabel: [
+        "老实",
+        "外向",
+        "热情",
+        "勤奋",
+        "滑头",
+        "自私",
+        "易怒",
+        "冷漠",
+        "迟钝",
+        "肯学习"
+      ],
+      age:"",
+      address_d:""
     };
   },
   watch: {
@@ -196,9 +237,7 @@ export default {
     },
     keyword: function() {
       this.debounce();
-    },
-
-    
+    }
   },
   methods: {
     selectChannel: () => console.log("a"),
@@ -206,10 +245,10 @@ export default {
       this.$router.go(-1); //返回上一层
     },
     tagToggle(tag) {
-      if(this.tags.indexOf(tag)!=-1){
-        return true
-      }else{
-        return false
+      if (this.tags.indexOf(tag) != -1) {
+        return true;
+      } else {
+        return false;
       }
       // return true;
     },
@@ -218,15 +257,16 @@ export default {
       let _this = this;
       this.tags = this.checktag.join(",");
       // 全职or兼职
-        this.jobtime.forEach(v => {
-          this.compute[v] = '1';
-        });
+      this.jobtime.forEach(v => {
+        this.compute[v] = "1";
+      });
       if (
         this.tags != "" &&
         this.name != "" &&
         this.tel != "" &&
         this.keyword != "" &&
-        this.wockexp != ""
+        this.wockexp != ""&&
+        this.age !=""
       ) {
         axios
           .post(url, {
@@ -242,11 +282,17 @@ export default {
             remark: this.remark,
             is_full_time: this.workTime,
             able_work_time: this.compute,
-           uuid: this.$route.params.uuid
+            uuid: this.$route.params.uuid,
+            age:this.age,
+              address_d:this.address_d
           })
           .then(function(response) {
             if (response.data.code == 1001) {
-               _this.$router.push({ name: "Resourcelib"});
+              _this.$message.success("编辑成功");
+                 setTimeout(() => {
+                window.scrollTo(0,0); 
+              },2000);
+              // _this.$router.push({ name: "Resourcelib" });
               // _this.$router.push("resourcelib");
             } else {
               _this.$message.error(response.data.msg);
@@ -276,73 +322,71 @@ export default {
         } else {
           this.tipstoggle = false;
         }
-        setTimeout( ()=> {
-            this.hasdata=false
-          },500)
+        setTimeout(() => {
+          this.hasdata = false;
+        }, 500);
       }
     },
     selectTips(index) {
       this.hasdata = true;
-
-      // console.log(this.tipstoggle);
       this.selectTip = this.tips[index];
-       this.keyword = this.tips[index]["name"];
+      this.keyword = this.tips[index]["name"];
+          this.address_d = this.tips[index]["district"]+this.tips[index]['address'];
       if (this.selectTip.location.length > 0) {
-       
       } else {
         // this.$message.error("请输入详细地址");
         // this.keyword=""
       }
     },
-    async getDefaultData(){
-    const url = this.httpsBasic.httpsBasic + "eguard/selectInfo";
-          const { data } = await axios.get(url, {
-            params: {
-              token: window.localStorage.getItem("operatingToken"),
-              uuid: this.$route.params.uuid
-            }
-          });
-          //  console.log(data)
-          if (data.code === 1001) {
-          this.tipstoggle = false;
-            this.hasdata = true;
-            // _self.datas = res.data.data;
-            this.tel = data.data.phone; //电话
-            this.name = data.data.name; //姓名
-            this.sex = parseFloat(data.data.sex); //性别
-            this.keyword = data.data.address; //居住地
-            this.wockexp = data.data.work_experience; //工作经历
-            this.remark = data.data.remark; //备注
-            this.checkchannel = parseFloat(data.data.origin); //渠道
-            // console.log(_self.checktag);
-            data.data.is_full_time === "1"
-                    ? (this.workTime = 1)
-                    : (this.workTime = 0);
-            const len = data.data.able_work_time.length;
-            for (let i = 0; i < len; i++) {
-              if (data.data.able_work_time[i] === "1") {
-                this.checkState[i] = true;
-              }
-            }//可用时间
-            this.tags = data.data.tag.split(",");
-            this.checktag=this.tags
-              // console.log(this.tags)
-              // for(let j=0;j<this.tags.length;j++){
-              
-              //    console.log(this.tagToggle)
-              // }//性格标签
-          
-          }else if(response.data.code == 1010){
-            _this.$alert('登录失效或过期，请重新登录', '登录失效', {
-              confirmButtonText: '确定',
-              callback: action => {
-                _this.$message({
-                  type: '',
-                  message: _this.$router.push({ name: "Login"})
-                });
-              }
-            })
+    async getDefaultData() {
+      const url = this.httpsBasic.httpsBasic + "eguard/selectInfo";
+      const { data } = await axios.get(url, {
+        params: {
+          token: window.localStorage.getItem("operatingToken"),
+          uuid: this.$route.params.uuid
         }
+      });
+      //  console.log(data)
+      if (data.code === 1001) {
+        this.tipstoggle = false;
+        this.hasdata = true;
+        // _self.datas = res.data.data;
+        this.tel = data.data.phone; //电话
+        this.name = data.data.name; //姓名
+        this.sex = parseFloat(data.data.sex); //性别
+        this.keyword = data.data.address; //居住地
+        this.wockexp = data.data.work_experience; //工作经历
+        this.remark = data.data.remark; //备注
+        this.age=data.data.age
+        this.checkchannel = parseFloat(data.data.origin); //渠道
+        // console.log(_self.checktag);
+        data.data.is_full_time === "1"
+          ? (this.workTime = 1)
+          : (this.workTime = 0);
+        const len = data.data.able_work_time.length;
+        for (let i = 0; i < len; i++) {
+          if (data.data.able_work_time[i] === "1") {
+            this.checkState[i] = true;
+          }
+        } //可用时间
+        this.tags = data.data.tag.split(",");
+        this.checktag = this.tags;
+        // console.log(this.tags)
+        // for(let j=0;j<this.tags.length;j++){
+
+        //    console.log(this.tagToggle)
+        // }//性格标签
+      } else if (response.data.code == 1010) {
+        _this.$alert("登录失效或过期，请重新登录", "登录失效", {
+          confirmButtonText: "确定",
+          callback: action => {
+            _this.$message({
+              type: "",
+              message: _this.$router.push({ name: "Login" })
+            });
+          }
+        });
+      }
     },
     async getData() {
       const url = this.httpsBasic.httpsBasic + "eguard/selectInfo";
@@ -356,7 +400,7 @@ export default {
       if (data.code === 1001) {
         // console.log(data)
         this.$message.success("已有该管家信息");
-       this.tipstoggle = false;
+        this.tipstoggle = false;
         this.hasdata = true;
         // _self.datas = res.data.data;
         this.tel = data.data.phone; //电话
@@ -366,32 +410,30 @@ export default {
         this.wockexp = data.data.work_experience; //工作经历
         this.remark = data.data.remark; //备注
         this.checkchannel = parseFloat(data.data.origin); //渠道
+        this.age=data.data.age
         this.tags = data.data.tag.split(",");
         // console.log(_self.checktag);
         data.data.is_full_time === "1"
-                ? (this.workTime = 1)
-                : (this.workTime = 0);
+          ? (this.workTime = 1)
+          : (this.workTime = 0);
         const len = data.data.able_work_time.length;
         for (let i = 0; i < len; i++) {
           if (data.data.able_work_time[i] === "1") {
-            
             this.checkState[i] = true;
           }
-        }//可用时间
+        } //可用时间
         //  console.log(this.checktag)
-          // for(let j=0;j<this.tags.length;j++){
-           
-          //    console.log(this.tagToggle)
-          // }//性格标签
-       
+        // for(let j=0;j<this.tags.length;j++){
+
+        //    console.log(this.tagToggle)
+        // }//性格标签
       }
     }
   },
   mounted() {
-    this.getDefaultData() 
+    this.getDefaultData();
     // 限流，当用户停止输入0.8s后请求，如果连续输入的情况下不请求api
     this.debounce = _.debounce(() => this.search(this.keyword), 800);
-    
   }
 };
 </script>

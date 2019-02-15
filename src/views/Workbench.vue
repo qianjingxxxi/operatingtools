@@ -13,7 +13,7 @@
         <label>
           <i>*</i>联系电话：
         </label>
-        <el-input v-model="tel" placeholder="请输入联系电话" value></el-input>
+        <el-input v-model.number="tel"  type="number" placeholder="请输入联系电话" value></el-input>
       </div>
       <div>
         <label>
@@ -30,6 +30,12 @@
           <el-radio :label="1">女</el-radio>
         </el-radio-group>
       </span>
+       <div>
+        <label>
+          <i>*</i>年龄：
+        </label>
+        <el-input  v-model.number="age"  placeholder="请输入年龄" type="number"></el-input>
+      </div>
       <div>
         <label>
           <i>*</i>居住地：
@@ -215,7 +221,9 @@ export default {
         "冷漠",
         "迟钝",
         "肯学习"
-      ]
+      ],
+      age:"",
+      address_d:""
     };
   },
   watch: {
@@ -262,10 +270,11 @@ export default {
         this.name != "" &&
         this.tel != "" &&
         this.keyword != "" &&
-        this.wockexp != ""
+        this.wockexp != "" &&
+        this.age !=""
       ) {
         // this.compute=this.compute.join(',')
-        // console.log(this.compute);
+        
         axios
           .post(url, {
             token: window.localStorage.getItem("operatingToken"),
@@ -279,7 +288,9 @@ export default {
             tag: this.tags,
             remark: this.remark,
             is_full_time: this.workTime,
-            able_work_time: this.compute
+            able_work_time: this.compute,
+            age:this.age,
+            address_d:this.address_d
           })
           .then(function(response) {
             if (response.data.code == 1001) {
@@ -298,6 +309,7 @@ export default {
                 _this.jobtime = [];
                 _this.checktag = [];
                 _this.workTime=1
+                _this.age=""
               },2000);
               // _this.$router.push("resourcelib");
             } else {
@@ -336,10 +348,9 @@ export default {
     },
     selectTips(index) {
       this.hasdata = true;
-
-      // console.log(this.tipstoggle);
       this.selectTip = this.tips[index];
       this.keyword = this.tips[index]["name"];
+      this.address_d = this.tips[index]["district"]+this.tips[index]['address'];
       if (this.selectTip.location.length > 0) {
       } else {
         // this.$message.error("请输入详细地址");
@@ -370,6 +381,7 @@ export default {
         this.checkchannel = parseFloat(data.data.origin); //渠道
         this.tags = data.data.tag.split(",");
         this.checktag = this.tags;
+        this.age=data.data.age
         // console.log(_self.checktag);
         data.data.is_full_time === "1"
           ? (this.workTime = 1)

@@ -25,11 +25,14 @@
             <div>
               <h3>{{item.name}}</h3>
               <p>{{item.sex=="0" ? "男":"女"}}</p>
+              <!-- <p>{{item.age}}</p>
+              <p>岁</p> -->
               <p>{{item.is_full_time=="1" ? "全职" : "兼职"}}</p>
             </div>
             <a class="el-icon-phone" :href="'tel:' + item.phone">{{item.phone}}</a>
           </div>
           <p class="address">{{item.address}}</p>
+          <p class="district">{{item.address_d}}</p>
           <ul class="charactertag">
             <li>{{item.tag}}</li>
           </ul>
@@ -143,7 +146,7 @@ export default {
         })
         .then(function(response) {
           if (response.data.code == 1001) {
-            // console.log(response);
+             console.log(response);
 
             if (_this.page == 1) {
               _this.items = response.data.data.list;

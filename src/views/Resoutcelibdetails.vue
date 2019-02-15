@@ -15,13 +15,16 @@
         <a class="detailsHeader">
           <img src="../assets/details.png" alt>
         </a>
-        <div>
+        <div class="basictitle">
           <div>
             <h3>{{datas.name}}</h3>
             <p>{{datas.sex=="0" ? "男":"女"}}</p>
+            <span>{{datas.age}}</span>
+            <span>岁</span>
           </div>
           <a class="el-icon-phone" :href="'tel:' + datas.phone">{{datas.phone}}</a>
           <p class="address">{{datas.address}}</p>
+          <p class="district">{{datas.address_d}}</p>
         </div>
       </div>
       <div class="evaluatetag tagline">
@@ -57,7 +60,7 @@
             <el-checkbox-group class="job-check" v-model="calendar">
               <el-checkbox
                 :label="index"
-                v-for="(jobcheck,index) in datas.able_work_time" 
+                v-for="(jobcheck,index) in datas.able_work_time"
                 v-bind:key="index"
                 :checked="checkState[index]"
                 disabled="disabled"
@@ -74,9 +77,9 @@
         <label class="tagtitle">历史面试记录：</label>
         <ul class="interview">
           <li v-for="(interview,index) in datas.interview" v-bind:key="index">
-            <span>{{interview.admin.name}} </span>
+            <span>{{interview.admin.name}}</span>
             <span>{{interview.create_time_type_datetime}}</span>
-            <span> 的沟通备注：</span>
+            <span>的沟通备注：</span>
             <span>{{interview.content==null ? interview.content="无" : interview.content=interview.content}}</span>
           </li>
         </ul>
@@ -113,7 +116,7 @@
 import axios from "axios";
 export default {
   data() {
-     // 初始化默认全不选中
+    // 初始化默认全不选中
     let list = [];
     for (let i = 1; i <= 21; i++) {
       list.push(false);
@@ -123,7 +126,7 @@ export default {
       jobtime: false,
       datas: "",
       tags: [],
-      checkState:list,
+      checkState: list,
       calendar: []
     };
   },
@@ -145,28 +148,28 @@ export default {
           if (res.data.code == 1001) {
             _self.datas = res.data.data;
             _self.tags = res.data.data.tag.split(",");
-            console.log(res);
+            // console.log(res);
             _self.datas.is_full_time == "1"
               ? (_self.showjobtime = false)
               : (_self.showjobtime = true);
             // console.log(_this.tags)
-            for(let i=0;i<_self.datas.able_work_time.length;i++){
+            for (let i = 0; i < _self.datas.able_work_time.length; i++) {
               // console.log( _self.datas.able_work_time[i])
-              if(_self.datas.able_work_time[i]=="1"){
-                  _self.checkState[i] = true;
+              if (_self.datas.able_work_time[i] == "1") {
+                _self.checkState[i] = true;
               }
             }
-          }else if(response.data.code == 1010){
-            _this.$alert('登录失效或过期，请重新登录', '登录失效', {
-              confirmButtonText: '确定',
+          } else if (response.data.code == 1010) {
+            _this.$alert("登录失效或过期，请重新登录", "登录失效", {
+              confirmButtonText: "确定",
               callback: action => {
                 _this.$message({
-                  type: '',
-                  message: _this.$router.push({ name: "Login"})
+                  type: "",
+                  message: _this.$router.push({ name: "Login" })
                 });
               }
-            })
-        } else {
+            });
+          } else {
             _self.$message.error(res.data.msg);
           }
           // console.log(res);
