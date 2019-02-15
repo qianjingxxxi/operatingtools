@@ -287,6 +287,7 @@ export default {
               _this.$message.success("提交成功");
 
               setTimeout(() => {
+                window.scrollTo(0,0); 
                 _this.tel = ""; //电话
                 _this.name = ""; //姓名
                 _this.sex = 0; //性别
@@ -297,7 +298,7 @@ export default {
                 _this.jobtime = [];
                 _this.checktag = [];
                 _this.workTime=1
-              },1000);
+              },2000);
               // _this.$router.push("resourcelib");
             } else {
               _this.$message.error(response.data.msg);
