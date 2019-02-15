@@ -53,7 +53,7 @@
         "minPixelValue": 1,
         "viewportHeight": 1334,
         "viewportUnit": "vw",
-        "unitPrecision": 3,
+        "unitPrecision": 2,
         "selectorBlackList": [
           ".ignore",
           ".loginfromnone",
