@@ -1,5 +1,5 @@
 <template>
-  <div class="fontsize">
+  <div class="fontsize workcontent">
     <!-- 标题栏 -->
     <header>
       <a @click="backpage">
@@ -50,18 +50,18 @@
 @import url("../style/Resoutcelib.less");
 </style>
 <style lang="less">
-.operation {
+.workcontent .operation {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
 }
-.el-button {
+.workcontent .el-button {
   padding: 6px 14px;
 }
 .fontsize .el-button{
   font-size: 12px;
 }
-.el-message-box {
+.workcontent .el-message-box {
   position: absolute;
   left: 0;
   top: 0;
@@ -74,23 +74,23 @@
 .fontsize .no-data-text {
   font-size: 12px;
 }
-._v-content > datalist:nth-child(2) {
+.workcontent ._v-content > datalist:nth-child(2) {
   border: none;
 }
-._v-content > div:last-child {
+.workcontent ._v-content > div:last-child {
   margin-top: 60px;
 }
-.searchbox {
+.workcontent .searchbox {
   position: fixed;
   top: 88px;
   background-color: #fff;
   width: 100%;
   z-index: 1;
 }
-.fontsize .el-input {
+.workcontent .fontsize .el-input {
   font-size: 12px;
 }
-.searchbox .el-input__inner {
+.workcontent .searchbox .el-input__inner {
   line-height: 28px;
   height: 28px;
   border: none;

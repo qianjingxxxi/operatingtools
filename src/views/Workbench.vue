@@ -282,8 +282,8 @@ export default {
           })
           .then(function(response) {
             if (response.data.code == 1001) {
-              // _this.$router.push({ name: "Resourcelib" });
-              _this.$router.push("resourcelib");
+              _this.$router.push({ name: "Resourcelib" });
+              // _this.$router.push("resourcelib");
             } else {
               _this.$message.error(response.data.msg);
             }
