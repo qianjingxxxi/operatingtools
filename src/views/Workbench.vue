@@ -145,11 +145,11 @@
 
 import axios from "axios";
 import _ from "lodash";
-import Vue from 'vue'
-import BaiduMap from 'vue-baidu-map'
+import Vue from "vue";
+import BaiduMap from "vue-baidu-map";
 Vue.use(BaiduMap, {
-  ak: 'FP1dPaBGaieVuvaXIticP53c8qxVCiqi'
-})
+  ak: "FP1dPaBGaieVuvaXIticP53c8qxVCiqi"
+});
 export default {
   data() {
     // 初始化默认全不选中
@@ -282,8 +282,8 @@ export default {
           })
           .then(function(response) {
             if (response.data.code == 1001) {
-              _this.$router.push({ name: "Resourcelib" });
-              // _this.$router.push("resourcelib");
+              // _this.$router.push({ name: "Resourcelib" });
+              _this.$router.push("resourcelib");
             } else {
               _this.$message.error(response.data.msg);
             }
@@ -298,13 +298,14 @@ export default {
       }
     },
     async search(keyword) {
-        const url = "https://restapi.amap.com/v3/assistant/inputtips";
-        const params = new URLSearchParams();
-        params.append("keywords", keyword);
-        // 开发者key
-        params.append("key", "0474a745d094cec483b7f9f988ba8216");
-        params.append("output", "JSON");
-        const { data } = await axios.get(`${url}?${params.toString()}`);
+      const url = "https://restapi.amap.com/v3/assistant/inputtips";
+      const params = new URLSearchParams();
+      params.append("keywords", keyword);
+      // 开发者key
+      params.append("key", "0474a745d094cec483b7f9f988ba8216");
+      params.append("output", "JSON");
+      const { data } = await axios.get(`${url}?${params.toString()}`);
+      // console.log(data);
       if (data.status === "1") {
         this.tips = data.tips;
         if (data.tips.length > 0 && !this.hasdata) {
@@ -315,6 +316,18 @@ export default {
         setTimeout(() => {
           this.hasdata = false;
         }, 500);
+      }
+    },
+    selectTips(index) {
+       this.hasdata = true;
+
+      // console.log(this.tipstoggle);
+      this.selectTip = this.tips[index];
+      this.keyword = this.tips[index]["name"];
+      if (this.selectTip.location.length > 0) {
+      } else {
+        // this.$message.error("请输入详细地址");
+        // this.keyword=""
       }
     },
     async getData() {
@@ -340,7 +353,7 @@ export default {
         this.remark = data.data.remark; //备注
         this.checkchannel = parseFloat(data.data.origin); //渠道
         this.tags = data.data.tag.split(",");
-         this.checktag=this.tags
+        this.checktag = this.tags;
         // console.log(_self.checktag);
         data.data.is_full_time === "1"
           ? (this.workTime = 1)
@@ -356,7 +369,7 @@ export default {
 
         //    console.log(this.tagToggle)
         // }//性格标签
-      }else{
+      } else {
         // this.hasdata = false;
       }
     }
