@@ -145,6 +145,11 @@
 
 import axios from "axios";
 import _ from "lodash";
+import Vue from 'vue'
+import BaiduMap from 'vue-baidu-map'
+Vue.use(BaiduMap, {
+  ak: 'FP1dPaBGaieVuvaXIticP53c8qxVCiqi'
+})
 export default {
   data() {
     // 初始化默认全不选中
@@ -293,13 +298,13 @@ export default {
       }
     },
     async search(keyword) {
-      const url = "https://restapi.amap.com/v3/assistant/inputtips";
-      const params = new URLSearchParams();
-      params.append("keywords", keyword);
-      // 开发者key
-      params.append("key", "0474a745d094cec483b7f9f988ba8216");
-      params.append("output", "JSON");
-      const { data } = await axios.get(`${url}?${params.toString()}`);
+        const url = "https://restapi.amap.com/v3/assistant/inputtips";
+        const params = new URLSearchParams();
+        params.append("keywords", keyword);
+        // 开发者key
+        params.append("key", "0474a745d094cec483b7f9f988ba8216");
+        params.append("output", "JSON");
+        const { data } = await axios.get(`${url}?${params.toString()}`);
       if (data.status === "1") {
         this.tips = data.tips;
         if (data.tips.length > 0 && !this.hasdata) {
@@ -310,18 +315,6 @@ export default {
         setTimeout(() => {
           this.hasdata = false;
         }, 500);
-      }
-    },
-    selectTips(index) {
-      this.hasdata = true;
-
-      // console.log(this.tipstoggle);
-      this.selectTip = this.tips[index];
-      this.keyword = this.tips[index]["name"];
-      if (this.selectTip.location.length > 0) {
-      } else {
-        // this.$message.error("请输入详细地址");
-        // this.keyword=""
       }
     },
     async getData() {
@@ -339,7 +332,7 @@ export default {
         this.tipstoggle = false;
         this.hasdata = true;
         // _self.datas = res.data.data;
-        this.tel = data.data.phone; //电话
+        // this.tel = data.data.phone; //电话
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
         this.keyword = data.data.address; //居住地
@@ -363,6 +356,8 @@ export default {
 
         //    console.log(this.tagToggle)
         // }//性格标签
+      }else{
+        // this.hasdata = false;
       }
     }
   },

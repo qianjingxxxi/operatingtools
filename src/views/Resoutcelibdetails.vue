@@ -66,9 +66,20 @@
           </div>
         </div>
       </div>
-      <div class="tagline line-none">
+      <div class="tagline">
         <label class="tagtitle">备注：</label>
         <p>{{datas.remark}}</p>
+      </div>
+      <div class="tagline line-none">
+        <label class="tagtitle">历史面试记录：</label>
+        <ul class="interview">
+          <li v-for="(interview,index) in datas.interview" v-bind:key="index">
+            <span>{{interview.admin.name}} </span>
+            <span>{{interview.create_time_type_datetime}}</span>
+            <span> 的沟通备注：</span>
+            <span>{{interview.content==null ? interview.content="无" : interview.content=interview.content}}</span>
+          </li>
+        </ul>
       </div>
     </section>
   </div>
@@ -113,7 +124,7 @@ export default {
       datas: "",
       tags: [],
       checkState:list,
-      calendar: [],
+      calendar: []
     };
   },
   methods: {
@@ -134,7 +145,7 @@ export default {
           if (res.data.code == 1001) {
             _self.datas = res.data.data;
             _self.tags = res.data.data.tag.split(",");
-            // console.log(_self.datas.is_full_time);
+            console.log(res);
             _self.datas.is_full_time == "1"
               ? (_self.showjobtime = false)
               : (_self.showjobtime = true);
