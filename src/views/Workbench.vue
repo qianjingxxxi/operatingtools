@@ -239,7 +239,8 @@ export default {
   methods: {
     selectChannel: () => console.log("a"),
     backpage() {
-      this.$router.go(-1); //返回上一层
+      // this.$router.go(-1); //返回上一层
+      this.$router.push({ name: "Resourcelib" });
     },
     tagToggle(tag) {
       if (this.tags.indexOf(tag) != -1) {
@@ -282,7 +283,21 @@ export default {
           })
           .then(function(response) {
             if (response.data.code == 1001) {
-              _this.$router.push({ name: "Resourcelib" });
+              // _this.$router.push("Workbench");
+              _this.$message.success("提交成功");
+
+              setTimeout(() => {
+                _this.tel = ""; //电话
+                _this.name = ""; //姓名
+                _this.sex = 0; //性别
+                _this.keyword = ""; //居住地
+                _this.wockexp = ""; //工作经历
+                _this.remark = ""; //备注
+                _this.checkchannel = 0; //渠道
+                _this.jobtime = [];
+                _this.checktag = [];
+                _this.workTime=1
+              },1000);
               // _this.$router.push("resourcelib");
             } else {
               _this.$message.error(response.data.msg);
@@ -319,7 +334,7 @@ export default {
       }
     },
     selectTips(index) {
-       this.hasdata = true;
+      this.hasdata = true;
 
       // console.log(this.tipstoggle);
       this.selectTip = this.tips[index];
@@ -344,8 +359,8 @@ export default {
         this.$message.success("已有该管家信息");
         this.tipstoggle = false;
         this.hasdata = true;
-        // _self.datas = res.data.data;
-        // this.tel = data.data.phone; //电话
+        _self.datas = res.data.data;
+        this.tel = data.data.phone; //电话
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
         this.keyword = data.data.address; //居住地
