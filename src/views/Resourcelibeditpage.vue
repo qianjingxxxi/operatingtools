@@ -292,7 +292,7 @@ export default {
                  setTimeout(() => {
                 window.scrollTo(0,0); 
               },2000);
-              // _this.$router.push({ name: "Resourcelib" });
+              _this.$router.push({ name: "Resourcelib" });
               // _this.$router.push("resourcelib");
             } else {
               _this.$message.error(response.data.msg);

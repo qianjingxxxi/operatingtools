@@ -13,7 +13,7 @@
         <label>
           <i>*</i>联系电话：
         </label>
-        <el-input v-model.number="tel"  type="number" placeholder="请输入联系电话" value></el-input>
+        <el-input v-model="tel"  type="number" placeholder="请输入联系电话" value></el-input>
       </div>
       <div>
         <label>
@@ -34,7 +34,7 @@
         <label>
           <i>*</i>年龄：
         </label>
-        <el-input  v-model.number="age"  placeholder="请输入年龄" type="number"></el-input>
+        <el-input  v-model="age"  placeholder="请输入年龄" type="number"></el-input>
       </div>
       <div>
         <label>
@@ -333,7 +333,7 @@ export default {
       params.append("key", "0474a745d094cec483b7f9f988ba8216");
       params.append("output", "JSON");
       const { data } = await axios.get(`${url}?${params.toString()}`);
-      // console.log(data);
+      console.log(data);
       if (data.status === "1") {
         this.tips = data.tips;
         if (data.tips.length > 0 && !this.hasdata) {
@@ -371,7 +371,7 @@ export default {
         this.$message.success("已有该管家信息");
         this.tipstoggle = false;
         this.hasdata = true;
-        _self.datas = res.data.data;
+        this.datas = data.data.data;
         this.tel = data.data.phone; //电话
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
@@ -404,6 +404,7 @@ export default {
   },
   mounted() {
     // 限流，当用户停止输入0.8s后请求，如果连续输入的情况下不请求api
+    console.log(this.keyword)
     this.debounce = _.debounce(() => this.search(this.keyword), 800);
   }
 };

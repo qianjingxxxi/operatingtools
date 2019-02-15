@@ -146,7 +146,7 @@ export default {
         })
         .then(function(response) {
           if (response.data.code == 1001) {
-             console.log(response);
+            //  console.log(response);
 
             if (_this.page == 1) {
               _this.items = response.data.data.list;
