@@ -219,7 +219,9 @@ export default {
     }
   },
   mounted() {
+    this.items=[]
     this.getData();
+    
   },
   computed: {
     ...mapState({
