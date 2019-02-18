@@ -133,13 +133,11 @@ export default {
   },
   watch: {
     search() {
-      // console.log(this.search);
       this.getData();
     }
   },
   methods: {
     getData() {
-      // console.log("aaaaaaaaa")
       let url = this.httpsBasic.httpsBasic + "eguard/selectList";
       let _this = this;
       axios
@@ -153,8 +151,6 @@ export default {
         })
         .then(function(response) {
           if (response.data.code == 1001) {
-            //  console.log(response);
-
             if (_this.page == 1) {
               _this.items = response.data.data.list;
             } else {
@@ -164,9 +160,9 @@ export default {
               if (
                 response.data.data.total_page >= response.data.data.current_page
               ) {
-                _this.noDate = true;
+                _this.noDate =false;
               } else {
-                _this.noDate = false;
+                _this.noDate = true;
               }
             } else {
               _this.noDate = true;
@@ -191,7 +187,7 @@ export default {
         });
     },
     infinite(done) {
-      if (!this.noDate) {
+      if (this.noDate==true) {
         // this.$refs.myscroller.noDataText = "没有更多数据了"; //更改上拉加载的文字
         this.$refs.my_scroller.finishInfinite(true);
       } else {
@@ -205,7 +201,7 @@ export default {
     refresh(done) {
       // console.log("刷新...");
       this.page = 1; //重置页数刷新每次页数都是第一页
-      this.noDate = false; //重置数据判断
+      this.noDate = true; //重置数据判断
       this.$refs.my_scroller.finishPullToRefresh();
       // this.$router.go(0)
       this.getData();

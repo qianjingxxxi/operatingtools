@@ -499,7 +499,6 @@ export default {
     },
     addmodel(add, index) {
       if (add == "添加") {
-        console.log("添加");
         this.wockexp.push({
           addtitle: "删除",
           addicon: require("../assets/delete.png"),
