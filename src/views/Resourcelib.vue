@@ -6,12 +6,12 @@
         <img src="../assets/backIcon.png">
       </a>
       <p>资源库</p>
-      <router-link tag="span" to="/Workbench">招聘</router-link>
+      <router-link tag="span" to="/Workbench">新增</router-link>
     </header>
     <div class="searchbox">
       <el-input v-model="search" placeholder="关键字搜索"></el-input>
     </div>
-    <hr>
+    <!-- <hr> -->
     <!-- content -->
     <div class="scroller-box">
       <scroller
@@ -20,7 +20,7 @@
         ref="my_scroller"
         style="flex-grow: 1"
       >
-        <div class="datalist ignore" v-for="(item, index) in items" v-bind:key="index">
+        <div class="datalist ignore" v-for="(item, index) in items" v-bind:key="index" @click="detailsPage(item.uuid)" >
           <div class="basicInfo ignore">
             <div>
               <h3>{{item.name}}</h3>
@@ -34,11 +34,18 @@
           <p class="address">{{item.address}}</p>
           <p class="district">{{item.address_d}}</p>
           <ul class="charactertag">
-            <li>{{item.tag}}</li>
+            <li>
+              <label>性格标签：</label>
+              <span>{{item.tag=="" ? "未添加" : item.tag}}</span>
+            </li>
+            <li>
+              <label>沟通记录：</label>
+              <span>{{item.remark=="" ? "未填写" : item.remark}}</span>
+            </li>
           </ul>
           <div class="operation">
             <el-row>
-              <el-button type="info" @click="detailsPage(item.uuid)" plain>查看详情</el-button>
+              <el-button type="info" @click="interviewpage(item.uuid)" plain>面试</el-button>
               <el-button type="primary" @click="editpage(item.uuid)" plain>编辑</el-button>
             </el-row>
           </div>
@@ -139,8 +146,8 @@ export default {
         .get(url, {
           params: {
             token: window.localStorage.getItem("operatingToken"),
-            page: 1,
-            page_max_row: 50,
+            page: this.page,
+            page_max_row: 10,
             search_key: this.search
           }
         })
@@ -184,8 +191,7 @@ export default {
         });
     },
     infinite(done) {
-      // console.log("infinite......");
-      if (this.noDate) {
+      if (!this.noDate) {
         // this.$refs.myscroller.noDataText = "没有更多数据了"; //更改上拉加载的文字
         this.$refs.my_scroller.finishInfinite(true);
       } else {
@@ -209,6 +215,11 @@ export default {
       // console.log(uuid)
       this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
       // this.$router.push("resoutcelibdetails")
+    },
+    interviewpage(uuid){
+      event.stopImmediatePropagation();
+      // console.log(uuid)
+      this.$router.push({ name: "Resourcelibinterview", params: { uuid: uuid } });
     },
     backpage() {
       this.$router.push({ name: "User" });

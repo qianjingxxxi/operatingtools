@@ -9,6 +9,7 @@ import Setting from "./views/Setting.vue";
 import Changepassword from "./views/Changepassword.vue";
 import Resoutcelibdetails from "./views/Resoutcelibdetails.vue";
 import Resourcelibeditpage from "./views/Resourcelibeditpage.vue";
+import Resourcelibinterview from "./views/Resourcelibinterview.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -70,6 +71,12 @@ export default new Router({
       name:'Resourcelibeditpage',
       component:() =>
         import("./views/Resourcelibeditpage.vue")
+    },
+    {
+      path:'/resourcelibinterview',
+      name:'Resourcelibinterview',
+      component:() =>
+      import("./views/Resourcelibinterview.vue")
     }
   ]
 });

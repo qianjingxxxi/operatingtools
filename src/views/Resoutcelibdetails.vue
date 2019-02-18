@@ -27,6 +27,10 @@
           <p class="district">{{datas.address_d}}</p>
         </div>
       </div>
+      <div class="tagline">
+        <label class="tagtitle">面试业务：</label>
+         <p>{{datas.trade}}</p>
+      </div>
       <div class="evaluatetag tagline">
         <label class="tagtitle">评价标签：</label>
         <ul>
@@ -35,7 +39,15 @@
       </div>
       <div class="tagline">
         <label class="tagtitle">工作经历：</label>
-        <p>{{datas.work_experience}}</p>
+        <ul class="workexpbox">
+          <li v-for="(workexp,index) in datas.work_experience" v-bind:key="index">
+            <span>{{workexp.start_time}}</span>
+            <span>至</span>
+            <span>{{workexp.end_time}}</span>
+            <span>{{workexp.content}}</span>
+          </li>
+        </ul>
+        <!-- <p>{{datas.work_experience}}</p> -->
       </div>
       <div class="tagline">
         <label class="tagtitle">工作时间：</label>
@@ -70,7 +82,7 @@
         </div>
       </div>
       <div class="tagline">
-        <label class="tagtitle">备注：</label>
+        <label class="tagtitle">沟通记录：</label>
         <p>{{datas.remark}}</p>
       </div>
       <div class="tagline line-none">
@@ -80,7 +92,7 @@
             <span>{{interview.admin.name}}</span>
             <span>{{interview.create_time_type_datetime}}</span>
             <span>的沟通备注：</span>
-            <span>{{interview.content==null ? interview.content="无" : interview.content=interview.content}}</span>
+            <span>{{interview.content}}</span>
           </li>
         </ul>
       </div>
@@ -148,7 +160,7 @@ export default {
           if (res.data.code == 1001) {
             _self.datas = res.data.data;
             _self.tags = res.data.data.tag.split(",");
-            //  console.log(res);
+            console.log(res);
             _self.datas.is_full_time == "1"
               ? (_self.showjobtime = false)
               : (_self.showjobtime = true);

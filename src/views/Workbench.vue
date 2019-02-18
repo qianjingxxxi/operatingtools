@@ -5,7 +5,7 @@
       <a @click="backpage">
         <img src="../assets/backIcon.png">
       </a>
-      <p>招聘</p>
+      <p>新增</p>
     </header>
     <!-- 表单填写 -->
     <section class="formData ignore">
@@ -13,7 +13,7 @@
         <label>
           <i>*</i>联系电话：
         </label>
-        <el-input v-model="tel"  type="number" placeholder="请输入联系电话" value></el-input>
+        <el-input v-model="tel" placeholder="请输入联系电话" value></el-input>
       </div>
       <div>
         <label>
@@ -30,11 +30,24 @@
           <el-radio :label="1">女</el-radio>
         </el-radio-group>
       </span>
-       <div>
+      <div>
         <label>
           <i>*</i>年龄：
         </label>
-        <el-input  v-model="age"  placeholder="请输入年龄" type="number"></el-input>
+        <el-input v-model="age" placeholder="请输入年龄" type="number"></el-input>
+      </div>
+      <div class="selectcheckbox dispositiontag selectbusiness">
+        <label>
+          <i>*</i>面试业务：
+        </label>
+        <el-checkbox-group class="selectlabel" v-model="businesses">
+          <el-checkbox
+            :label="business"
+            :checked="businessToggle(business)"
+            v-for="(business, index) in businessLabel"
+            v-bind:key="index"
+          ></el-checkbox>
+        </el-checkbox-group>
       </div>
       <div>
         <label>
@@ -55,7 +68,7 @@
           </li>
         </ul>
       </div>
-      <div>
+      <!-- <div>
         <label>
           <i>*</i>工作经历：
         </label>
@@ -65,7 +78,34 @@
           placeholder="如 2018.01-2019.01  永辉超市配送员"
           v-model="wockexp"
         ></el-input>
-      </div>
+      </div>-->
+      <span class="wockexp job-time">
+        <label>
+          <i>*</i>工作经历：
+        </label>
+        <div>
+          <div v-for="(workexpcon,index) in wockexp" v-bind:key="index">
+            <el-date-picker
+              v-model="workexpcon.wockexptime"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
+            ></el-date-picker>
+            <div class="addworkexp" @click="addmodel(workexpcon.addtitle,index)">
+              <img :src="workexpcon.addicon">
+              <span>{{workexpcon.addtitle}}</span>
+            </div>
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder
+              v-model="workexpcon.wockexpcontent"
+            ></el-input>
+          </div>
+        </div>
+      </span>
       <div class="selectcheckbox dispositiontag">
         <label>
           <i>*</i>性格标签：
@@ -117,9 +157,18 @@
           </div>
         </div>
       </span>
-      <div class="borderNone">
+      <span class="job-time">
         <label>
-          <i></i>备注：
+          <i></i>是否可用：
+        </label>
+        <el-radio-group v-model="is_die">
+          <el-radio :label="0">是</el-radio>
+          <el-radio :label="1">否</el-radio>
+        </el-radio-group>
+      </span>
+      <div>
+        <label>
+          <i></i>沟通记录：
         </label>
         <el-input
           type="textarea"
@@ -178,7 +227,16 @@ export default {
       tips: [],
       selectTip: "",
       tipstoggle: false,
-      wockexp: "",
+      wockexp: [
+        {
+          addtitle: "添加",
+          addicon: require("../assets/add.png"),
+          wockexptime: "",
+          start_time: "",
+          end_time: "",
+          content: ""
+        }
+      ],
       remark: "",
       jobtime: [],
       showjobtime: false,
@@ -222,8 +280,14 @@ export default {
         "迟钝",
         "肯学习"
       ],
-      age:"",
-      address_d:""
+      age: "",
+      address_d: "",
+      createTime: "",
+      checkbusiness: [false, false, false],
+      businesses: [],
+      businessLabel: ["配送", "运维", "物流"],
+      businesstag: [],
+      is_die: 0
     };
   },
   watch: {
@@ -241,6 +305,7 @@ export default {
       }
     },
     keyword: function() {
+      // event.stopImmediatePropagation();
       this.debounce();
     }
   },
@@ -257,24 +322,42 @@ export default {
         return false;
       }
     },
+    businessToggle(business) {
+      if (this.businesstag.indexOf(business) != -1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     submitform() {
       let url = this.httpsBasic.httpsBasic + "interview/insert";
       let _this = this;
       this.tags = this.checktag.join(",");
+      this.businesstag = this.businesses.join(",");
       // 全职or兼职
       this.jobtime.forEach(v => {
         this.compute[v] = "1";
       });
+
+      for (let i = 0; i < this.wockexp.length; i++) {
+        this.wockexp[i].start_time = this.wockexp[i]["wockexptime"][0];
+        this.wockexp[i].end_time = this.wockexp[i]["wockexptime"][1];
+        this.wockexp[i].content = this.wockexp[i]["wockexpcontent"];
+      }
       if (
         this.tags != "" &&
         this.name != "" &&
         this.tel != "" &&
         this.keyword != "" &&
         this.wockexp != "" &&
-        this.age !=""
+        this.age != "" &&
+        this.wockexp.start_time != "" &&
+        this.wockexp.end_time != "" &&
+        this.wockexp.content != "" &&
+        this.businesstag != ""
       ) {
         // this.compute=this.compute.join(',')
-        
+
         axios
           .post(url, {
             token: window.localStorage.getItem("operatingToken"),
@@ -289,29 +372,36 @@ export default {
             remark: this.remark,
             is_full_time: this.workTime,
             able_work_time: this.compute,
-            age:this.age,
-            address_d:this.address_d
+            age: this.age,
+            address_d: this.address_d,
+            trade: this.businesstag,
+            is_die: this.is_die
           })
           .then(function(response) {
             if (response.data.code == 1001) {
               // _this.$router.push("Workbench");
               _this.$message.success("提交成功");
-
               setTimeout(() => {
-                window.scrollTo(0,0); 
-                _this.tel = ""; //电话
-                _this.name = ""; //姓名
-                _this.sex = 0; //性别
-                _this.keyword = ""; //居住地
-                _this.wockexp = ""; //工作经历
-                _this.remark = ""; //备注
-                _this.checkchannel = 0; //渠道
-                _this.jobtime = [];
-                _this.checktag = [];
-                _this.workTime=1
-                _this.age=""
-              },2000);
-              // _this.$router.push("resourcelib");
+                window.scrollTo(0, 0);
+                _this.$router.push({ name: "Resourcelib" });
+              }, 2000);
+              // setTimeout(() => {
+              //
+              //   _this.tel = ""; //电话
+              //   _this.name = ""; //姓名
+              //   _this.sex = 0; //性别
+              //   _this.keyword = ""; //居住地
+              //   _this.wockexp = ""; //工作经历
+              //   _this.remark = ""; //备注
+              //   _this.checkchannel = 0; //渠道
+              //   _this.jobtime = [];
+              //   _this.checktag = [];
+              //   _this.workTime = 1;
+              //   _this.age = "";
+              //   _this.is_die=0;
+              //   _this.checkbusiness=[];
+              //   _this.businesstag=[]
+              // }, 2000);
             } else {
               _this.$message.error(response.data.msg);
             }
@@ -329,11 +419,12 @@ export default {
       const url = "https://restapi.amap.com/v3/assistant/inputtips";
       const params = new URLSearchParams();
       params.append("keywords", keyword);
+      // console.log(keyword)
       // 开发者key
       params.append("key", "0474a745d094cec483b7f9f988ba8216");
       params.append("output", "JSON");
       const { data } = await axios.get(`${url}?${params.toString()}`);
-      console.log(data);
+      // console.log(data);
       if (data.status === "1") {
         this.tips = data.tips;
         if (data.tips.length > 0 && !this.hasdata) {
@@ -347,10 +438,14 @@ export default {
       }
     },
     selectTips(index) {
-      this.hasdata = true;
+      // event.stopImmediatePropagation()
       this.selectTip = this.tips[index];
       this.keyword = this.tips[index]["name"];
-      this.address_d = this.tips[index]["district"]+this.tips[index]['address'];
+      this.address_d =
+        this.tips[index]["district"] + this.tips[index]["address"];
+      this.hasdata = true;
+      this.tipstoggle = false;
+      //  console.log(this.hasdata)
       if (this.selectTip.location.length > 0) {
       } else {
         // this.$message.error("请输入详细地址");
@@ -367,7 +462,6 @@ export default {
       });
 
       if (data.code === 1001) {
-        // console.log(data)
         this.$message.success("已有该管家信息");
         this.tipstoggle = false;
         this.hasdata = true;
@@ -381,8 +475,10 @@ export default {
         this.checkchannel = parseFloat(data.data.origin); //渠道
         this.tags = data.data.tag.split(",");
         this.checktag = this.tags;
-        this.age=data.data.age
-        // console.log(_self.checktag);
+        this.age = data.data.age;
+        this.is_die = parseFloat(data.data.is_die); //简历是否可用
+        this.businesstag = data.data.trade.split(",");
+        this.businesses = this.businesstag;
         data.data.is_full_time === "1"
           ? (this.workTime = 1)
           : (this.workTime = 0);
@@ -400,11 +496,24 @@ export default {
       } else {
         // this.hasdata = false;
       }
+    },
+    addmodel(add, index) {
+      if (add == "添加") {
+        console.log("添加");
+        this.wockexp.push({
+          addtitle: "删除",
+          addicon: require("../assets/delete.png"),
+          start_time: "",
+          end_time: "",
+          content: ""
+        });
+      } else {
+        this.wockexp.splice(index, 1);
+      }
     }
   },
   mounted() {
     // 限流，当用户停止输入0.8s后请求，如果连续输入的情况下不请求api
-    console.log(this.keyword)
     this.debounce = _.debounce(() => this.search(this.keyword), 800);
   }
 };
@@ -468,6 +577,48 @@ export default {
 .el-checkbox {
   margin-right: 15px;
 }
+.ignore .el-date-editor .el-range-input {
+  width: 40%;
+}
+.el-range-editor.el-input__inner {
+  width: 85%;
+  padding: 3px 6px;
+}
+
+.el-date-editor .el-range-input,
+.el-date-editor .el-range-separator {
+  font-size: 12px;
+}
+.el-range__close-icon {
+  background: url(../assets/close.png) no-repeat;
+  background-size: 14px;
+  background-position: right center;
+}
 /* .selectcheckbox .el-radio{margin-bottom: 6px} */
+.el-picker-panel {
+  width: 100vw;
+  left: 0;
+}
+.el-date-range-picker .el-picker-panel__body {
+  min-width: 100vw;
+}
+.el-date-range-picker__header div,
+.el-date-range-picker__content.is-right .el-date-range-picker__header div {
+  margin: 0;
+}
+.el-input__icon,
+.el-date-editor .el-range-input,
+.el-date-editor .el-range-separator {
+  height: fit-content !important;
+}
+.wockexp > div {
+  display: inline-block;
+  vertical-align: top;
+  width: 76%;
+  position: relative;
+}
+.wockexp > div .el-textarea__inner {
+  margin-top: 4px;
+}
 </style>
 
