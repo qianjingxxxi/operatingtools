@@ -160,7 +160,7 @@ export default {
           if (res.data.code == 1001) {
             _self.datas = res.data.data;
             _self.tags = res.data.data.tag.split(",");
-            console.log(res);
+            // console.log(res);
             _self.datas.is_full_time == "1"
               ? (_self.showjobtime = false)
               : (_self.showjobtime = true);
