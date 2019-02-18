@@ -92,7 +92,7 @@ export default {
 <style lang="less">
 @import url("../style/basic/reset.less");
 .ignore .el-checkbox__label{
-    font-size: 12px
+    font-size: 14px
 }
 </style>
 

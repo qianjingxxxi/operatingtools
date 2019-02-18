@@ -82,7 +82,7 @@
   height: 150px;
 }
 .fontsize .no-data-text {
-  font-size: 12px;
+  font-size: 14px;
 }
 .workcontent ._v-content > datalist:nth-child(2) {
   border: none;
@@ -98,7 +98,7 @@
   z-index: 1;
 }
 .workcontent .fontsize .el-input {
-  font-size: 12px;
+  font-size: 14px;
 }
 .workcontent .searchbox .el-input__inner {
   line-height: 28px;
@@ -112,7 +112,10 @@
   text-indent: 30px;
 }
 .ignore .address{
-    font-size: 12px!important
+    font-size: 16px!important
+}
+.ignore .searchbox .el-input__inner{
+  font-size:18px;
 }
 </style>
 

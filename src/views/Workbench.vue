@@ -579,6 +579,9 @@ export default {
 .ignore .el-date-editor .el-range-input {
   width: 40%;
 }
+.ignore .el-input__inner{
+  font-size: 14px
+}
 .el-range-editor.el-input__inner {
   width: 85%;
   padding: 3px 6px;
