@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="tagline">
-        <label class="tagtitle">面试业务：</label>
+        <label class="tagtitle">适合业务：</label>
          <p>{{datas.trade}}</p>
       </div>
       <div class="evaluatetag tagline">
@@ -42,7 +42,7 @@
         <ul class="workexpbox">
           <li v-for="(workexp,index) in datas.work_experience" v-bind:key="index">
             <span>{{workexp.start_time}}</span>
-            <span>至</span>
+            <span>{{workexp.start_time==undefined ?  "" : "至" }}</span>
             <span>{{workexp.end_time}}</span>
             <span>{{workexp.content}}</span>
           </li>
@@ -82,7 +82,7 @@
         </div>
       </div>
       <div class="tagline">
-        <label class="tagtitle">沟通记录：</label>
+        <label class="tagtitle">最近一次沟通记录：</label>
         <p>{{datas.remark}}</p>
       </div>
       <div class="tagline line-none">

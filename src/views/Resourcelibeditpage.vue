@@ -38,7 +38,7 @@
       </div>
       <div class="selectcheckbox dispositiontag selectbusiness">
         <label>
-          <i>*</i>面试业务：
+          <i>*</i>适合业务：
         </label>
         <el-checkbox-group class="selectlabel" v-model="businesses">
           <el-checkbox
@@ -166,7 +166,7 @@
           <el-radio :label="1">否</el-radio>
         </el-radio-group>
       </span>
-      <div>
+      <!-- <div>
         <label>
           <i></i>沟通记录：
         </label>
@@ -185,9 +185,9 @@
           <el-radio :label="0">平台简历</el-radio>
           <el-radio :label="1">转介绍</el-radio>
           <el-radio :label="2">自主开发</el-radio>
-          <!-- <el-radio :label="3">资源库</el-radio> -->
+          <el-radio :label="3">资源库</el-radio>
         </el-radio-group>
-      </div>
+      </div> -->
       <el-row class="submitBtn borderNone">
         <el-button type="primary" @click="submitform">提交</el-button>
       </el-row>
@@ -222,7 +222,6 @@ export default {
       checktag: [],
       name: "",
       tel: "",
-      checkchannel: 0,
       keyword: "",
       tips: [],
       selectTip: "",
@@ -237,7 +236,6 @@ export default {
           content: ""
         }
       ],
-      remark: "",
       jobtime: [],
       showjobtime: false,
       tags: [],
@@ -338,7 +336,7 @@ export default {
       this.jobtime.forEach(v => {
         this.compute[v] = "1";
       });
-    console.log(this.wockexp)
+    // console.log(this.wockexp)
       for (let i = 0; i < this.wockexp.length; i++) {
         this.wockexp[i].start_time = this.wockexp[i]["wockexptime"][0];
         this.wockexp[i].end_time = this.wockexp[i]["wockexptime"][1];
@@ -361,7 +359,6 @@ export default {
         axios
           .post(url, {
             token: window.localStorage.getItem("operatingToken"),
-            origin: this.checkchannel,
             phone: this.tel,
             name: this.name,
             sex: this.sex,
@@ -369,7 +366,6 @@ export default {
             address_l_l: this.selectTip.location,
             work_experience: this.wockexp,
             tag: this.tags,
-            remark: this.remark,
             is_full_time: this.workTime,
             able_work_time: this.compute,
             age: this.age,
@@ -381,6 +377,7 @@ export default {
           .then(function(response) {
             if (response.data.code == 1001) {
               // _this.$router.push("Workbench");
+                  _this.$message.success("编辑成功");
                  setTimeout(() => {
                 window.scrollTo(0, 0);
                 _this.$router.push({ name: "Resourcelib" });

@@ -38,7 +38,7 @@
       </div>
       <div class="selectcheckbox dispositiontag selectbusiness">
         <label>
-          <i>*</i>面试业务：
+          <i>*</i>适合业务：
         </label>
         <el-checkbox-group class="selectlabel" v-model="businesses">
           <el-checkbox
