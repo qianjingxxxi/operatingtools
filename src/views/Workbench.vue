@@ -465,7 +465,8 @@ export default {
         this.$message.success("已有该管家信息");
         this.tipstoggle = false;
         this.hasdata = true;
-        this.datas = data.data.data;
+        this.datas = data.data;
+        console.log(data)
         this.tel = data.data.phone; //电话
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
@@ -479,6 +480,15 @@ export default {
         this.is_die = parseFloat(data.data.is_die); //简历是否可用
         this.businesstag = data.data.trade.split(",");
         this.businesses = this.businesstag;
+        data.data.workexpcon==undefined ?  this.wockexp=[  {
+          addtitle: "添加",
+          addicon: require("../assets/add.png"),
+          wockexptime: "",
+          start_time: "",
+          end_time: "",
+          content: ""
+        }] : this.wockexp=data.data.workexpcon 
+
         data.data.is_full_time === "1"
           ? (this.workTime = 1)
           : (this.workTime = 0);

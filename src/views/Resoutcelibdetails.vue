@@ -91,7 +91,7 @@
           <li v-for="(interview,index) in datas.interview" v-bind:key="index">
             <span>{{interview.admin.name}}</span>
             <span>{{interview.create_time_type_datetime}}</span>
-            <span>的沟通备注：</span>
+            <span>的沟通记录：</span>
             <span>{{interview.content}}</span>
           </li>
         </ul>

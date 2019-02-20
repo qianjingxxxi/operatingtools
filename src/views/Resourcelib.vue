@@ -27,7 +27,7 @@
               <p>{{item.sex=="0" ? "男":"女"}}</p>
               <!-- <p>{{item.age}}</p>
               <p>岁</p> -->
-              <p>{{item.is_full_time=="1" ? "全职" : "兼职"}}</p>
+              <p>{{item.age}}岁</p>
             </div>
             <a class="el-icon-phone" :href="'tel:' + item.phone">{{item.phone}}</a>
           </div>
