@@ -168,13 +168,13 @@
       </span>
       <div>
         <label>
-          <i></i>沟通记录：
+          <i>*</i>沟通记录：
         </label>
         <el-input
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 4}"
-          placeholder
           v-model="remark"
+          placeholder="请填写至少14个中文字符"
         ></el-input>
       </div>
       <div class="qudao">
@@ -354,7 +354,8 @@ export default {
         this.wockexp.start_time != "" &&
         this.wockexp.end_time != "" &&
         this.wockexp.content != "" &&
-        this.businesstag != ""
+        this.businesstag != "" && 
+        thi.remark!=""
       ) {
         // this.compute=this.compute.join(',')
 
