@@ -8,7 +8,7 @@
       <span class="mark-error">请输入账号</span>
     </div>
     <div class="userPassword">
-      <input type="password" v-model="userPassword" placeholder="默认密码：123456">
+      <input type="password" v-model="userPassword" placeholder="默认密码：手机号后六位">
       <span class="mark-error">请输入密码</span>
     </div>
      <el-checkbox class="ignore" v-model="rememberID">记住账号和密码</el-checkbox>
