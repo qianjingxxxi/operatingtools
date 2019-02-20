@@ -330,6 +330,7 @@ export default {
       }
     },
     submitform() {
+
       let url = this.httpsBasic.httpsBasic + "interview/insert";
       let _this = this;
       this.tags = this.checktag.join(",");
@@ -355,7 +356,8 @@ export default {
         this.wockexp.end_time != "" &&
         this.wockexp.content != "" &&
         this.businesstag != "" && 
-        thi.remark!=""
+        this.remark!=""  &&
+         this.remark.length>13
       ) {
         // this.compute=this.compute.join(',')
 
