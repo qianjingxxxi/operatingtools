@@ -576,7 +576,7 @@ export default {
     line-height: 20px;
   }
   .selectlabel {
-    width: 72%;
+    width: 70%;
   }
   .job-check {
     width: 100% !important;
@@ -612,7 +612,7 @@ export default {
   }
   .ignore .el-date-editor .el-range-input {
     width: 40%;
-    font-size:18px;
+    font-size:14px;
   }
   .el-range-editor.el-input__inner {
     width: 85%;
@@ -648,13 +648,18 @@ export default {
   .wockexp > div {
     display: inline-block;
     vertical-align: top;
-    width: 72%;
+    width: 70%;
     position: relative;
   }
   .wockexp > div .el-textarea__inner {
     margin-top: 4px;
   }
   .el-radio__label{min-width:46px;display: inline-block;}
+  .el-date-editor .el-range-input,
+  .el-date-editor .el-range-separator {
+    font-size: 14px;
+    width: auto;
+  }
 }
 </style>
 

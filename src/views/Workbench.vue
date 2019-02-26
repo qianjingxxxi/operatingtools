@@ -633,7 +633,7 @@ export default {
   .wockexp > div {
     display: inline-block;
     vertical-align: top;
-    width: 72%;
+    width: 70%;
     position: relative;
   }
   .wockexp > div .el-textarea__inner {

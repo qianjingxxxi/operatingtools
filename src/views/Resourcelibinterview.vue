@@ -630,7 +630,7 @@ export default {
   }
   .ignore .el-date-editor .el-range-input {
     width: 40%;
-    font-size:18px;
+    font-size:14px;
   }
   .el-range-editor.el-input__inner {
     width: 85%;
@@ -639,7 +639,7 @@ export default {
 
   .el-date-editor .el-range-input,
   .el-date-editor .el-range-separator {
-    font-size: 18px;
+    font-size: 14px;
     width: auto;
   }
   .el-range__close-icon {
@@ -667,7 +667,7 @@ export default {
   .wockexp > div {
     display: inline-block;
     vertical-align: top;
-    width: 72%;
+    width: 70%;
     position: relative;
   }
   .wockexp > div .el-textarea__inner {
