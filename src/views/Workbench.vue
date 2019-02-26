@@ -92,6 +92,7 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
+              readonly="true"
             ></el-date-picker>
             <div class="addworkexp" @click="addmodel(workexpcon.addtitle,index)">
               <img :src="workexpcon.addicon">

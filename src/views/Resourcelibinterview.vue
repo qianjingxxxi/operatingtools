@@ -538,12 +538,12 @@ export default {
         //    console.log(this.tagToggle)
         // }//性格标签
       } else if (data.code == 1010) {
-        _this.$alert("登录失效或过期，请重新登录", "登录失效", {
+        this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
           callback: action => {
-            _this.$message({
+            this.$message({
               type: "重新登录",
-              message: _this.$router.push({ name: "Login" })
+              message: this.$router.push({ name: "Login" })
             });
           }
         });

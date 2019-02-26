@@ -40,7 +40,7 @@
             </div>
             <a class="el-icon-phone" :href="'tel:' + item.phone">{{item.phone}}</a>
           </div>
-          <p class="address el-icon-location">{{item.address}}</p>
+          <p class="address el-icon-location" v-if="hasaddress">{{item.address}}</p>
           <p class="district">{{item.address_d}}</p>
           <ul class="charactertag">
             <li>
@@ -165,7 +165,8 @@ export default {
       noDate: true,
       search: "",
       checkedInterview: false,
-      isInterview: 0
+      isInterview: 0,
+      hasaddress:true
     };
   },
   watch: {
@@ -201,6 +202,10 @@ export default {
             } else {
               _this.items = _this.items.concat(response.data.data.list);
             }
+            for(let i=0 ; i<_this.items.length; i++){
+          _this.items[i].address=="" ? _this.hasaddress=false : _this.hasaddress=true
+            }
+           
             if (response.data.data.list.length > 0) {
               if (
                 response.data.data.total_page >= response.data.data.current_page
