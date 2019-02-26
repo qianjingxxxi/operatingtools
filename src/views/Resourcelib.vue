@@ -40,16 +40,20 @@
             </div>
             <a class="el-icon-phone" :href="'tel:' + item.phone">{{item.phone}}</a>
           </div>
-          <p class="address">{{item.address}}</p>
+          <p class="address el-icon-location">{{item.address}}</p>
           <p class="district">{{item.address_d}}</p>
           <ul class="charactertag">
             <li>
               <label>性格标签：</label>
               <span>{{item.tag=="" ? "未添加" : item.tag}}</span>
             </li>
-            <li>
-              <label>沟通记录：</label>
-              <span>{{item.remark=="" ? "未填写" : item.remark}}</span>
+             <li>
+              <label>适合业务：</label>
+              <span>{{item.trade=="" ? "未添加" : item.trade}}</span>
+            </li>
+            <li class="goutong">
+              <!-- <label>沟通：</label> -->
+              <span >{{item.remark=="" ? "未填写" : item.remark}}</span>
             </li>
           </ul>
           <div class="operation">
@@ -137,6 +141,10 @@
 .ziyuanku{
     margin-top: 180px
 }
+.charactertag .goutong {
+  font-size:26px;
+  line-height:32px;
+}
 }
 .el-message-box {
     width: 90%;
@@ -186,7 +194,7 @@ export default {
           }
         })
         .then(function(response) {
-          // console.log(response);
+          //  console.log(response);
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
