@@ -119,11 +119,18 @@
   }
   .tagline .job-check {
     display: inline-block;
-    width: 86%;
+    width: 100%;
     margin: 0;
     text-align: left;
     margin-left: -1px;
   }
+  .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+    border-color: #333;
+}
+.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+    background-color: #f2f6fc;
+    border-color: #333;
+}
 }
 </style>
 
