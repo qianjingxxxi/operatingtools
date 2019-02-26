@@ -11,19 +11,19 @@
     <section class="formData ignore">
       <div class="hasdata">
         <label>
-          <i></i>姓名：
+          <i></i>姓名:
         </label>
         <p>{{name}}</p>
       </div>
       <div class="hasdata">
         <label>
-          <i></i>联系电话：
+          <i></i>联系电话:
         </label>
         <p>{{tel}}</p>
       </div>
       <div class="selectcheck">
         <label>
-          <i>*</i>所属业务：
+          <i>*</i>所属业务:
         </label>
         <el-select v-model="option" placeholder="请选择">
           <el-option
@@ -36,7 +36,7 @@
       </div>
       <div class="selectcheck">
         <label>
-          <i>*</i>所属门店：
+          <i>*</i>所属门店:
         </label>
         <el-select v-model="shop" placeholder="请选择">
           <el-option v-for="item in shops" :key="item.shop" :label="item.shop" :value="item.shop"></el-option>
@@ -44,13 +44,13 @@
       </div>
       <div class="widthOhter">
         <label>
-          <i>*</i>身份证号：
+          <i>*</i>身份证号:
         </label>
-        <el-input v-model="identity" placeholder="请输入身份证号：" value></el-input>
+        <el-input v-model="identity" placeholder="请输入身份证号:" value></el-input>
       </div>
       <div class="labelTwoLine">
         <label>
-          <i>*</i>身份证(正面)：
+          <i>*</i>身份证(正面):
         </label>
         <div>
           <!-- <input type="text" readonly> -->
@@ -59,7 +59,7 @@
       </div>
       <div class="labelTwoLine">
         <label>
-          <i>*</i>身份证(背面)：
+          <i>*</i>身份证(背面):
         </label>
         <div>
           <img :src="identitySide" @click="identitySideSrc">
@@ -67,13 +67,13 @@
       </div>
       <div class="widthOhter">
         <label>
-          <i>*</i>银行卡号：
+          <i>*</i>银行卡号:
         </label>
-        <el-input v-model="identity" placeholder="请输入身份证号：" value></el-input>
+        <el-input v-model="identity" placeholder="请输入身份证号:" value></el-input>
       </div>
       <div class="labelTwoLine">
         <label>
-          <i>*</i>银行卡(正面)：
+          <i>*</i>银行卡(正面):
         </label>
         <div>
           <img :src="bankcard" @click="bankcardSrc">

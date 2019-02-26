@@ -11,19 +11,19 @@
     <section class="formData ignore">
       <div>
         <label>
-          <i>*</i>联系电话：
+          <i>*</i>联系电话:
         </label>
         <el-input v-model="tel" placeholder="请输入联系电话" value></el-input>
       </div>
       <div>
         <label>
-          <i>*</i>姓名：
+          <i>*</i>姓名:
         </label>
         <el-input v-model="name" placeholder="请输入姓名"></el-input>
       </div>
       <span class="job-time">
         <label>
-          <i></i>性别：
+          <i></i>性别:
         </label>
         <el-radio-group v-model="sex">
           <el-radio :label="0">男</el-radio>
@@ -32,13 +32,13 @@
       </span>
       <div>
         <label>
-          <i>*</i>年龄：
+          <i>*</i>年龄:
         </label>
         <el-input v-model="age" placeholder="请输入年龄" type="number"></el-input>
       </div>
       <div class="selectcheckbox dispositiontag selectbusiness">
         <label>
-          <i>*</i>适合业务：
+          <i>*</i>适合业务:
         </label>
         <el-checkbox-group class="selectlabel" v-model="businesses">
           <el-checkbox
@@ -51,7 +51,7 @@
       </div>
       <div>
         <label>
-          <i>*</i>居住地：
+          <i>*</i>居住地:
         </label>
         <el-input v-model="keyword" placeholder="请输入详细地址"></el-input>
         <span v-if="false">{{selectTip.location}}</span>
@@ -70,7 +70,7 @@
       </div>
       <!-- <div>
         <label>
-          <i>*</i>工作经历：
+          <i>*</i>工作经历:
         </label>
         <el-input
           type="textarea"
@@ -81,7 +81,7 @@
       </div>-->
       <span class="wockexp job-time">
         <label>
-          <i>*</i>工作经历：
+          <i>*</i>工作经历:
         </label>
         <div>
           <div v-for="(workexpcon,index) in wockexp" v-bind:key="index">
@@ -108,7 +108,7 @@
       </span>
       <div class="selectcheckbox dispositiontag">
         <label>
-          <i>*</i>性格标签：
+          <i>*</i>性格标签:
         </label>
         <el-checkbox-group class="selectlabel" v-model="checktag">
           <el-checkbox
@@ -121,7 +121,7 @@
       </div>
       <span class="job-time">
         <label>
-          <i></i>可用时间：
+          <i></i>可用时间:
         </label>
         <el-radio-group v-model="workTime">
           <el-radio :label="1">全职</el-radio>
@@ -159,7 +159,7 @@
       </span>
       <span class="job-time">
         <label>
-          <i></i>是否可用：
+          <i></i>是否可用:
         </label>
         <el-radio-group v-model="is_die">
           <el-radio :label="0">是</el-radio>
@@ -168,7 +168,7 @@
       </span>
       <div>
         <label>
-          <i></i>沟通记录：
+          <i></i>沟通记录:
         </label>
         <el-input
           type="textarea"
@@ -179,7 +179,7 @@
       </div>
       <div class="qudao">
         <label>
-          <i></i>渠道：
+          <i></i>渠道:
         </label>
         <el-radio-group v-model="checkchannel">
           <el-radio :label="0">平台简历</el-radio>

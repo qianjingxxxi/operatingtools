@@ -3,6 +3,9 @@
         <router-view v-if="isRouterAlive"></router-view>
   </div>
 </template>
+ <style>
+    #app{background: #fff}
+ </style>
  
 <script>
 export default {

@@ -139,7 +139,8 @@
   font-size:18px;
 }
 .ziyuanku{
-    margin-top: 180px
+    margin-top: 180px;
+    position: relative;
 }
 .charactertag .goutong {
   font-size:26px;

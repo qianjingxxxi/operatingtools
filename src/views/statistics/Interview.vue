@@ -186,6 +186,13 @@ export default {
   watch: {},
   methods: {
     getData() {
+    const date = new Date();
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    const strDate = date.getDate();
+    parseFloat(month) > 9 ? (month = month) : (month = "0" + parseFloat(month));
+    this.startTime = String(year) + month + String(strDate) + "000000";
+     this.endTime = String(year) + month + String(strDate) + "235959";
       let url = this.httpsBasic.httpsBasic + "interview/selectList";
       let _this = this;
       axios
@@ -352,18 +359,19 @@ export default {
       this.page = 1;
       this.noDate = true; //重置数据判断
       this.getData();
+    },
+     async getbusiness(){
+       const url = this.httpsBasic.httpsBasic +"business/selectBusinessList";
+       const params=new URLSearchParams();
+       params.append("token", window.localStorage.getItem("operatingToken"))
+        const {data} = await axios.get(`${url}?${params.toString()}`)
+        console.log(data)
     }
   },
   mounted() {
     this.items = [];
-    const date = new Date();
-    const year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    const strDate = date.getDate();
-    parseFloat(month) > 9 ? (month = month) : (month = "0" + parseFloat(month));
-    this.startTime = String(year) + month + String(strDate) + "000000";
-     this.endTime = String(year) + month + String(strDate) + "235959";
     this.getData();
+    this.getbusiness();//获取业务
   },
   computed: {
     ...mapState({

@@ -28,17 +28,17 @@
         </div>
       </div>
       <div class="tagline">
-        <label class="tagtitle">适合业务：</label>
+        <label class="tagtitle">适合业务:</label>
         <p>{{datas.trade}}</p>
       </div>
       <div class="evaluatetag tagline">
-        <label class="tagtitle">评价标签：</label>
+        <label class="tagtitle">评价标签:</label>
         <ul>
           <li v-for="(tag,index) in tags" v-bind:key="index">{{tag}}</li>
         </ul>
       </div>
       <div class="tagline">
-        <label class="tagtitle">工作经历：</label>
+        <label class="tagtitle">工作经历:</label>
         <ul class="workexpbox">
           <li v-for="(workexp,index) in datas.work_experience" v-bind:key="index">
             <span>{{workexp.start_time}}</span>
@@ -50,7 +50,7 @@
         <!-- <p>{{datas.work_experience}}</p> -->
       </div>
       <div class="tagline">
-        <label class="tagtitle">工作时间：</label>
+        <label class="tagtitle">工作时间:</label>
         <p class="experience">{{datas.is_full_time=="1" ? "全职" : "兼职"}}</p>
         <div class="part-time-job" v-show="showjobtime">
           <ul>
@@ -82,17 +82,17 @@
         </div>
       </div>
       <!-- <div class="tagline">
-        <label class="tagtitle">最近一次沟通记录：</label>
+        <label class="tagtitle">最近一次沟通记录:</label>
         <p>{{datas.remark}}</p>
       </div> -->
       <div class="tagline line-none">
-        <label class="tagtitle">面试记录：</label>
+        <label class="tagtitle">面试记录:</label>
         <ul class="interview">
           <li v-for="(interview,index) in datas.interview" v-bind:key="index">
             <span>{{index+1}}. </span>
             <span>{{interview.admin.name}}</span>
             <span>{{interview.create_time_type_datetime}}</span>
-            <span>的沟通记录：</span>
+            <span>的沟通记录:</span>
             <span>{{interview.content}}</span>
           </li>
         </ul>
