@@ -94,7 +94,7 @@ export default {
               password: this.password
             })
             .then(function(res) {
-              if (res.data.code == 1001) {
+              if (res.data.code == 1001 || res.data.code ==1009) {
                 _this.$message.success("密码修改成功");
                 _this.$router.push({ path: "/changepassword" });
               } else {

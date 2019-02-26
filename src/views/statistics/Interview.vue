@@ -180,7 +180,8 @@ export default {
       activeName: "first",
       startTime: "",
       endTime: "",
-      sum: 0
+      sum: 0,
+      businessList:[]
     };
   },
   watch: {},
@@ -359,13 +360,6 @@ export default {
       this.page = 1;
       this.noDate = true; //重置数据判断
       this.getData();
-    },
-     async getbusiness(){
-       const url = this.httpsBasic.httpsBasic +"business/selectBusinessList";
-       const params=new URLSearchParams();
-       params.append("token", window.localStorage.getItem("operatingToken"))
-        const {data} = await axios.get(`${url}?${params.toString()}`)
-        console.log(data)
     }
   },
   mounted() {

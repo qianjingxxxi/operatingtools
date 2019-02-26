@@ -86,7 +86,7 @@ export default {
           if (response.data.code == 1001) {
             _this.name = response.data.data.name;
             // console.log(_this.name);
-          } else if (response.data.code == 1010) {
+          } else if (response.data.code == 1010 || response.data.code == 1009) {
             _this.$alert("登录失效或过期，请重新登录", "登录失效", {
               confirmButtonText: "确定",
               callback: action => {
