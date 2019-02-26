@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="editpage">
     <!-- 标题栏 -->
     <header>
       <a @click="backpage">
@@ -187,7 +187,7 @@
           <el-radio :label="2">自主开发</el-radio>
           <el-radio :label="3">资源库</el-radio>
         </el-radio-group>
-      </div> -->
+      </div>-->
       <el-row class="submitBtn borderNone">
         <el-button type="primary" @click="submitform">提交</el-button>
       </el-row>
@@ -281,10 +281,10 @@ export default {
       age: "",
       address_d: "",
       createTime: "",
-      checkbusiness: [false,false,false],
-      businesses:[],
+      checkbusiness: [false, false, false],
+      businesses: [],
       businessLabel: ["配送", "运维", "物流"],
-      businesstag:[],
+      businesstag: [],
       is_die: 0
     };
   },
@@ -331,12 +331,12 @@ export default {
       let url = this.httpsBasic.httpsBasic + "eguard/update";
       let _this = this;
       this.tags = this.checktag.join(",");
-      this.businesstag=this.businesses.join(",")
+      this.businesstag = this.businesses.join(",");
       // 全职or兼职
       this.jobtime.forEach(v => {
         this.compute[v] = "1";
       });
-    // console.log(this.wockexp)
+      // console.log(this.wockexp)
       for (let i = 0; i < this.wockexp.length; i++) {
         this.wockexp[i].start_time = this.wockexp[i]["wockexptime"][0];
         this.wockexp[i].end_time = this.wockexp[i]["wockexptime"][1];
@@ -371,14 +371,14 @@ export default {
             age: this.age,
             address_d: this.address_d,
             trade: this.businesstag,
-            is_die:this.is_die,
-            uuid: this.$route.params.uuid,
+            is_die: this.is_die,
+            uuid: this.$route.params.uuid
           })
           .then(function(response) {
             if (response.data.code == 1001) {
               // _this.$router.push("Workbench");
-                  _this.$message.success("编辑成功");
-                 setTimeout(() => {
+              _this.$message.success("编辑成功");
+              setTimeout(() => {
                 window.scrollTo(0, 0);
                 _this.$router.push({ name: "Resourcelib" });
               }, 2000);
@@ -450,15 +450,17 @@ export default {
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
         this.keyword = data.data.address; //居住地
-        this.wockexp = data.data.work_experience; //工作经历
+        if (data.data.work_experience != null && data.data.work_experience!="") {
+          this.wockexp = data.data.work_experience; //工作经历
+        }
         this.remark = data.data.remark; //备注
         this.checkchannel = parseFloat(data.data.origin); //渠道
         this.tags = data.data.tag.split(",");
         this.checktag = this.tags;
         this.age = data.data.age;
-        this.is_die=parseFloat(data.data.is_die);//简历是否可用
-        this.businesstag=data.data.trade.split(",")
-        this.businesses=this.businesstag;
+        this.is_die = parseFloat(data.data.is_die); //简历是否可用
+        this.businesstag = data.data.trade.split(",");
+        this.businesses = this.businesstag;
         data.data.is_full_time === "1"
           ? (this.workTime = 1)
           : (this.workTime = 0);
@@ -494,9 +496,11 @@ export default {
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
         this.keyword = data.data.address; //居住地
-        this.wockexp = data.data.work_experience; //工作经历
+       if (data.data.work_experience != null && data.data.work_experience!="") {
+          this.wockexp = data.data.work_experience; //工作经历
+        }
         this.remark = data.data.remark; //备注
-        this.age=data.data.age
+        this.age = data.data.age;
         this.checkchannel = parseFloat(data.data.origin); //渠道
         // console.log(_self.checktag);
         data.data.is_full_time === "1"
@@ -520,7 +524,7 @@ export default {
           confirmButtonText: "确定",
           callback: action => {
             _this.$message({
-              type: "",
+              type: "重新登录",
               message: _this.$router.push({ name: "Login" })
             });
           }
@@ -543,7 +547,7 @@ export default {
     }
   },
   mounted() {
-    this.getDefaultData() 
+    this.getDefaultData();
     // 限流，当用户停止输入0.8s后请求，如果连续输入的情况下不请求api
     this.debounce = _.debounce(() => this.search(this.keyword), 800);
   }
@@ -555,101 +559,102 @@ export default {
 @import url("../style/basic/basics.less");
 @import url("../style/workbench.less");
 </style>
-<style>
-.formData .el-checkbox__label,
-.formData .el-radio__label,
-.formData .el-input,
-.formData .el-textarea {
-  font-size: 12px !important;
-  color: #556677;
-}
-.el-input__inner {
-  height: 32px;
-  line-height: 32px;
-}
-.el-radio-group {
-  line-height: normal;
-}
-.el-radio {
-  line-height: 20px;
-}
-.selectlabel {
-  width: 72%;
-}
-.job-check {
-  width: 100% !important;
-}
-.formData .job-check .el-checkbox {
-  width: 13.9%;
-  border: 1px solid #dcdfe6;
-  line-height: 30px;
-  text-align: center;
-  margin: -1px -1px 0 0;
-}
-.formData .job-check .el-checkbox__label {
-  font-size: 0 !important;
-  padding: 0;
-}
-.submitBtn {
-  justify-content: center;
-  margin: 30px 0 90px;
-}
-.borderNone {
-  border-bottom: none !important;
-}
-.el-message {
-  top: 0;
-  justify-content: center;
-}
-#app .ignore > .qudao label {
-  width: 22%;
-  line-height: 22px;
-}
-.el-checkbox {
-  margin-right: 15px;
-}
-.ignore .el-date-editor .el-range-input {
-  width: 40%;
-}
-.el-range-editor.el-input__inner {
-  width: 85%;
-  padding: 3px 6px;
-}
+<style lang="less">
+.editpage {
+   .el-checkbox__label,
+   .el-radio__label,
+  .el-input,
+.el-textarea {
+    font-size: 18px ;
+    color: #556677;
+  }
+ 
+  .el-radio-group {
+    line-height: normal;
+  }
+  .el-radio {
+    line-height: 20px;
+  }
+  .selectlabel {
+    width: 72%;
+  }
+  .job-check {
+    width: 100% !important;
+  }
+  .formData .job-check .el-checkbox {
+    width: 13.9%;
+    border: 1px solid #dcdfe6;
+    line-height: 30px;
+    text-align: center;
+    margin: -1px -1px 0 0;
+  }
+  .formData .job-check .el-checkbox__label {
+    font-size: 0 !important;
+    padding: 0;
+  }
+  .submitBtn {
+    justify-content: center;
+    margin: 30px 0 90px;
+  }
+  .borderNone {
+    border-bottom: none !important;
+  }
+  .el-message {
+    top: 0;
+    justify-content: center;
+  }
+  #app .ignore > .qudao label {
+    width: 22%;
+    line-height: 22px;
+  }
+  .el-checkbox {
+    margin-right: 15px;
+  }
+  .ignore .el-date-editor .el-range-input {
+    width: 40%;
+    font-size:18px;
+  }
+  .el-range-editor.el-input__inner {
+    width: 85%;
+    padding: 3px 6px;
+  }
 
-.el-date-editor .el-range-input,
-.el-date-editor .el-range-separator {
-  font-size: 12px;
-}
-.el-range__close-icon {
-  background: url(../assets/close.png) no-repeat;
-  background-size: 14px;
-  background-position: right center;
-}
-/* .selectcheckbox .el-radio{margin-bottom: 6px} */
-.el-picker-panel {
-  width: 100vw;
-  left: 0;
-}
-.el-date-range-picker .el-picker-panel__body {
-  min-width: 100vw;
-}
-.el-date-range-picker__header div,
-.el-date-range-picker__content.is-right .el-date-range-picker__header div {
-  margin: 0;
-}
-.el-input__icon,
-.el-date-editor .el-range-input,
-.el-date-editor .el-range-separator {
-  height: fit-content !important;
-}
-.wockexp > div {
-  display: inline-block;
-  vertical-align: top;
-  width: 76%;
-  position: relative;
-}
-.wockexp > div .el-textarea__inner {
-  margin-top: 4px;
+  .el-date-editor .el-range-input,
+  .el-date-editor .el-range-separator {
+    font-size: 18px;
+  }
+  .el-range__close-icon {
+    background: url(../assets/close.png) no-repeat;
+    background-size: 14px;
+    background-position: right center;
+  }
+  /* .selectcheckbox .el-radio{margin-bottom: 6px} */
+  .el-picker-panel {
+    width: 100vw;
+    left: 0;
+  }
+  .el-date-range-picker .el-picker-panel__body {
+    min-width: 100vw;
+  }
+  .el-date-range-picker__header div,
+  .el-date-range-picker__content.is-right .el-date-range-picker__header div {
+    margin: 0;
+  }
+  .el-input__icon,
+  .el-date-editor .el-range-input,
+  .el-date-editor .el-range-separator {
+    height: fit-content !important;
+  }
+  .wockexp > div {
+    display: inline-block;
+    vertical-align: top;
+    width: 72%;
+    position: relative;
+  }
+  .wockexp > div .el-textarea__inner {
+    margin-top: 4px;
+  }
+  .el-radio__label{min-width:46px;display: inline-block;}
 }
 </style>
 

@@ -33,23 +33,25 @@ hr{
 .basicInfo>div>p:nth-child(2){
     margin: 0 6% 0 12%
 }
-.ignore>div>h3{
-    font-size: 14px;
+.datalist>div h3{
+    font-size: 32px;
 }
-.ignore>div>p,.ignore a{
-    font-size: 14px
+.datalist>div p,.datalist a{
+    font-size:30px;
+    color: #556677;
 }
 .charactertag,.address{
     width: 70%;
 }
 .charactertag{margin-bottom: 10px}
-.ignore .district{
-    font-size: 14px;
+.datalist .district{
+    font-size: 30px;
     color: #ababab;
+    line-height: 40px;
  
 }
 .district{
-    margin-bottom: 6px;
+    margin: 6px 0;
 }
 .charactertag>li{
     // display: inline-block;
@@ -57,11 +59,13 @@ hr{
     color: #556677;
     // border: 1px solid #ccc;
     margin: 0 10px 0 -1px;
-    line-height: 30px;
     // text-align: center;
+    font-size: 30px;
+    padding: 6px 0;
+    line-height: 40px;
 }
 .address{
-    
+    font-size: 30px;
     line-height: 40px;
     color: #556677;
 }
@@ -77,3 +81,29 @@ hr{
 // .charactertag > li label,.charactertag > li span{
 //     font-size: 16px
 // }
+
+
+
+// 搜索
+.searchbox {
+    display: flex;
+    flex-direction: row;
+    // justify-content: space-between;
+  }
+  .searchbox > div:first-child {
+    width: 66%;
+  }
+  .searchbox > div > label {
+    line-height: 40px;
+    color: #556677;
+    font-size: 18px
+  }
+  .workcontent  .searchbox {
+    position: fixed;
+    top: 88px;
+    background-color: #fff;
+    width: 100%;
+    z-index: 1;
+    padding: 10px 0;
+    border-bottom: 12px solid #f2f2f2;
+  }

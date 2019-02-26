@@ -10,23 +10,32 @@
     </header>
     <div class="searchbox">
       <el-input v-model="search" placeholder="关键字搜索"></el-input>
+      <div>
+        <label>只看：</label>
+        <el-checkbox v-model="checkedInterview">未沟通</el-checkbox>
+      </div>
     </div>
     <!-- <hr> -->
     <!-- content -->
-    <div class="scroller-box">
+    <div class="scroller-box ziyuanku">
       <scroller
         :on-infinite="infinite"
         :on-refresh="refresh"
         ref="my_scroller"
         style="flex-grow: 1"
       >
-        <div class="datalist ignore" v-for="(item, index) in items" v-bind:key="index" @click="detailsPage(item.uuid)" >
+        <div
+          class="datalist ignore"
+          v-for="(item, index) in items"
+          v-bind:key="index"
+          @click="detailsPage(item.uuid)"
+        >
           <div class="basicInfo ignore">
             <div>
               <h3>{{item.name}}</h3>
               <p>{{item.sex=="0" ? "男":"女"}}</p>
               <!-- <p>{{item.age}}</p>
-              <p>岁</p> -->
+              <p>岁</p>-->
               <p>{{item.age}}岁</p>
             </div>
             <a class="el-icon-phone" :href="'tel:' + item.phone">{{item.phone}}</a>
@@ -45,7 +54,19 @@
           </ul>
           <div class="operation">
             <el-row>
-              <el-button type="info" @click="interviewpage(item.uuid)" plain>面试</el-button>
+              <!-- <el-button
+                v-if="item.is_interview=='1' && item.is_entry=='0' ? true : false"
+                type="success"
+                @click="enptypage(item.phone,item.name)"
+                plain
+              >入职</el-button>
+              <el-button
+                v-if="item.is_interview=='1' && item.is_entry=='1' ? true : false"
+                type="success"
+                @click="interviewpage(item.uuid)"
+                plain
+              >拜访</el-button> -->
+              <el-button type="warning" @click="interviewpage(item.uuid)" plain>面试</el-button>
               <el-button type="primary" @click="editpage(item.uuid)" plain>编辑</el-button>
             </el-row>
           </div>
@@ -60,63 +81,66 @@
 @import url("../style/Resoutcelib.less");
 </style>
 <style lang="less">
-.workcontent .operation {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-}
-.workcontent .el-button {
-  padding: 6px 14px;
-}
-.fontsize .el-button{
-  font-size: 12px;
-}
-.workcontent .el-message-box {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 92%;
-  margin: auto;
-  right: 0;
-  bottom: 0;
-  height: 150px;
-}
-.fontsize .no-data-text {
-  font-size: 14px;
-}
-.workcontent ._v-content > datalist:nth-child(2) {
-  border: none;
-}
-.workcontent ._v-content > div:last-child {
-  margin-top: 60px;
-}
-.workcontent .searchbox {
-  position: fixed;
-  top: 88px;
-  background-color: #fff;
-  width: 100%;
-  z-index: 1;
-}
-.workcontent .fontsize .el-input {
-  font-size: 14px;
-}
-.workcontent .searchbox .el-input__inner {
-  line-height: 28px;
-  height: 28px;
-  border: none;
-  border-bottom: 2px solid #f2f2f2;
-  background-image: url(../assets/sousuo.png);
-  background-size: 18px;
-  background-repeat: no-repeat;
-  background-position: 18px center;
-  text-indent: 30px;
-}
-.ignore .address{
-    font-size: 16px!important
-}
-.ignore .searchbox .el-input__inner{
+.workcontent {
+  .operation {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  .el-button {
+    padding: 6px 14px;
+  }
+  .datalist .el-button {
+    font-size: 16px;
+  }
+  .el-message-box {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 92%;
+    margin: auto;
+    right: 0;
+    bottom: 0;
+    height: 150px;
+  }
+  .no-data-text {
+    font-size: 30px;
+  }
+  ._v-content > datalist:nth-child(2) {
+    border: none;
+  }
+  ._v-content > div:last-child {
+    margin-top: 60px;
+  }
+  
+  .fontsize .el-input {
+    font-size: 18px;
+  }
+  .searchbox .el-input__inner {
+    line-height: 32px;
+    // height: 28px;
+    border: none;
+    background-image: url(../assets/sousuo.png);
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 18px center;
+    text-indent: 30px;
+    width: 60%;
+  }
+  .searchbox .el-input__inner {
+    font-size: 18px;
+    width: 100%;
+  }
+.el-checkbox__label{
   font-size:18px;
 }
+.ziyuanku{
+    margin-top: 180px
+}
+}
+.el-message-box {
+    width: 90%;
+  }
 </style>
 
 <script>
@@ -131,16 +155,24 @@ export default {
       items: [],
       page: 1,
       noDate: true,
-      search: ""
+      search: "",
+      checkedInterview: false,
+      isInterview: 0
     };
   },
   watch: {
     search() {
       this.getData();
+    },
+    checkedInterview() {
+      this.getData();
     }
   },
   methods: {
     getData() {
+      this.checkedInterview == false
+        ? (this.isInterview = "all")
+        : (this.isInterview = 0);
       let url = this.httpsBasic.httpsBasic + "eguard/selectList";
       let _this = this;
       axios
@@ -149,10 +181,12 @@ export default {
             token: window.localStorage.getItem("operatingToken"),
             page: this.page,
             page_max_row: 10,
-            search_key: this.search
+            search_key: this.search,
+            is_interview: this.isInterview
           }
         })
         .then(function(response) {
+          // console.log(response);
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
@@ -163,24 +197,24 @@ export default {
               if (
                 response.data.data.total_page >= response.data.data.current_page
               ) {
-                _this.noDate =false;
+                _this.noDate = false;
               } else {
                 _this.noDate = true;
               }
             } else {
               _this.noDate = true;
             }
-          }else if(response.data.code == 1010){
-            _this.$alert('登录失效或过期，请重新登录', '登录失效', {
-              confirmButtonText: '确定',
+          } else if (response.data.code == 1010) {
+            _this.$alert("登录失效或过期，请重新登录", "登录失效", {
+              confirmButtonText: "确定",
               callback: action => {
                 _this.$message({
-                  type: '',
-                  message: _this.$router.push({ name: "Login"})
+                  type: "重新登录",
+                  message: _this.$router.push({ name: "Login" })
                 });
               }
-            })
-        } else {
+            });
+          } else {
             _this.$message.error(response.data.msg);
           }
           //  console.log(response);
@@ -190,7 +224,7 @@ export default {
         });
     },
     infinite(done) {
-      if (this.noDate==true) {
+      if (this.noDate == true) {
         // this.$refs.myscroller.noDataText = "没有更多数据了"; //更改上拉加载的文字
         this.$refs.my_scroller.finishInfinite(true);
       } else {
@@ -215,10 +249,13 @@ export default {
       this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
       // this.$router.push("resoutcelibdetails")
     },
-    interviewpage(uuid){
+    interviewpage(uuid) {
       event.stopImmediatePropagation();
       // console.log(uuid)
-      this.$router.push({ name: "Resourcelibinterview", params: { uuid: uuid } });
+      this.$router.push({
+        name: "Resourcelibinterview",
+        params: { uuid: uuid }
+      });
     },
     backpage() {
       this.$router.push({ name: "User" });
@@ -229,12 +266,18 @@ export default {
         name: "Resourcelibeditpage",
         params: { uuid: uuid }
       });
+    },
+    enptypage(tel, name) {
+      event.stopImmediatePropagation();
+      this.$router.push({
+        name: "TakingWork",
+        params: { tel: tel, name: name }
+      });
     }
   },
   mounted() {
-    this.items=[]
+    this.items = [];
     this.getData();
-    
   },
   computed: {
     ...mapState({

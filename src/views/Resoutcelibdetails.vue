@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="resumedetails">
     <!-- 标题栏 -->
     <header>
       <a @click="backpage">
@@ -29,7 +29,7 @@
       </div>
       <div class="tagline">
         <label class="tagtitle">适合业务：</label>
-         <p>{{datas.trade}}</p>
+        <p>{{datas.trade}}</p>
       </div>
       <div class="evaluatetag tagline">
         <label class="tagtitle">评价标签：</label>
@@ -42,7 +42,7 @@
         <ul class="workexpbox">
           <li v-for="(workexp,index) in datas.work_experience" v-bind:key="index">
             <span>{{workexp.start_time}}</span>
-            <span>{{workexp.start_time==undefined ?  "" : "至" }}</span>
+            <span>{{workexp.start_time==undefined ? "" : "至" }}</span>
             <span>{{workexp.end_time}}</span>
             <span>{{workexp.content}}</span>
           </li>
@@ -81,14 +81,15 @@
           </div>
         </div>
       </div>
-      <div class="tagline">
+      <!-- <div class="tagline">
         <label class="tagtitle">最近一次沟通记录：</label>
         <p>{{datas.remark}}</p>
-      </div>
+      </div> -->
       <div class="tagline line-none">
-        <label class="tagtitle">历史面试记录：</label>
+        <label class="tagtitle">面试记录：</label>
         <ul class="interview">
           <li v-for="(interview,index) in datas.interview" v-bind:key="index">
+            <span>{{index+1}}. </span>
             <span>{{interview.admin.name}}</span>
             <span>{{interview.create_time_type_datetime}}</span>
             <span>的沟通记录：</span>
@@ -104,23 +105,25 @@
 @import url("../style/Resoutcelibdetails.less");
 </style>
 <style lang="less">
-.job-check .el-checkbox__label {
-  font-size: 0 !important;
-  padding: 0;
-}
-.tagline .el-checkbox {
-  width: 13.9%;
-  border: 1px solid #dcdfe6;
-  line-height: 30px;
-  text-align: center;
-  margin: -1px -1px 0 0;
-}
-.tagline .job-check {
-  display: inline-block;
-  width: 86%;
-  margin: 0;
-  text-align: left;
-  margin-left: -1px;
+.resumedetails {
+  .job-check .el-checkbox__label {
+    font-size: 0 !important;
+    padding: 0;
+  }
+  .tagline .el-checkbox {
+    width: 13.9%;
+    border: 1px solid #dcdfe6;
+    line-height: 30px;
+    text-align: center;
+    margin: -1px -1px 0 0;
+  }
+  .tagline .job-check {
+    display: inline-block;
+    width: 86%;
+    margin: 0;
+    text-align: left;
+    margin-left: -1px;
+  }
 }
 </style>
 
@@ -176,7 +179,7 @@ export default {
               confirmButtonText: "确定",
               callback: action => {
                 _this.$message({
-                  type: "",
+                  type: "重新登录",
                   message: _this.$router.push({ name: "Login" })
                 });
               }

@@ -1,11 +1,11 @@
 <template>
-  <div class="workbenchbox">
+  <div class="resourcelibmianshi">
     <!-- 标题栏 -->
     <header>
       <a @click="backpage">
         <img src="../assets/backIcon.png">
       </a>
-      <p>新增</p>
+      <p>面试</p>
     </header>
     <!-- 表单填写 -->
     <section class="formData ignore">
@@ -168,13 +168,13 @@
       </span>
       <div>
         <label>
-          <i>*</i>沟通记录：
+          <i></i>沟通记录：
         </label>
         <el-input
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 4}"
-          v-model="remark"
           placeholder="请填写至少14个中文字符"
+          v-model="remark"
         ></el-input>
       </div>
       <div class="qudao">
@@ -312,8 +312,8 @@ export default {
   methods: {
     selectChannel: () => console.log("a"),
     backpage() {
-      // this.$router.go(-1); //返回上一层
-      this.$router.push({ name: "Resourcelib" });
+      this.$router.go(-1); //返回上一层
+      // this.$router.push({ name: "Resourcelib" });
     },
     tagToggle(tag) {
       if (this.tags.indexOf(tag) != -1) {
@@ -338,7 +338,6 @@ export default {
       this.jobtime.forEach(v => {
         this.compute[v] = "1";
       });
-
       for (let i = 0; i < this.wockexp.length; i++) {
         this.wockexp[i].start_time = this.wockexp[i]["wockexptime"][0];
         this.wockexp[i].end_time = this.wockexp[i]["wockexptime"][1];
@@ -387,23 +386,6 @@ export default {
                 window.scrollTo(0, 0);
                 _this.$router.push({ name: "Resourcelib" });
               }, 2000);
-              // setTimeout(() => {
-              //
-              //   _this.tel = ""; //电话
-              //   _this.name = ""; //姓名
-              //   _this.sex = 0; //性别
-              //   _this.keyword = ""; //居住地
-              //   _this.wockexp = ""; //工作经历
-              //   _this.remark = ""; //备注
-              //   _this.checkchannel = 0; //渠道
-              //   _this.jobtime = [];
-              //   _this.checktag = [];
-              //   _this.workTime = 1;
-              //   _this.age = "";
-              //   _this.is_die=0;
-              //   _this.checkbusiness=[];
-              //   _this.businesstag=[]
-              // }, 2000);
             } else {
               _this.$message.error(response.data.msg);
             }
@@ -464,16 +446,19 @@ export default {
       });
 
       if (data.code === 1001) {
-        this.$message.success("已有该管家信息");
+        // console.log(data.data);
+        // this.$message.success("已有该管家信息");
         this.tipstoggle = false;
         this.hasdata = true;
-        this.datas = data.data;
-        console.log(data);
+        this.datas = data.data.data;
         this.tel = data.data.phone; //电话
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
         this.keyword = data.data.address; //居住地
-        this.wockexp = data.data.work_experience; //工作经历
+        // this.wockexp = data.data.work_experience; //工作经历
+        if (data.data.work_experience != null && data.data.work_experience!="") {
+          this.wockexp = data.data.work_experience; //工作经历
+        }
         this.remark = data.data.remark; //备注
         this.checkchannel = parseFloat(data.data.origin); //渠道
         this.tags = data.data.tag.split(",");
@@ -482,19 +467,6 @@ export default {
         this.is_die = parseFloat(data.data.is_die); //简历是否可用
         this.businesstag = data.data.trade.split(",");
         this.businesses = this.businesstag;
-        data.data.workexpcon == undefined
-          ? (this.wockexp = [
-              {
-                addtitle: "添加",
-                addicon: require("../assets/add.png"),
-                wockexptime: "",
-                start_time: "",
-                end_time: "",
-                content: ""
-              }
-            ])
-          : (this.wockexp = data.data.workexpcon);
-
         data.data.is_full_time === "1"
           ? (this.workTime = 1)
           : (this.workTime = 0);
@@ -513,8 +485,73 @@ export default {
         // this.hasdata = false;
       }
     },
+    async getDefaultData() {
+      const url = this.httpsBasic.httpsBasic + "eguard/selectInfo";
+      const { data } = await axios.get(url, {
+        params: {
+          token: window.localStorage.getItem("operatingToken"),
+          uuid: this.$route.params.uuid
+        }
+      });
+      //  console.log(data)
+      if (data.code === 1001) {
+        this.tipstoggle = false;
+        this.hasdata = true;
+        // _self.datas = res.data.data;
+        this.tel = data.data.phone; //电话
+        this.name = data.data.name; //姓名
+        this.sex = parseFloat(data.data.sex); //性别
+        this.keyword = data.data.address; //居住地
+        if (data.data.work_experience != null && data.data.work_experience!="") {
+          this.wockexp = data.data.work_experience; //工作经历
+        } else {
+          this.wockexp = [
+            {
+              addtitle: "添加",
+              addicon: require("../assets/add.png"),
+              wockexptime: "",
+              start_time: "",
+              end_time: "",
+              content: ""
+            }
+          ];
+        }
+        console.log(this.wockexp);
+        this.remark = data.data.remark; //备注
+        this.age = data.data.age;
+        this.checkchannel = parseFloat(data.data.origin); //渠道
+        // console.log(_self.checktag);
+        data.data.is_full_time === "1"
+          ? (this.workTime = 1)
+          : (this.workTime = 0);
+        const len = data.data.able_work_time.length;
+        for (let i = 0; i < len; i++) {
+          if (data.data.able_work_time[i] === "1") {
+            this.checkState[i] = true;
+          }
+        } //可用时间
+        this.tags = data.data.tag.split(",");
+        this.checktag = this.tags;
+        // console.log(this.tags)
+        // for(let j=0;j<this.tags.length;j++){
+
+        //    console.log(this.tagToggle)
+        // }//性格标签
+      } else if (data.code == 1010) {
+        _this.$alert("登录失效或过期，请重新登录", "登录失效", {
+          confirmButtonText: "确定",
+          callback: action => {
+            _this.$message({
+              type: "重新登录",
+              message: _this.$router.push({ name: "Login" })
+            });
+          }
+        });
+      }
+    },
     addmodel(add, index) {
       if (add == "添加") {
+        console.log("添加");
         this.wockexp.push({
           addtitle: "删除",
           addicon: require("../assets/delete.png"),
@@ -528,6 +565,7 @@ export default {
     }
   },
   mounted() {
+    this.getDefaultData();
     // 限流，当用户停止输入0.8s后请求，如果连续输入的情况下不请求api
     this.debounce = _.debounce(() => this.search(this.keyword), 800);
   }
@@ -539,24 +577,21 @@ export default {
 @import url("../style/basic/basics.less");
 @import url("../style/workbench.less");
 </style>
-<style lang="less"> 
-.workbenchbox {
-.el-checkbox__label,
- .el-radio__label,
-.el-input,
+<style lang="less">
+.resourcelibmianshi {
+  .el-checkbox__label,
+  .el-radio__label,
+  .el-input,
  .el-textarea {
     font-size: 18px;
     color: #556677;
   }
-  // .el-input__inner {
-  //   height: 32px;
-  //   line-height: 32px;
-  // }
+ 
   .el-radio-group {
     line-height: normal;
   }
   .el-radio {
-    // line-height: 20px;
+    line-height: 20px;
   }
   .selectlabel {
     width: 72%;
@@ -593,20 +628,19 @@ export default {
   .el-checkbox {
     margin-right: 15px;
   }
-.el-date-editor .el-range-input {
+  .ignore .el-date-editor .el-range-input {
     width: 40%;
-  }
-  .el-input__inner {
-    font-size: 20px;
+    font-size:18px;
   }
   .el-range-editor.el-input__inner {
-    width: 84%;
+    width: 85%;
     padding: 3px 6px;
   }
 
   .el-date-editor .el-range-input,
   .el-date-editor .el-range-separator {
-    font-size: 14px;
+    font-size: 18px;
+    width: auto;
   }
   .el-range__close-icon {
     background: url(../assets/close.png) no-repeat;
@@ -639,15 +673,17 @@ export default {
   .wockexp > div .el-textarea__inner {
     margin-top: 4px;
   }
-  .el-tabs__nav {
-    float: unset;
-    width: 100%;
-    text-align: center;
-  }
-  .el-checkbox__label{line-height:26px}
+    .el-checkbox__label{line-height:26px}
   .qudao>div{width:100%;}
   .el-radio__label{min-width:46px;display: inline-block;}
   .qudao .el-radio{margin-bottom:10px;}
 }
+.el-picker-panel{
+  left: 0!important;
+}
+.el-date-range-picker .el-picker-panel__body{width: 100vw;min-width:100vw}
+.el-input__icon{width: 22px;}
 </style>
+
+
 

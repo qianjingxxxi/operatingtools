@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="changepassword">
     <!-- 标题栏 -->
     <header>
       <a @click="backpage">
@@ -29,14 +29,21 @@
 @import url("../style/Changepassword.less");
 </style>
 <style lang="less">
+.changepassword{
 .el-input {
   width: 100%;
+  font-size:18px;
 }
 .el-input__inner {
   border-radius: 0;
   // border-left:none;
   // border-right:none;
 }
+.el-button{
+  font-size:18px;
+}
+}
+
 </style>
 
 <script>

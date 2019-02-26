@@ -10,6 +10,10 @@ import Changepassword from "./views/Changepassword.vue";
 import Resoutcelibdetails from "./views/Resoutcelibdetails.vue";
 import Resourcelibeditpage from "./views/Resourcelibeditpage.vue";
 import Resourcelibinterview from "./views/Resourcelibinterview.vue";
+import TakingWork from "./views/TakingWork.vue";
+import Interview from "./views/statistics/Interview.vue";
+import Addvisit from "./views/Addvisit.vue";
+import Visit from "./views/statistics/Visit.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -77,6 +81,30 @@ export default new Router({
       name:'Resourcelibinterview',
       component:() =>
       import("./views/Resourcelibinterview.vue")
+    },
+    {
+      path:'/takingWork',
+      name:'TakingWork',
+      component:()=>
+      import("./views/TakingWork.vue")
+    },
+    {
+      path:'/interview',
+      name:'Interview',
+      component:()=>
+      import("./views/statistics/Interview.vue")
+    },
+    {
+      path:'/addvisit',
+      name:'Addvisit',
+      component:() =>
+      import("./views/Addvisit.vue")
+    },
+    {
+      path:'/visit',
+      name:'Visit',
+      component:() =>
+      import("./views/statistics/Visit.vue")
     }
   ]
 });
