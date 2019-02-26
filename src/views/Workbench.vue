@@ -92,7 +92,7 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
-              readonly="true"
+            
             ></el-date-picker>
             <div class="addworkexp" @click="addmodel(workexpcon.addtitle,index)">
               <img :src="workexpcon.addicon">
@@ -601,8 +601,11 @@ export default {
     font-size: 20px;
   }
   .el-range-editor.el-input__inner {
-    width: 84%;
-    padding: 3px 6px;
+    width: 85%;
+    padding: 3px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   .el-date-editor .el-range-input,

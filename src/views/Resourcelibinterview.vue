@@ -635,6 +635,9 @@ export default {
   .el-range-editor.el-input__inner {
     width: 85%;
     padding: 3px 6px;
+     display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   .el-date-editor .el-range-input,
@@ -680,6 +683,8 @@ export default {
 }
 .el-picker-panel{
   left: 0!important;
+    width: 100vw;
+    overflow-x: hidden;
 }
 .el-date-range-picker .el-picker-panel__body{width: 100vw;min-width:100vw}
 .el-input__icon{width: 22px;}

@@ -519,7 +519,7 @@ export default {
 
         //    console.log(this.tagToggle)
         // }//性格标签
-      } else if (response.data.code == 1010) {
+      } else if (data.code == 1010) {
         this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
           callback: action => {
@@ -617,6 +617,9 @@ export default {
   .el-range-editor.el-input__inner {
     width: 85%;
     padding: 3px 6px;
+     display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   .el-date-editor .el-range-input,
@@ -639,7 +642,9 @@ export default {
   .el-date-range-picker__header div,
   .el-date-range-picker__content.is-right .el-date-range-picker__header div {
     margin: 0;
+    padding:10px;
   }
+
   .el-input__icon,
   .el-date-editor .el-range-input,
   .el-date-editor .el-range-separator {
@@ -661,6 +666,9 @@ export default {
     width: auto;
   }
 }
+  .el-date-range-picker__content.is-right .el-date-range-picker__header div{margin: 0;}
+  .el-date-table td div{height: 16px;}
+  .el-picker-panel{top:452px;}
 </style>
 
 
