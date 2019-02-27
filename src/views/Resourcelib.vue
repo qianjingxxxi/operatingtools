@@ -185,9 +185,11 @@ export default {
   },
   watch: {
     search() {
+      this.items =[]
       this.getData();
     },
     checkedInterview() {
+       this.items =[]
       this.getData();
     }
   },
@@ -209,7 +211,6 @@ export default {
           }
         })
         .then(function(response) {
-          //  console.log(response);
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
