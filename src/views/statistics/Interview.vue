@@ -159,7 +159,6 @@
 }
 .el-tabs__nav{width: 100%;float: unset;text-align:center;}
 .searchbox > div:first-child{width: 100%;}
-.el-tabs__item{font-size:18px;}
 }
 
 </style>
@@ -180,20 +179,12 @@ export default {
       activeName: "first",
       startTime: "",
       endTime: "",
-      sum: 0,
-      businessList:[]
+      sum: 0
     };
   },
   watch: {},
   methods: {
     getData() {
-    const date = new Date();
-    const year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    const strDate = date.getDate();
-    parseFloat(month) > 9 ? (month = month) : (month = "0" + parseFloat(month));
-    this.startTime = String(year) + month + String(strDate) + "000000";
-     this.endTime = String(year) + month + String(strDate) + "235959";
       let url = this.httpsBasic.httpsBasic + "interview/selectList";
       let _this = this;
       axios
@@ -364,8 +355,14 @@ export default {
   },
   mounted() {
     this.items = [];
+      const date = new Date();
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    const strDate = date.getDate();
+    parseFloat(month) > 9 ? (month = month) : (month = "0" + parseFloat(month));
+    this.startTime = String(year) + month + String(strDate) + "000000";
+     this.endTime = String(year) + month + String(strDate) + "235959";
     this.getData();
-    this.getbusiness();//获取业务
   },
   computed: {
     ...mapState({

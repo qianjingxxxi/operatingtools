@@ -26,7 +26,7 @@
           <label>
             <i>*</i>所属业务:
           </label>
-          <el-select v-model="add.b_uuid" placeholder="请选择">
+          <el-select v-model="add.b_uuid" placeholder="请选择" @change="getUUID(add.b_uuid,indexVal)">
             <el-option
               :key="business.uuid"
               :label="business.name"
@@ -168,7 +168,6 @@ export default {
       tel: this.$route.params.tel,
       name: this.$route.params.name,
       identity: "",
-      shops: [],
       shopValue: "",
       identityFrount: require("../assets/interview/identityFrount.png"),
       identitySide: require("../assets/interview/identitySide.png"),
@@ -181,6 +180,7 @@ export default {
           c_uuid: [],
           businessList: [],
           ifshops: false,
+          shops: []
         }
       ]
     };
@@ -196,6 +196,14 @@ export default {
   methods: {
     backpage: function() {
       this.$router.go(-1); //返回上一层
+    },
+    getUUID(e,i) {
+        if(e!=""){
+          this.addbusiness[i].ifshops=true
+          this.businessValue=e
+          this.getshops()
+        }
+      console.log(e);
     },
     onUpload: function(e) {
       let formData = new FormData();
@@ -276,7 +284,9 @@ export default {
           start_time: "",
           b_uuid: "",
           c_uuid: [],
-          businessList: []
+          businessList: [],
+          ifshops: false,
+          shops:[]
         });
       } else {
         this.addbusiness.splice(index, 1);

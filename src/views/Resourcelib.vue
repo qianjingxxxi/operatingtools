@@ -28,7 +28,6 @@
           class="datalist ignore"
           v-for="(item, index) in items"
           v-bind:key="index"
-          @click="detailsPage(item.uuid)"
         >
           <div class="basicInfo ignore">
             <div>
@@ -58,6 +57,7 @@
           </ul>
           <div class="operation">
             <el-row>
+               <el-button type="info" @click="detailsPage(item.uuid)" plain>查看详情</el-button>
               <!-- <el-button
                 v-if="item.is_interview=='1' && item.is_entry=='0' ? true : false"
                 type="success"
@@ -70,8 +70,11 @@
                 @click="interviewpage(item.uuid)"
                 plain
               >拜访</el-button> -->
+              <div>
+
               <el-button type="warning" @click="interviewpage(item.uuid)" plain>面试</el-button>
               <el-button type="primary" @click="editpage(item.uuid)" plain>编辑</el-button>
+              </div>
             </el-row>
           </div>
         </div>
@@ -86,11 +89,21 @@
 </style>
 <style lang="less">
 .workcontent {
-  .operation {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
+  .operation>div .el-button{
+      padding: 4px 8px;
+      font-size:14px;
   }
+   .operation>div{
+       display: flex;
+    flex-direction: row;
+    width: 100%;
+   }
+   .operation>div>div{
+     display: flex;
+    flex-direction: row;
+    width: 82%;
+    justify-content: flex-end;
+   }
   .el-button {
     padding: 6px 14px;
   }
@@ -218,7 +231,8 @@ export default {
             } else {
               _this.noDate = true;
             }
-          } else if (response.data.code == 1010) {
+            // console.log(  _this.items )
+          } else if (response.data.code == 1010 || response.data.code == 1009) {
             _this.$alert("登录失效或过期，请重新登录", "登录失效", {
               confirmButtonText: "确定",
               callback: action => {
