@@ -234,7 +234,7 @@ export default {
       }
     },
     submitform:function() {
-      console.log(this.addbusiness)
+      let _this=this;
       if (
         this.bankNum != "" &&
         this.identity != ""
@@ -251,13 +251,14 @@ export default {
               bank_card_img:this.bank_card_img
 
           }).then(function(res){
-            console.log(res)
-            alert(JSON.stringify(res))
+            // console.log(res)
+             _this.$message.success("提交成功");
+            // alert(JSON.stringify(res))
           }).catch(function(error){
               alert(JSON.stringify(error))
           })
       } else {
-        this.$message.warning("资料未填写完整");
+        _this.$message.warning("资料未填写完整");
       }
       console.log(this.tel);
     },

@@ -189,7 +189,7 @@
         </el-radio-group>
       </div>
       <el-row class="submitBtn borderNone">
-        <el-button type="primary" >提交</el-button>
+        <el-button type="primary"  @click="submitform">提交</el-button>
       </el-row>
     </section>
   </div>
@@ -358,7 +358,7 @@ export default {
         this.remark.length > 13
       ) {
         // this.compute=this.compute.join(',')
-
+        // console.log("Asxsdcd")
         axios
           .post(url, {
             token: window.localStorage.getItem("operatingToken"),
@@ -379,6 +379,7 @@ export default {
             is_die: this.is_die
           })
           .then(function(response) {
+            // console.log(response)
             if (response.data.code == 1001) {
               // _this.$router.push("Workbench");
               _this.$message.success("提交成功");
@@ -441,12 +442,12 @@ export default {
       const { data } = await axios.get(url, {
         params: {
           token: window.localStorage.getItem("operatingToken"),
-          phone: this.tel
+          uuid: this.$route.params.uuid
         }
       });
 
       if (data.code === 1001) {
-        // console.log(data.data);
+      //  console.log(data.data);
         // this.$message.success("已有该管家信息");
         this.tipstoggle = false;
         this.hasdata = true;

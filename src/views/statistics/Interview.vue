@@ -32,7 +32,6 @@
           class="datalist ignore"
           v-for="(item, index) in items"
           v-bind:key="index"
-          @click="detailsPage(item.uuid)"
         >
           <div class="basicInfo ignore">
             <div>
@@ -58,18 +57,7 @@
           </ul>
           <div class="operation">
             <el-row>
-              <el-button
-                v-if="item.eguard.is_interview=='1' && item.eguard.is_entry=='0' ? true : false"
-                type="success"
-                @click="enptypage(item.eguard.phone,item.eguard.name,item.eguard.uuid)"
-                plain
-              >入职</el-button>
-              <el-button
-                v-if="item.eguard.is_interview=='1' && item.eguard.is_entry=='1' ? true : false"
-                type="success"
-                @click="interviewpage(item.eguard.uuid)"
-                plain
-              >拜访</el-button>
+              <el-button type="info" @click="detailsPage(item.eguard.uuid)" plain>查看详情</el-button>
               <el-button type="warning" @click="interviewpage(item.eguard.uuid)" plain>面试</el-button>
               <el-button type="primary" @click="editpage(item.eguard.uuid)" plain>编辑</el-button>
             </el-row>
@@ -203,7 +191,7 @@ export default {
           }
         })
         .then(function(response) {
-          //   console.log(response);
+             console.log(response);
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
@@ -259,13 +247,13 @@ export default {
       this.getData();
     },
     detailsPage(uuid) {
-      event.stopImmediatePropagation();
+      // event.stopImmediatePropagation();
       // console.log(uuid)
       this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
       // this.$router.push("resoutcelibdetails")
     },
     interviewpage(uuid) {
-      event.stopImmediatePropagation();
+      // event.stopImmediatePropagation();
       // console.log(uuid)
       this.$router.push({
         name: "Resourcelibinterview",
@@ -276,14 +264,14 @@ export default {
       this.$router.push({ name: "User" });
     },
     editpage(uuid) {
-      event.stopImmediatePropagation();
+      // event.stopImmediatePropagation();
       this.$router.push({
         name: "Resourcelibeditpage",
         params: { uuid: uuid }
       });
     },
     enptypage(tel, name,e_uuid) {
-      event.stopImmediatePropagation();
+      // event.stopImmediatePropagation();
       this.$router.push({
         name: "TakingWork",
         params: { tel: tel, name: name,e_uuid:e_uuid }

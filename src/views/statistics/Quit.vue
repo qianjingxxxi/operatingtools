@@ -5,7 +5,7 @@
       <a @click="backpage">
         <img src="../../assets/backIcon.png">
       </a>
-      <p>离职记录</p>
+      <p>离职记录<span>({{sum}})</span></p>
     </header>
     <div class="searchbox">
       <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -205,7 +205,8 @@ export default {
       isInterview: 0,
       hasaddress: true,
       total: 0,
-      activeName: "first"
+      activeName: "first",
+        sum: 0
     };
   },
   watch: {
@@ -240,6 +241,7 @@ export default {
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
+               _this.sum = response.data.data.total_count;
             } else {
               _this.items = _this.items.concat(response.data.data.list);
             }
@@ -300,10 +302,10 @@ export default {
       this.getData();
     },
     detailsPage(uuid) {
-      event.stopImmediatePropagation();
+    //   event.stopImmediatePropagation();
       //   this.detailsID=uuid;
       // console.log(uuid)
-      // this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
+      this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
       // this.$router.push("resoutcelibdetails")
     },
     interviewpage(uuid) {
@@ -318,14 +320,14 @@ export default {
       this.$router.push({ name: "User" });
     },
     editpage(uuid) {
-      event.stopImmediatePropagation();
+    //   event.stopImmediatePropagation();
       this.$router.push({
         name: "Resourcelibeditpage",
         params: { uuid: uuid }
       });
     },
     visitpage(tel, name, uuid) {
-      event.stopImmediatePropagation();
+    //   event.stopImmediatePropagation();
       this.$router.push({
         name: "Addvisit",
         params: { tel: tel, name: name, e_uuid: uuid }

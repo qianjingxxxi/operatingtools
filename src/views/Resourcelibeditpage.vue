@@ -218,7 +218,7 @@
                 ></el-option>
               </el-select>
             </div>
-          </div> -->
+          </div>-->
           <div class="widthOhter">
             <label>
               <i>*</i>身份证号:
@@ -377,7 +377,8 @@ export default {
       bankNum: "",
       id_img_n: "",
       id_img_p: "",
-      bank_card_img: ""
+      bank_card_img: "",
+      isEntry: 0
     };
   },
   watch: {
@@ -444,47 +445,73 @@ export default {
         this.wockexp.start_time != "" &&
         this.wockexp.end_time != "" &&
         this.wockexp.content != "" &&
-        this.businesstag != "" &&
-        this.bankNum != "" &&
-        this.identity != ""
+        this.businesstag != ""
       ) {
+        let params = "";
         // this.compute=this.compute.join(',')
-        let params={
-             token: window.localStorage.getItem("operatingToken"),
-            phone: this.tel,
-            name: this.name,
-            sex: this.sex,
-            address: this.keyword,
-            address_l_l: this.selectTip.location,
-            work_experience: this.wockexp,
-            tag: this.tags,
-            is_full_time: this.workTime,
-            able_work_time: this.compute,
-            age: this.age,
-            address_d: this.address_d,
-            trade: this.businesstag,
-            is_die: this.is_die,
-            uuid: this.$route.params.uuid,
-            id_num: this.identity,
-            location: JSON.stringify(this.addbusiness),
-            bank_card_num: this.bankNum,
-            id_img_p: this.id_img_p,
-            id_img_n: this.id_img_n,
-            bank_card_img: this.bank_card_img
+    
+        if (parseFloat(this.isEntry) == 1) {
+          if (this.bankNum != "" && this.identity != "") {
+            params = {
+              token: window.localStorage.getItem("operatingToken"),
+              phone: this.tel,
+              name: this.name,
+              sex: this.sex,
+              address: this.keyword,
+              address_l_l: this.selectTip.location,
+              work_experience: this.wockexp,
+              tag: this.tags,
+              is_full_time: this.workTime,
+              able_work_time: this.compute,
+              age: this.age,
+              address_d: this.address_d,
+              trade: this.businesstag,
+              is_die: this.is_die,
+              uuid: this.$route.params.uuid,
+              id_num: this.identity,
+              location: JSON.stringify(this.addbusiness),
+              bank_card_num: this.bankNum,
+              id_img_p: this.id_img_p,
+              id_img_n: this.id_img_n,
+              bank_card_img: this.bank_card_img
+            };
+          } else {
+            _this.$message.warning("资料未填写完整");
+          }
+        }else{
+           params = {
+              token: window.localStorage.getItem("operatingToken"),
+              phone: this.tel,
+              name: this.name,
+              sex: this.sex,
+              address: this.keyword,
+              address_l_l: this.selectTip.location,
+              work_experience: this.wockexp,
+              tag: this.tags,
+              is_full_time: this.workTime,
+              able_work_time: this.compute,
+              age: this.age,
+              address_d: this.address_d,
+              trade: this.businesstag,
+              is_die: this.is_die,
+              uuid: this.$route.params.uuid,
+              id_num: this.identity,
+              location: JSON.stringify(this.addbusiness)
+            };
         }
-        if(this.id_img_p==""){
-          delete params.id_img_p; 
+        if (this.id_img_p == "") {
+          delete params.id_img_p;
         }
-         if(this.id_img_n==""){
-          delete params.id_img_n; 
+        if (this.id_img_n == "") {
+          delete params.id_img_n;
         }
-         if(this.bank_card_img==""){
-          delete params.bank_card_img; 
+        if (this.bank_card_img == "") {
+          delete params.bank_card_img;
         }
         axios
           .post(url, params)
           .then(function(response) {
-            console.log(response);
+            // console.log(response);
             if (response.data.code == 1001) {
               // _this.$router.push("Workbench");
               _this.$message.success("编辑成功");
@@ -501,8 +528,6 @@ export default {
             _this.$message.error(error);
             // console.log(error);
           });
-
-       
       } else {
         _this.$message.warning("资料未填写完整");
       }
@@ -555,8 +580,9 @@ export default {
 
       if (data.code === 1001) {
         // this.$message.success("已有该管家信息");
-        console.log(data)
+        console.log(data);
         this.datas = data.data;
+        this.isEntry = data.data.is_entry;
         this.tipstoggle = false;
         this.hasdata = true;
         this.tel = data.data.phone; //电话
@@ -595,11 +621,11 @@ export default {
 
         //    console.log(this.tagToggle)
         // }//性格标签
-        this.bankNum=data.data.bank_card_num;//银行卡号
-        this.identity=data.data.id_num;//身份证号
-        this.identityFrount=data.data.id_img_p;//身份证正面
-        this.identitySide=data.data.id_img_n;//身份证反面
-        this.bankcard=data.data.bank_card_img;//银行卡
+        this.bankNum = data.data.bank_card_num; //银行卡号
+        this.identity = data.data.id_num; //身份证号
+        this.identityFrount = data.data.id_img_p; //身份证正面
+        this.identitySide = data.data.id_img_n; //身份证反面
+        this.bankcard = data.data.bank_card_img; //银行卡
       } else {
         // this.hasdata = false;
       }
@@ -660,11 +686,11 @@ export default {
           }
         });
         // this.addbusiness=data.data.businesseguard
-        this.bankNum=data.data.bank_card_num;//银行卡号
-        this.identity=data.data.id_num;//身份证号
-        this.identityFrount=data.data.id_img_p;//身份证正面
-        this.identitySide=data.data.id_img_n;//身份证反面
-        this.bankcard=data.data.bank_card_img;//银行卡
+        this.bankNum = data.data.bank_card_num; //银行卡号
+        this.identity = data.data.id_num; //身份证号
+        this.identityFrount = data.data.id_img_p; //身份证正面
+        this.identitySide = data.data.id_img_n; //身份证反面
+        this.bankcard = data.data.bank_card_img; //银行卡
       }
     },
     addmodel(add, index) {
@@ -1020,8 +1046,8 @@ export default {
   .infoList > h2 > img {
     height: 32px;
   }
-  .formData .widthanohter{
-    width: 48%!important;
+  .formData .widthanohter {
+    width: 48% !important;
   }
 }
 .el-date-range-picker__content.is-right .el-date-range-picker__header div {

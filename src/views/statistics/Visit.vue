@@ -5,7 +5,7 @@
       <a @click="backpage">
         <img src="../../assets/backIcon.png">
       </a>
-      <p>拜访记录</p>
+      <p>拜访记录<span>({{sum}})</span></p>
     </header>
     <div class="searchbox">
       <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -210,7 +210,8 @@ export default {
       isInterview: 0,
       hasaddress: true,
       total: 0,
-      activeName: "first"
+      activeName: "first",
+        sum: 0
     };
   },
   watch: {
@@ -244,6 +245,7 @@ export default {
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
+               _this.sum = response.data.data.total_count;
             } else {
               _this.items = _this.items.concat(response.data.data.list);
             }

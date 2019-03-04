@@ -368,7 +368,6 @@ export default {
       });
     },
     quitBtn: function(uuid) {
-      console.log("lizhi");
       this.$prompt("请输入离职原因", "管家离职", {
         confirmButtonText: "确定",
         cancelButtonText: "取消"

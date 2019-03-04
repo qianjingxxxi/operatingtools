@@ -5,7 +5,9 @@
       <a @click="backpage">
         <img src="../../assets/backIcon.png">
       </a>
-      <p>入职</p>
+      <p>入职记录
+        <span>({{sum}})</span>
+      </p>
     </header>
     <div class="searchbox">
       <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -75,7 +77,6 @@
                   plain
                 >删除</el-button>
                 <el-button
-                 
                   type="success"
                   @click="visitpage(item.eguard.phone,item.eguard.name,item.eguard.uuid)"
                   plain
@@ -210,7 +211,8 @@ export default {
       isInterview: 0,
       hasaddress: true,
       total: 0,
-      activeName: "first"
+      activeName: "first",
+      sum: 0
     };
   },
   watch: {
@@ -245,11 +247,12 @@ export default {
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
+              _this.sum = response.data.data.total_count;
             } else {
               _this.items = _this.items.concat(response.data.data.list);
             }
 
-            console.log(_this.items);
+            // console.log(_this.items);
             for (let i = 0; i < _this.items.length; i++) {
               _this.items[i].address == ""
                 ? (_this.hasaddress = false)
@@ -305,14 +308,14 @@ export default {
       this.getData();
     },
     detailsPage(uuid) {
-      event.stopImmediatePropagation();
+      // event.stopImmediatePropagation();
       //   this.detailsID=uuid;
       // console.log(uuid)
-      // this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
+      this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
       // this.$router.push("resoutcelibdetails")
     },
     interviewpage(uuid) {
-      event.stopImmediatePropagation();
+      // event.stopImmediatePropagation();
       // console.log(uuid)
       this.$router.push({
         name: "Resourcelibinterview",
@@ -323,14 +326,15 @@ export default {
       this.$router.push({ name: "User" });
     },
     editpage(uuid) {
-      event.stopImmediatePropagation();
+      // event.stopImmediatePropagation();
+      console.log(uuid);
       this.$router.push({
         name: "Resourcelibeditpage",
         params: { uuid: uuid }
       });
     },
     visitpage(tel, name, uuid) {
-      event.stopImmediatePropagation();
+      // event.stopImmediatePropagation();
       this.$router.push({
         name: "Addvisit",
         params: { tel: tel, name: name, e_uuid: uuid }
@@ -439,7 +443,7 @@ export default {
         });
     },
     delAgain(uuid) {
-      const _this=this
+      const _this = this;
       const url = this.httpsBasic.httpsBasic + "entryquit/delete";
       axios
         .post(url, {
