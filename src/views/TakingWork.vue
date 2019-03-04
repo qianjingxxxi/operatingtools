@@ -39,19 +39,19 @@
             <span>{{add.addtitle}}</span>
           </div>
         </div>
-        <div class="selectcheck" v-if="add.ifshops">
+        <div class="selectcheck selectshops" v-if="add.ifshops">
           <label>
             <i>*</i>所属门店:
           </label>
-          <el-checkbox-group class="selectlabel" v-model="shopValue">
-            <el-checkbox
-              v-for="shop in add.shops"
-              :key="shop.uuid"
+          <el-select v-model="add.c_uuids" multiple placeholder="请选择">
+            <el-option
+              v-for="(shop,index) in add.shops"
               :label="shop.shop_name"
+              :key="index"
+              :name="shop.uuid"
               :value="shop.uuid"
-              :checked="shopsToggle(shopValue)"
-            ></el-checkbox>
-          </el-checkbox-group>
+            ></el-option>
+          </el-select>
         </div>
       </div>
       <div class="widthOhter">
@@ -81,7 +81,7 @@
         <label>
           <i>*</i>银行卡号:
         </label>
-        <el-input v-model="identity" placeholder="请输入身份证号:" value></el-input>
+        <el-input v-model="bankNum" placeholder="请输入身份证号:" value></el-input>
       </div>
       <div class="labelTwoLine">
         <label>
@@ -114,7 +114,7 @@
     width: 38%;
   }
   .el-input {
-    font-size: 18px;
+    font-size: 16px;
   }
   .formData .hasdata {
     border-bottom: 1px solid #ccc;
@@ -151,24 +151,43 @@
     position: relative;
   }
   .formData > .businessBox label {
-    font-size: 18px;
+    font-size: 16px;
     color: #556677;
     width: 48%;
     vertical-align: top;
     line-height: 32px;
+  }
+  .el-checkbox-group {
+    width: 93.5%;
+  }
+  .el-checkbox {
+    margin-right: 10px;
+  }
+  .el-checkbox__label {
+    padding-left: 4px;
+  }
+  .ignore .el-checkbox__label {
+    font-weight: normal;
+  }
+  .formData .businessBox div div label {
+    width: unset;
+  }
+   .formData .selectshops .el-select{
+      width: 88%;
   }
 }
 </style>
 
 <script>
 import axios from "axios";
+import wx from "weixin-js-sdk";
 export default {
   data() {
     return {
       tel: this.$route.params.tel,
       name: this.$route.params.name,
       identity: "",
-      shopValue: "",
+      shopValue: [],
       identityFrount: require("../assets/interview/identityFrount.png"),
       identitySide: require("../assets/interview/identitySide.png"),
       bankcard: require("../assets/interview/yinhangqia.png"),
@@ -177,72 +196,85 @@ export default {
           addtitle: "添加",
           addicon: require("../assets/add.png"),
           b_uuid: "",
-          c_uuid: [],
+          c_uuids: [],
           businessList: [],
           ifshops: false,
           shops: []
         }
-      ]
+      ],
+      bankNum:"",
+      id_img_n:"",
+      id_img_p:"",
+      bank_card_img:""
     };
   },
   watch: {
     b_uuid: function() {
-      console.log(  this.addbusiness)
+      console.log(this.addbusiness);
       // this.addbusiness.businessValue != ""
       //   ? (this.addbusiness.ifshops = true && this.getshops())
       //   : (this.addbusiness.ifshops = false);
+    },
+    shopValue:function(){
+      console.log(this.shopValue)
     }
   },
   methods: {
     backpage: function() {
       this.$router.go(-1); //返回上一层
     },
-    getUUID(e,i) {
-        if(e!=""){
-          this.addbusiness[i].ifshops=true
-          this.businessValue=e
-          this.getshops()
-        }
+    checkboxClick(e) {
       console.log(e);
     },
-    onUpload: function(e) {
-      let formData = new FormData();
-      formData.append("file", e.target.files[0]);
-      formData.append("type", "test");
-      console.log(formData);
+    getUUID(e, i) {
+      if (e != "") {
+        this.addbusiness[i].ifshops = true;
+        this.businessValue = e;
+        this.getshops();
+      }
     },
-    async submitform() {
+    submitform:function() {
+      console.log(this.addbusiness)
       if (
-        this.businessValue != "" &&
-        this.shopValue != "" &&
+        this.bankNum != "" &&
         this.identity != ""
       ) {
-        const url = this.httpsBasic.httpsBasic + "";
+         const url = this.httpsBasic.httpsBasic + "eguard/entry";
+          axios.post(url,{
+              e_uuid:this.$route.params.e_uuid,
+              id_num:this.identity,
+              token:window.localStorage.getItem("operatingToken"),
+              location:JSON.stringify(this.addbusiness),
+              bank_card_num:this.bankNum,
+              id_img_p:this.id_img_p,
+              id_img_n: this.id_img_n,
+              bank_card_img:this.bank_card_img
+
+          }).then(function(res){
+            console.log(res)
+            alert(JSON.stringify(res))
+          }).catch(function(error){
+              alert(JSON.stringify(error))
+          })
       } else {
         this.$message.warning("资料未填写完整");
       }
       console.log(this.tel);
     },
-    identityFrountSrc: function() {},
-    identitySideSrc: function() {},
-    bankcardSrc: function() {},
     async getbusiness() {
       const url = this.httpsBasic.httpsBasic + "business/selectBusinessList";
       const params = new URLSearchParams();
       params.append("token", window.localStorage.getItem("operatingToken"));
       const { data } = await axios.get(`${url}?${params.toString()}`);
       if (data.code == 1001) {
-        for(let i=0;i<this.addbusiness.length;i++){
-         this.addbusiness[i].businessList=data.data
+        for (let i = 0; i < this.addbusiness.length; i++) {
+          this.addbusiness[i].businessList = data.data;
         }
       } else if (data.code == 1010) {
         this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
           callback: action => {
-            this.$message({
-              type: "重新登录",
-              message: this.$router.push({ name: "Login" })
-            });
+             this.$router.push({ name: "Login" })
           }
         });
       } else {
@@ -257,17 +289,14 @@ export default {
       params.append("uuid", this.businessValue);
       const { data } = await axios.get(`${url}?${params.toString()}`);
       if (data.code == 1001) {
-         for(let i=0;i<this.addbusiness.length;i++){
-         this.addbusiness[i].shops=data.data
+        for (let i = 0; i < this.addbusiness.length; i++) {
+          this.addbusiness[i].shops = data.data;
         }
       } else if (data.code == 1010) {
         this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
           callback: action => {
-            this.$message({
-              type: "重新登录",
-              message: this.$router.push({ name: "Login" })
-            });
+            this.$router.push({ name: "Login" })
           }
         });
       } else {
@@ -275,7 +304,7 @@ export default {
       }
     },
     addmodel: function(add, index) {
-       this.getbusiness();
+      this.getbusiness();
       console.log(add);
       if (add == "添加") {
         this.addbusiness.push({
@@ -283,22 +312,147 @@ export default {
           addicon: require("../assets/delete.png"),
           start_time: "",
           b_uuid: "",
-          c_uuid: [],
+          c_uuids: [],
           businessList: [],
           ifshops: false,
-          shops:[]
+          shops: []
         });
       } else {
         this.addbusiness.splice(index, 1);
       }
     },
-    shopsToggle: function(shop) {
-      console.log(shop);
-    }
+    shopsToggle: function(uuid, index) {
+      // console.log(index);
+      // console.log(uuid);
+    },
+    getwx: function() {
+      let wechaturl = window.location.href.split("#")[0];
+      if (window.wechaturl !== undefined) {
+        wechaturl = window.wechaturl;
+      }
+      const url = this.httpsBasic.httpsBasicWx + "wechat/jssdk";
+      // alert(wxUrl)
+      axios
+        .post(url, {
+          url: wechaturl
+        })
+        .then(function(res) {
+          wx.config({
+            debug: false, // 开启调试模式,
+            appId: res.data.data.appId, // 必填，企业号的唯一标识，此处填写企业号corpid
+            timestamp: res.data.data.timestamp, // 必填，生成签名的时间戳
+            nonceStr: res.data.data.nonceStr, // 必填，生成签名的随机串
+            signature: res.data.data.signature, // 必填，签名，见附录1
+            jsApiList: res.data.data.jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+          });
+        });
+    },
+    async identityFrountSrc() {
+      const _this = this;
+      wx.ready(function() {
+        wx.chooseImage({
+          count: 1, // 默认9
+          sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+          success: function(res) {
+            let bosImg = res.localIds[0].toString(); // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图
+            wx.uploadImage({
+              localId: bosImg, // 需要上传的图片的本地ID，由chooseImage接口获得
+              isShowProgressTips: 1, // 默认为1，显示进度提示
+              success: function(res) {
+                const result = res.serverId; // 返回图片的服务器端ID
+                 _this.id_img_p=result
+                // 判断设备
+                var xt = navigator.userAgent;
+                if (xt.indexOf("OS") > -1) {
+                  wx.getLocalImgData({
+                    localId: bosImg, // 图片的localID
+                    success: function(res) {
+                      // localData是图片的base64数据，可以用img标签显示
+                      _this.identityFrount = res.localData;
+                    }
+                  });
+                } else {
+                  _this.identityFrount = result;
+                }
+              }
+            });
+          }
+        });
+      });
+    },
+async identitySideSrc() {
+      const _this = this;
+      wx.ready(function() {
+        wx.chooseImage({
+          count: 1, // 默认9
+          sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+          success: function(res) {
+            let bosImg = res.localIds[0].toString(); // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图
+            wx.uploadImage({
+              localId: bosImg, // 需要上传的图片的本地ID，由chooseImage接口获得
+              isShowProgressTips: 1, // 默认为1，显示进度提示
+              success: function(res) {
+                const result = res.serverId; // 返回图片的服务器端ID
+                 _this.id_img_n=result
+                // 判断设备
+                var xt = navigator.userAgent;
+                if (xt.indexOf("OS") > -1) {
+                  wx.getLocalImgData({
+                    localId: bosImg, // 图片的localID
+                    success: function(res) {
+                      // localData是图片的base64数据，可以用img标签显示
+                      _this.identitySide = res.localData;
+                    }
+                  });
+                } else {
+                  _this.identitySide = result;
+                }
+              }
+            });
+          }
+        });
+      });
+    },
+    async bankcardSrc() {
+      const _this = this;
+      wx.ready(function() {
+        wx.chooseImage({
+          count: 1, // 默认9
+          sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+          success: function(res) {
+            let bosImg = res.localIds[0].toString(); // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图
+            wx.uploadImage({
+              localId: bosImg, // 需要上传的图片的本地ID，由chooseImage接口获得
+              isShowProgressTips: 1, // 默认为1，显示进度提示
+              success: function(res) {
+                const result = res.serverId; // 返回图片的服务器端ID
+                   _this.bank_card_img=result
+                // 判断设备
+                var xt = navigator.userAgent;
+                if (xt.indexOf("OS") > -1) {
+                  wx.getLocalImgData({
+                    localId: bosImg, // 图片的localID
+                    success: function(res) {
+                      // localData是图片的base64数据，可以用img标签显示
+                      _this.bankcard = res.localData;
+                    }
+                  });
+                } else {
+                  _this.bankcard = result;
+                }
+              }
+            });
+          }
+        });
+      });
+    },
   },
   mounted() {
     this.getbusiness();
-    console.log(this.addbusiness)
+    this.getwx(); //获取微信JSSDK
     // console.log(this.businessList);
   }
 };

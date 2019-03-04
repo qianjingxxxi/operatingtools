@@ -313,8 +313,8 @@ export default {
   methods: {
     selectChannel: () => console.log("a"),
     backpage() {
-      // this.$router.go(-1); //返回上一层
-      this.$router.push({ name: "Resourcelib" });
+      this.$router.go(-1); //返回上一层
+      // this.$router.push({ name: "Resourcelib" });
     },
     tagToggle(tag) {
       if (this.tags.indexOf(tag) != -1) {
@@ -469,7 +469,6 @@ export default {
         this.tipstoggle = false;
         this.hasdata = true;
         this.datas = data.data;
-        console.log(data);
         this.tel = data.data.phone; //电话
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
@@ -546,7 +545,7 @@ export default {
  .el-radio__label,
 .el-input,
  .el-textarea {
-    font-size: 18px;
+    font-size: 16px;
     color: #556677;
   }
   // .el-input__inner {
@@ -598,7 +597,7 @@ export default {
     width: 40%;
   }
   .el-input__inner {
-    font-size: 20px;
+    font-size: 16px;
   }
   .el-range-editor.el-input__inner {
     width: 85%;

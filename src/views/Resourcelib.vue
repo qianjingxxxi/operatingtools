@@ -51,7 +51,7 @@
               <span>{{item.trade=="" ? "未添加" : item.trade}}</span>
             </li>
             <li class="goutong">
-              <!-- <label>沟通：</label> -->
+              <label>沟通记录：</label>
               <span >{{item.remark=="" ? "未填写" : item.remark}}</span>
             </li>
           </ul>
@@ -63,23 +63,23 @@
                 type="success"
                 @click="enptypage(item.phone,item.name)"
                 plain
-              >入职</el-button>
-              <el-button
+              >入职</el-button> -->
+              <div>
+                 <el-button
                 v-if="item.is_interview=='1' && item.is_entry=='1' ? true : false"
                 type="success"
-                @click="interviewpage(item.uuid)"
+                @click="visitpage(item.phone,item.name,item.uuid)"
                 plain
-              >拜访</el-button> -->
-              <div>
-
-              <el-button type="warning" @click="interviewpage(item.uuid)" plain>面试</el-button>
-              <el-button type="primary" @click="editpage(item.uuid)" plain>编辑</el-button>
+              >拜访</el-button>
+              <el-button   v-if="item.is_entry=='0' ? true : false" type="warning" @click="interviewpage(item.uuid)" plain>面试</el-button>
+              <el-button  v-if="item.is_interview=='1' ? true : false" type="primary" @click="editpage(item.uuid)" plain>编辑</el-button>
               </div>
             </el-row>
           </div>
         </div>
       </scroller>
     </div>
+  <!-- <resoutdetails :detailspage="detailsID"></resoutdetails> -->
   </div>
 </template>
 
@@ -90,7 +90,7 @@
 <style lang="less">
 .workcontent {
   .operation>div .el-button{
-      padding: 4px 8px;
+      padding: 8px 16px;
       font-size:14px;
   }
    .operation>div{
@@ -149,16 +149,16 @@
     width: 100%;
   }
 .el-checkbox__label{
-  font-size:18px;
+  font-size:16px;
 }
 .ziyuanku{
     margin-top: 180px;
     position: relative;
 }
-.charactertag .goutong {
-  font-size:26px;
-  line-height:32px;
-}
+// .charactertag .goutong {
+//   font-size:26px;
+//   line-height:32px;
+// }
 }
 .el-message-box {
     width: 90%;
@@ -170,6 +170,7 @@ import axios from "axios";
 import { mapState } from "vuex";
 import Vue from "vue";
 import VueScroller from "vue-scroller";
+import resoutdetails from "../components/details.vue"
 Vue.use(VueScroller);
 export default {
   data() {
@@ -180,16 +181,19 @@ export default {
       search: "",
       checkedInterview: false,
       isInterview: 0,
-      hasaddress:true
+      hasaddress:true,
+      total:0
     };
   },
   watch: {
     search() {
-      this.items =[]
+      this.items =[];
+      this.page=1
       this.getData();
     },
     checkedInterview() {
        this.items =[]
+      this.page=1
       this.getData();
     }
   },
@@ -206,7 +210,7 @@ export default {
             token: window.localStorage.getItem("operatingToken"),
             page: this.page,
             page_max_row: 10,
-            search_key: this.search,
+            search_key: encodeURI(this.search),
             is_interview: this.isInterview
           }
         })
@@ -214,6 +218,7 @@ export default {
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
+              _this.total=response.data.data.total_count
             } else {
               _this.items = _this.items.concat(response.data.data.list);
             }
@@ -237,10 +242,7 @@ export default {
             _this.$alert("登录失效或过期，请重新登录", "登录失效", {
               confirmButtonText: "确定",
               callback: action => {
-                _this.$message({
-                  type: "重新登录",
-                  message: _this.$router.push({ name: "Login" })
-                });
+                 _this.$router.push({ name: "Login" })
               }
             });
           } else {
@@ -274,6 +276,7 @@ export default {
     },
     detailsPage(uuid) {
       event.stopImmediatePropagation();
+      // this.detailsID=uuid;
       // console.log(uuid)
       this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
       // this.$router.push("resoutcelibdetails")
@@ -296,11 +299,11 @@ export default {
         params: { uuid: uuid }
       });
     },
-    enptypage(tel, name) {
+    visitpage(tel, name,uuid){
       event.stopImmediatePropagation();
       this.$router.push({
-        name: "TakingWork",
-        params: { tel: tel, name: name }
+        name: "Addvisit",
+        params: { tel: tel, name: name,e_uuid:uuid }
       });
     }
   },
@@ -314,6 +317,7 @@ export default {
     })
   },
   components: {
+    resoutdetails
     // search
   }
 };

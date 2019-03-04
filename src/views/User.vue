@@ -11,28 +11,28 @@
         <img src="../assets/user/setting.png" alt="setting">
       </router-link>
     </header>
-     <!-- <section class="workbench workstatistics">
+    <section class="workbench workstatistics">
       <h2>今日工作统计</h2>
       <ul>
         <li @click="InterviewHref">
           <p>{{interview}}</p>
           <span>面试</span>
         </li>
-        <li>
+        <li @click="entryHref">
           <p>{{entry}}</p>
           <span>入职</span>
         </li>
-        <li>
+        <li @click="visitHref">
           <p>{{visit}}</p>
           <span>拜访</span>
         </li>
-        <li>
+        <li @click="quitHref">
           <p>{{quit}}</p>
           <span>离职</span>
         </li>
       </ul>
-    </section> -->
-     <section class="workbench">
+    </section>
+    <section class="workbench">
       <h2>我的工作台</h2>
       <ul>
         <li @click="resourceHref">
@@ -41,7 +41,7 @@
           </a>
           <p>资源库</p>
         </li>
-        <!-- <li>
+        <!-- <li @click="imgsrc">
           <a>
             <img src="../assets/user/enpty.png" alt="interview">
           </a>
@@ -73,6 +73,15 @@ export default {
     InterviewHref() {
       this.$router.push("interview");
     },
+    entryHref() {
+      this.$router.push("Enpty");
+    },
+    quitHref() {
+      this.$router.push("Quit");
+    },
+    visitHref(){
+      this.$router.push("Visit");
+    },
     getData() {
       let url =
         this.httpsBasic.httpsBasic +
@@ -90,10 +99,7 @@ export default {
             _this.$alert("登录失效或过期，请重新登录", "登录失效", {
               confirmButtonText: "确定",
               callback: action => {
-                _this.$message({
-                  type: "重新登录",
-                  message: _this.$router.push({ name: "Login" })
-                });
+                _this.$router.push({ name: "Login" });
               }
             });
           } else {
@@ -112,7 +118,9 @@ export default {
           date.getMonth() + 1 > 9
             ? (M = parseFloat(date.getMonth()) + 1)
             : (M = "0" + parseFloat(date.getMonth() + 1)),
-        D = String(date.getDate()),
+        D = parseFloat(date.getDate() > 9)
+          ? (D = parseFloat(date.getDate()))
+          : (D = "0" + parseFloat(date.getDate())),
         start = Y + M + D + "000000",
         end = Y + M + D + "235959";
       const url = this.httpsBasic.httpsBasic + "count/workNumCount";

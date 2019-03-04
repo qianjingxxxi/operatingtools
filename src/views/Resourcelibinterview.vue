@@ -189,7 +189,7 @@
         </el-radio-group>
       </div>
       <el-row class="submitBtn borderNone">
-        <el-button type="primary" @click="submitform">提交</el-button>
+        <el-button type="primary" >提交</el-button>
       </el-row>
     </section>
   </div>
@@ -458,6 +458,22 @@ export default {
         // this.wockexp = data.data.work_experience; //工作经历
         if (data.data.work_experience != null && data.data.work_experience!="") {
           this.wockexp = data.data.work_experience; //工作经历
+            this.wockexp = data.data.work_experience; //工作经历
+            for (let i = 0; i <  this.wockexp.length; i++) {
+             this.wockexp[i].age="添加";
+            this.wockexp[i].age=require("../assets/add.png");
+          }
+        } else {
+          this.wockexp = [
+            {
+              addtitle: "添加",
+              addicon: require("../assets/add.png"),
+              wockexptime: "",
+              start_time: "",
+              end_time: "",
+              content: ""
+            }
+          ];
         }
         this.remark = data.data.remark; //备注
         this.checkchannel = parseFloat(data.data.origin); //渠道
@@ -504,6 +520,11 @@ export default {
         this.keyword = data.data.address; //居住地
         if (data.data.work_experience != null && data.data.work_experience!="") {
           this.wockexp = data.data.work_experience; //工作经历
+            this.wockexp = data.data.work_experience; //工作经历
+            for (let i = 0; i <  this.wockexp.length; i++) {
+             this.wockexp[i].age="添加";
+            this.wockexp[i].age=require("../assets/add.png");
+          }
         } else {
           this.wockexp = [
             {
@@ -516,7 +537,6 @@ export default {
             }
           ];
         }
-        console.log(this.wockexp);
         this.remark = data.data.remark; //备注
         this.age = data.data.age;
         this.checkchannel = parseFloat(data.data.origin); //渠道
@@ -537,14 +557,11 @@ export default {
 
         //    console.log(this.tagToggle)
         // }//性格标签
-      } else if (data.code == 1010) {
+      } else if (data.code == 1010 || data.code==1009) {
         this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
           callback: action => {
-            this.$message({
-              type: "重新登录",
-              message: this.$router.push({ name: "Login" })
-            });
+           this.$router.push({ name: "Login" })
           }
         });
       }

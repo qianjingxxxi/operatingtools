@@ -11,7 +11,7 @@
       <input type="password" v-model="userPassword" placeholder="默认密码：手机号后六位">
       <span class="mark-error">请输入密码</span>
     </div>
-     <el-checkbox class="ignore" v-model="rememberID">记住账号和密码</el-checkbox>
+    <el-checkbox class="ignore" v-model="rememberID">记住账号和密码</el-checkbox>
     <div class="submitBtn">
       <el-button @click="loginHref">登录</el-button>
     </div>
@@ -19,7 +19,7 @@
 </template>
 <script>
 import axios from "axios";
-import {mapMutations, mapState} from 'vuex';
+import { mapMutations, mapState } from "vuex";
 
 export default {
   data() {
@@ -27,18 +27,15 @@ export default {
       userName: "",
       userPassword: "",
       visible: false,
-      rememberID:true
+      rememberID: true
     };
   },
   methods: {
-    ...mapMutations([
-      'setToken',
-    ]),
+    ...mapMutations(["setToken"]),
     loginHref() {
       let _this = this;
-      // console.log($route.path=""), 
+      // console.log($route.path=""),
       let url = this.httpsBasic.httpsBasic + "loginByPhonePassword";
-
       axios
         .post(url, {
           phone: this.userName,
@@ -47,17 +44,23 @@ export default {
         .then(function(response) {
           // console.log(response)
           if (response.data.code == "1001") {
-              _this.setToken({
-              token: response.data.data.token,
+            _this.setToken({
+              token: response.data.data.token
             });
-            window.localStorage.setItem("operatingToken", response.data.data.token);
+            window.localStorage.setItem(
+              "operatingToken",
+              response.data.data.token
+            );
             // //判断是否保存用户名
-            if(_this.rememberID){
-                window.localStorage.setItem("operatingName", _this.userName)
-                window.localStorage.setItem("operatingPassword",_this.userPassword);
-            }else {
-                window.localStorage.removeItem('operatingName')
-                window.localStorage.removeItem('operatingPassword')
+            if (_this.rememberID) {
+              window.localStorage.setItem("operatingName", _this.userName);
+              window.localStorage.setItem(
+                "operatingPassword",
+                _this.userPassword
+              );
+            } else {
+              window.localStorage.removeItem("operatingName");
+              window.localStorage.removeItem("operatingPassword");
             }
 
             // console.log(_this.token);
@@ -73,17 +76,26 @@ export default {
     }
   },
   mounted() {
-    if(window.localStorage.getItem('operatingName')!=null){
-        this.userName=window.localStorage.getItem('operatingName');
-        this.userPassword=window.localStorage.getItem('operatingPassword');
-    }else{
-      this.userName="";
-      this.userPassword="";
+    if (window.localStorage.getItem("operatingName") != null) {
+      this.userName = window.localStorage.getItem("operatingName");
+      this.userPassword = window.localStorage.getItem("operatingPassword");
+    } else {
+      this.userName = "";
+      this.userPassword = "";
     }
+
+    if (navigator.userAgent.indexOf("iPhone") !== -1) {
+      window.wechaturl = window.location + "";
+      console.log(window.wechaturl);
+    } //ios
+    if (navigator.userAgent.indexOf("miniProgram") !== -1) {
+      window.wechaturl = window.location + "";
+    } //android
+    console.log(window.wechaturl);
   },
   computed: {
     ...mapState({
-      token: state => state.auth.token,
+      token: state => state.auth.token
     })
   },
   components: {}
@@ -91,8 +103,8 @@ export default {
 </script>
 <style lang="less">
 @import url("../style/basic/reset.less");
-.ignore .el-checkbox__label{
-    font-size: 16px
+.ignore .el-checkbox__label {
+  font-size: 16px;
 }
 </style>
 

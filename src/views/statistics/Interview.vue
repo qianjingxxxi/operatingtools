@@ -7,7 +7,7 @@
       </a>
       <p>
         面试记录
-        <span> ({{sum}}) </span>
+        <span>({{sum}})</span>
       </p>
     </header>
     <div class="searchbox">
@@ -61,7 +61,7 @@
               <el-button
                 v-if="item.eguard.is_interview=='1' && item.eguard.is_entry=='0' ? true : false"
                 type="success"
-                @click="enptypage(item.eguard.phone,item.eguard.name)"
+                @click="enptypage(item.eguard.phone,item.eguard.name,item.eguard.uuid)"
                 plain
               >入职</el-button>
               <el-button
@@ -85,82 +85,87 @@
 @import url("../../style/Resoutcelib.less");
 </style>
 <style lang="less">
-.interviewBox{
-.operation {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+.interviewBox {
+  .operation {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  .el-button {
+    padding: 6px 14px;
+  }
+  .el-button {
+    font-size: 18px;
+  }
+  .el-message-box {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 92%;
+    margin: auto;
+    right: 0;
+    bottom: 0;
+    height: 150px;
+  }
+  .no-data-text {
+    font-size: 30px;
+  }
+  ._v-content > datalist:nth-child(2) {
+    border: none;
+  }
+  ._v-content > div:last-child {
+    margin-top: 60px;
+  }
+  .searchbox {
+    position: fixed;
+    background-color: #fff;
+    width: 100%;
+    z-index: 1;
+    top: 90px;
+    // border-bottom: 1px solid #f2f2f2;
+  }
+  .el-input {
+    font-size: 14px;
+  }
+  .el-tabs__header {
+    margin: 0;
+  }
+  .searchbox .el-input__inner {
+    line-height: 28px;
+    height: 28px;
+    border: none;
+    //   border-bottom: 2px solid #f2f2f2;
+    background-image: url(../../assets/sousuo.png);
+    background-size: 18px;
+    background-repeat: no-repeat;
+    background-position: 18px center;
+    text-indent: 30px;
+  }
+  .interviewBox .el-tabs__nav {
+    text-align: center;
+    float: unset;
+  }
+  .ignore .address {
+    font-size: 16px !important;
+  }
+  .ignore .searchbox .el-input__inner {
+    font-size: 18px;
+  }
+  .scroller-box {
+    margin-top: 180px;
+  }
+  .el-tabs__nav-wrap::after {
+    height: 0;
+  }
+  .el-tabs__nav {
+    width: 100%;
+    float: unset;
+    text-align: center;
+  }
+  .searchbox > div:first-child {
+    width: 100%;
+  }
 }
-.el-button {
-  padding: 6px 14px;
-}
- .el-button {
-  font-size: 18px;
-}
- .el-message-box {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 92%;
-  margin: auto;
-  right: 0;
-  bottom: 0;
-  height: 150px;
-}
- .no-data-text {
-  font-size: 30px;
-}
- ._v-content > datalist:nth-child(2) {
-  border: none;
-}
- ._v-content > div:last-child {
-  margin-top: 60px;
-}
- .searchbox {
-   position: fixed;
-  background-color: #fff;
-  width: 100%;
-  z-index: 1;
-  top: 90px;
-  // border-bottom: 1px solid #f2f2f2;
-}
-.el-input {
-  font-size: 14px;
-}
-.el-tabs__header {
-  margin: 0;
-}
- .searchbox .el-input__inner {
-  line-height: 28px;
-  height: 28px;
-  border: none;
-//   border-bottom: 2px solid #f2f2f2;
-  background-image: url(../../assets/sousuo.png);
-  background-size: 18px;
-  background-repeat: no-repeat;
-  background-position: 18px center;
-  text-indent: 30px;
-}
-.interviewBox .el-tabs__nav{
-  text-align:center;
-  float:unset
-}
-.ignore .address {
-  font-size: 16px !important;
-}
-.ignore .searchbox .el-input__inner {
-  font-size: 18px;
-}
-.scroller-box {
-  margin-top: 180px
-}
-.el-tabs__nav-wrap::after {
-  height: 0;
-}
-.el-tabs__nav{width: 100%;float: unset;text-align:center;}
-.searchbox > div:first-child{width: 100%;}
-}
-
 </style>
 
 <script>
@@ -198,11 +203,11 @@ export default {
           }
         })
         .then(function(response) {
-        //   console.log(response);
+          //   console.log(response);
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
-              _this.sum=response.data.data.total_count
+              _this.sum = response.data.data.total_count;
             } else {
               _this.items = _this.items.concat(response.data.data.list);
             }
@@ -221,10 +226,7 @@ export default {
             _this.$alert("登录失效或过期，请重新登录", "登录失效", {
               confirmButtonText: "确定",
               callback: action => {
-                _this.$message({
-                  type: "",
-                  message: _this.$router.push({ name: "Login" })
-                });
+                _this.$router.push({ name: "Login" })
               }
             });
           } else {
@@ -250,7 +252,7 @@ export default {
     },
     refresh(done) {
       // console.log("刷新...");
-      this.page = 1; //重置页数刷新每次页数都是第一页  
+      this.page = 1; //重置页数刷新每次页数都是第一页
       this.noDate = true; //重置数据判断
       this.$refs.my_scroller.finishPullToRefresh();
       // this.$router.go(0)
@@ -280,21 +282,22 @@ export default {
         params: { uuid: uuid }
       });
     },
-    enptypage(tel, name) {
+    enptypage(tel, name,e_uuid) {
       event.stopImmediatePropagation();
       this.$router.push({
         name: "TakingWork",
-        params: { tel: tel, name: name }
+        params: { tel: tel, name: name,e_uuid:e_uuid }
       });
     },
     handleClick(tab, event) {
       const date = new Date();
       const year = date.getFullYear();
       let month = date.getMonth() + 1;
-      const strDate = date.getDate();
+      let strDate = date.getDate();
       parseFloat(month) > 9
         ? (month = month)
         : (month = "0" + parseFloat(month));
+      parseFloat(strDate)>9 ? strDate=strDate : strDate="0"+parseFloat(strDate)
       const todayStart = String(year) + month + String(strDate) + "000000";
       const todayEnd = String(year) + month + String(strDate) + "235959";
       const preDate = new Date(date.getTime() - 24 * 60 * 60 * 1000); //昨日
@@ -303,7 +306,8 @@ export default {
       parseFloat(monthpre) > 9
         ? (monthpre = monthpre)
         : (monthpre = "0" + parseFloat(monthpre));
-      const strDatepre = preDate.getDate();
+      let strDatepre = preDate.getDate();
+          parseFloat(strDatepre)>9 ? strDatepre=strDatepre : strDatepre="0"+parseFloat(strDatepre)
       const yesterdayStart =
         String(yearpre) + monthpre + String(strDatepre) + "000000";
       const yesterdayend =
@@ -314,7 +318,8 @@ export default {
       parseFloat(monthweek) > 9
         ? (monthweek = monthweek)
         : (monthweek = "0" + parseFloat(monthweek));
-      const strDateweek = weekDate.getDate();
+      let strDateweek = weekDate.getDate();
+          parseFloat(strDateweek)>9 ? strDateweek=strDateweek : strDateweek="0"+parseFloat(strDateweek)
       const weekStart =
         String(yearweek) + monthweek + String(strDateweek) + "000000";
       const monthDate = new Date(date.getTime() - 24 * 60 * 60 * 1000 * 30); //本月
@@ -323,7 +328,8 @@ export default {
       parseFloat(monthmonth) > 9
         ? (monthmonth = monthmonth)
         : (monthmonth = "0" + parseFloat(monthmonth));
-      const strDatemonth = monthDate.getDate();
+      let strDatemonth = monthDate.getDate();
+         parseFloat(strDatemonth)>9 ? strDatemonth=strDatemonth : strDatemonth="0"+parseFloat(strDatemonth)
       const monthStart =
         String(yearmonth) + monthmonth + String(strDatemonth) + "000000";
       switch (tab.label) {
@@ -355,14 +361,16 @@ export default {
   },
   mounted() {
     this.items = [];
-      const date = new Date();
+    const date = new Date();
     const year = date.getFullYear();
     let month = date.getMonth() + 1;
-    const strDate = date.getDate();
+    let strDate = date.getDate();
     parseFloat(month) > 9 ? (month = month) : (month = "0" + parseFloat(month));
+    parseFloat(strDate)>9 ? strDate=strDate : strDate="0"+parseFloat(strDate)
     this.startTime = String(year) + month + String(strDate) + "000000";
-     this.endTime = String(year) + month + String(strDate) + "235959";
+    this.endTime = String(year) + month + String(strDate) + "235959";
     this.getData();
+
   },
   computed: {
     ...mapState({

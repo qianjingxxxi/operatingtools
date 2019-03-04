@@ -14,6 +14,8 @@ import TakingWork from "./views/TakingWork.vue";
 import Interview from "./views/statistics/Interview.vue";
 import Addvisit from "./views/Addvisit.vue";
 import Visit from "./views/statistics/Visit.vue";
+import  Quit from "./views/statistics/Quit.vue";
+import  Enpty from "./views/statistics/Enpty.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -105,6 +107,20 @@ export default new Router({
       name:'Visit',
       component:() =>
       import("./views/statistics/Visit.vue")
+    }
+    ,
+    {
+      path:'/enpty',
+      name:'Enpty',
+      component:() =>
+      import("./views/statistics/Enpty.vue")
+    }
+    ,
+    {
+      path:'/quit',
+      name:'Quit',
+      component:() =>
+      import("./views/statistics/Quit.vue")
     }
   ]
 });
