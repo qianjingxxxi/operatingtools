@@ -50,3 +50,97 @@ header>span{
     color: rgba(0, 0, 0, 0.4);
     font-size: 12px;
 }
+
+
+// 离职弹框
+.quitdelbox{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: rgba(0,0,0,.5);
+    width: 100vw;height: 100vh;
+    z-index: 9;
+    // display: none;
+}
+.quitdelbox>div{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    z-index: 9;
+    margin: 50% auto 0;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #ebeef5;
+    padding-bottom: 30px;
+    width: 90%;
+}
+.quitfirst>div>div:first-child{
+    font-size: 28px;
+    padding: 50px 30px 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: #556677;
+}
+.quitfirst>div>div:nth-child(2){
+    color: #556677;
+    font-size: 28px;
+    padding: 10px 15px;
+}
+.quitfirst h3{
+    font-size: 32px;
+}
+.quitfirst>div>div:first{
+    position: relative;
+}
+.quitfirst>div>div:last-child{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.quitfirst p{
+    color: #556677;
+    font-size: 28px;
+    margin: 30px 0 20px
+}
+.quitfirst input{
+    color: #556677;
+    font-size: 28px;
+    border: 1px solid #dcdfe6;
+    width: 90%;
+    padding: 10px 0;
+    text-indent: 10px;
+    border-radius: 4px;
+}
+.quitAgain>div>div h3{
+    color: #e6a23c;
+    font-size: 32px;
+    width: 100%;
+}
+.quitfirst>div>div:last-child{margin-right: 30px}
+.quitAgain>div>div h3 span{
+    display: inline-block;
+    margin-right: 10px;
+}
+.quitAgain>div>div:first-child{
+    padding: 50px 0 20px;
+    text-align: center;
+    position: relative;
+}
+.quitdelbox a{
+        position: absolute;
+        right: 10px;
+        top:10px;
+        // padding: 10px;
+        display: inline-block;
+        font-size: 28px
+}
+.quitAgain>div p{
+    font-size: 28px;
+    color: #556677;
+    margin: 30px 0 50px;
+}

@@ -47,7 +47,7 @@
             plain
           >面试</el-button>
           <el-button
-            @click="quitBtn(datas.uuid)"
+            @click="quitBtn()"
             v-if="datas.is_entry=='1' ? true : false"
             type="danger"
             plain
@@ -215,6 +215,37 @@
         </transition>
       </div>
     </section>
+    <!--离职 -->
+    <aside class="quitdelbox quitfirst" v-if="causeBox">
+      <div>
+        <div>
+          <h3>管家离职</h3>
+          <a class="el-icon-close" @click="closeAside"></a>
+        </div>
+        <p>请输入离职原因</p>
+        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="cause"></el-input>
+        <div>
+          <el-button size="small" @click="cancelbox">取消</el-button>
+          <el-button size="small" type="primary" @click="surecause(datas.uuid)">确认</el-button>
+        </div>
+      </div>
+    </aside>
+    <!-- 再次确认离职 -->
+    <aside class="quitdelbox quitAgain" v-if="againbox">
+      <div>
+        <div>
+          <h3>
+            <span class="el-icon-warning"></span>提示
+          </h3>
+          <a class="el-icon-close" @click="closeAside"></a>
+        </div>
+        <p>是否确定该管家离职?</p>
+        <div>
+          <el-button size="small" @click="cancelbox">取消</el-button>
+          <el-button size="small" type="primary" @click="isQuit(datas.uuid)">确认</el-button>
+        </div>
+      </div>
+    </aside>
   </div>
 </template>
 <style scoped lang="less" >
@@ -223,6 +254,10 @@
 </style>
 <style lang="less">
 .resumedetails {
+  .el-textarea {
+    width: 90%;
+    margin-bottom: 20px;
+  }
   .buttonList .el-button {
     margin-left: 30px;
     padding: 8px 14px;
@@ -254,7 +289,9 @@
     border-color: #333;
   }
 }
-.el-message-box{z-index: 9999!important;}
+.el-message-box {
+  z-index: 9999 !important;
+}
 </style>
 
 <script>
@@ -279,7 +316,10 @@ export default {
       show3: true,
       arrowUp: require("../assets/arrowUp.png"),
       arrowDown: require("../assets/arrowDown.png"),
-      imgList: []
+      imgList: [],
+      cause: "",
+      causeBox: false,
+      againbox: false
     };
   },
   methods: {
@@ -316,7 +356,7 @@ export default {
           params: {
             token: window.localStorage.getItem("operatingToken"),
             // uuid: this.$route.params.uuid
-            uuid:window.localStorage.getItem("uuid_details")
+            uuid: window.localStorage.getItem("uuid_details")
           }
         })
         .then(function(res) {
@@ -326,7 +366,7 @@ export default {
             _self.imgList.push(_self.datas.id_img_p);
             _self.imgList.push(_self.datas.bank_card_img);
             _self.tags = res.data.data.tag.split(",");
-            // console.log(res);
+            //  console.log(res);
             _self.datas.is_full_time == "1"
               ? (_self.showjobtime = false)
               : (_self.showjobtime = true);
@@ -381,47 +421,40 @@ export default {
         params: { tel: tel, name: name, e_uuid: e_uuid }
       });
     },
-    quitBtn: function(uuid) {
-      this.$prompt("请输入离职原因", "管家离职", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-      })
-        .then(({ value }) => {
-          if (value != null && value != "") {
-            this.$confirm("是否确定该管家离职?", "提示", {
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              type: "warning"
-            })
-              .then(() => {
-                this.isQuit(uuid, value);
-              })
-              .catch(() => {
-                this.$message({
-                  type: "info",
-                  message: "已取消"
-                });
-              });
-          } else {
-            this.$message.error("请填写离职原因");
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "取消离职"
-          });
-        });
+    cancelbox() {
+      this.$message("取消离职");
+      this.causeBox = false;
+      this.againbox = false;
     },
-    async isQuit(e_uuid, value) {
+    closeAside() {
+      this.causeBox = false;
+      this.againbox = false;
+    },
+    quitBtn() {
+      this.causeBox = true;
+    },
+    surecause(uuid) {
+      if (this.cause != "") {
+        this.causeBox = false;
+        this.againbox = true;
+      } else {
+        this.$message.warning("离职原因不能为空");
+      }
+    },
+    async isQuit(e_uuid) {
       const url = this.httpsBasic.httpsBasic + "eguard/quit";
       const params = new URLSearchParams();
       params.append("token", window.localStorage.getItem("operatingToken"));
       params.append("e_uuid", e_uuid);
-      params.append("content", value);
+      params.append("content", this.cause);
       const { data } = await axios.post(`${url}?${params.toString()}`);
       if (data.code == 1001) {
         this.$message.success("离职成功");
+        this.againbox = true;
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          this.$router.push({ name: "Resourcelib" });
+        }, 2000);
       } else {
         this.$message.error(data.msg);
       }

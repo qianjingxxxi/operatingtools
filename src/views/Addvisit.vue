@@ -23,7 +23,7 @@
           <el-option
             :key="business.uuid"
             :label="business.name"
-            :value="business.uuid"
+            :value="business.name"
             v-for="business in businessList"
           ></el-option>
         </el-select>
@@ -125,6 +125,7 @@ export default {
       const { data } = await axios.get(`${url}?${params.toString()}`);
       if (data.code == 1001) {
         this.businessList = data.data;
+        // console.log(data)
       } else if (data.code == 1010) {
         this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
@@ -225,6 +226,7 @@ export default {
       });
     },
     submitform() {
+      // console.log(this.businessValue)
       const url = this.httpsBasic.httpsBasic + "eguard/visit";
       const _this = this;
       axios
@@ -238,15 +240,15 @@ export default {
           token: window.localStorage.getItem("operatingToken")
         })
         .then(function(res) {
-          // alert(JSON.stringify(res));
-          if(re.data.code==1001){
+            // alert(JSON.stringify(res));
+          if(res.data.code==1001){
                _this.$message.success("提交成功");
               setTimeout(() => {
                 window.scrollTo(0, 0);
                 _this.$router.push({ name: "Visit" });
               }, 2000);
           }else{
-            _this.$message.error(response.data.msg);
+            _this.$message.error(res.data.msg);
           }
         })
         .catch(function(error) {

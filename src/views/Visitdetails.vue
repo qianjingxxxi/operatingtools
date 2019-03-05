@@ -102,13 +102,14 @@ export default {
       const url = this.httpsBasic.httpsBasic + "visit/selectInfo";
       const params = new URLSearchParams();
       params.append("token", window.localStorage.getItem("operatingToken"));
+      console.log(this.$route.params.uuid)
       params.append("uuid", this.$route.params.uuid);
       const { data } = await axios.get(`${url}?${params.toString()}`);
       if (data.code == 1001) {
         this.typeValue = data.data.type; //类型
         this.goalValue = data.data.desitination; //目的
         this.content = data.data.content; //内容
-        this.visitImg = data.data.imgs.split(","); //附件
+        this.visitImg = data.data.imgs; //附件
         this.businessValue = data.data.business;
       } else if (data.code == 1010) {
         this.$alert("登录失效或过期，请重新登录", "登录失效", {

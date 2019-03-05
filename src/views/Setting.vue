@@ -16,7 +16,7 @@
       </router-link>
       <a>
         <p>当前版本</p>
-        <span>1.0.3</span>
+        <span>1.2.2</span>
       </a>
       <a class="quit" @click="quitHref">退出登录</a>
     </section>

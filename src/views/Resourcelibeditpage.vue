@@ -923,7 +923,7 @@ export default {
   .el-radio__label,
   .el-input,
   .el-textarea {
-    font-size: 18px;
+    font-size: 16px;
     color: #556677;
   }
 
@@ -982,7 +982,7 @@ export default {
 
   .el-date-editor .el-range-input,
   .el-date-editor .el-range-separator {
-    font-size: 18px;
+    font-size: 16px;
   }
   .el-range__close-icon {
     background: url(../assets/close.png) no-repeat;

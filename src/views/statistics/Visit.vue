@@ -79,7 +79,7 @@
                 <el-button
                   v-if="item.eguard.is_interview=='1' && item.eguard.is_entry=='1' ? true : false"
                   type="success"
-                  @click="visitpage(item.eguard.phone,item.eguard.name,item.uuid)"
+                  @click="visitpage(item.eguard.phone,item.eguard.name,item.e_uuid)"
                   plain
                 >拜访</el-button>
               </div>
@@ -253,6 +253,7 @@ export default {
         })
         .then(function(response) {
           if (response.data.code == 1001) {
+            //  console.log(response)
             if (_this.page == 1) {
               _this.items = response.data.data.list;
               _this.sum = response.data.data.total_count;
@@ -316,7 +317,7 @@ export default {
       this.getData();
     },
     detailsPage(uuid, name) {
-      console.log(name);
+      // console.log(uuid);
       this.$router.push({
         name: "Visitdetails",
         params: { uuid: uuid, name: name }

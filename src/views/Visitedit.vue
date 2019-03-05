@@ -23,7 +23,7 @@
           <el-option
             :key="business.uuid"
             :label="business.name"
-            :value="business.uuid"
+            :value="business.name"
             v-for="business in businessList"
           ></el-option>
         </el-select>
@@ -124,16 +124,17 @@ export default {
       params.append("token", window.localStorage.getItem("operatingToken"));
       params.append("uuid", this.$route.params.uuid);
       const { data } = await axios.get(`${url}?${params.toString()}`);
+
+      console.log(data)
       if(data.code==1001){
         this.typeValue=data.data.type//类型
         this.goalValue=data.data.desitination//目的
         this.content=data.data.content;//内容
-        this.visitImg=(data.data.imgs).split(',')//附件
+        this.visitImg=data.data.imgs//附件
         this.businessValue=data.data.business
       }else{
          this.$message.error(data.msg);
       }
-      console.log(data)
     },
     async getbusiness() {
       const url = this.httpsBasic.httpsBasic + "business/selectBusinessList";

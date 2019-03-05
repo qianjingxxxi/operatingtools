@@ -86,12 +86,12 @@ export default {
 
     if (navigator.userAgent.indexOf("iPhone") !== -1) {
       window.wechaturl = window.location + "";
-      console.log(window.wechaturl);
+      // console.log(window.wechaturl);
     } //ios
     if (navigator.userAgent.indexOf("miniProgram") !== -1) {
       window.wechaturl = window.location + "";
     } //android
-    console.log(window.wechaturl);
+    // console.log(window.wechaturl);
   },
   computed: {
     ...mapState({

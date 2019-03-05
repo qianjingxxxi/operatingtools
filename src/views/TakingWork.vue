@@ -31,7 +31,7 @@
               :key="business.uuid"
               :label="business.name"
               :value="business.uuid"
-              v-for="business in add.businessList"
+              v-for="business in businessList"
             ></el-option>
           </el-select>
           <div class="addbusiness" @click="addmodel(add.addtitle,indexVal)">
@@ -45,7 +45,7 @@
           </label>
           <el-select v-model="add.c_uuids" multiple placeholder="请选择">
             <el-option
-              v-for="(shop,index) in add.shops"
+              v-for="(shop,index) in shops"
               :label="shop.shop_name"
               :key="index"
               :name="shop.uuid"
@@ -172,8 +172,8 @@
   .formData .businessBox div div label {
     width: unset;
   }
-   .formData .selectshops .el-select{
-      width: 88%;
+  .formData .selectshops .el-select {
+    width: 88%;
   }
 }
 </style>
@@ -197,15 +197,16 @@ export default {
           addicon: require("../assets/add.png"),
           b_uuid: "",
           c_uuids: [],
-          businessList: [],
-          ifshops: false,
-          shops: []
+          ifshops: false
         }
       ],
-      bankNum:"",
-      id_img_n:"",
-      id_img_p:"",
-      bank_card_img:""
+      shops: [],
+
+      businessList: [],
+      bankNum: "",
+      id_img_n: "",
+      id_img_p: "",
+      bank_card_img: ""
     };
   },
   watch: {
@@ -215,8 +216,8 @@ export default {
       //   ? (this.addbusiness.ifshops = true && this.getshops())
       //   : (this.addbusiness.ifshops = false);
     },
-    shopValue:function(){
-      console.log(this.shopValue)
+    shopValue: function() {
+      console.log(this.shopValue);
     }
   },
   methods: {
@@ -233,38 +234,38 @@ export default {
         this.getshops();
       }
     },
-    submitform:function() {
-      let _this=this;
-      if (
-        this.bankNum != "" &&
-        this.identity != ""
-      ) {
-         const url = this.httpsBasic.httpsBasic + "eguard/entry";
-          axios.post(url,{
-              e_uuid:this.$route.params.e_uuid,
-              id_num:this.identity,
-              token:window.localStorage.getItem("operatingToken"),
-              location:JSON.stringify(this.addbusiness),
-              bank_card_num:this.bankNum,
-              id_img_p:this.id_img_p,
-              id_img_n: this.id_img_n,
-              bank_card_img:this.bank_card_img
-
-          }).then(function(res){
-            // console.log(res)
-             _this.$message.success("提交成功");
-               setTimeout(() => {
-                window.scrollTo(0, 0);
-                _this.$router.push({ name: "Resourcelib" });
-              }, 2000);
-            // alert(JSON.stringify(res))
-          }).catch(function(error){
-            _this.$message.error(error);
+    submitform: function() {
+      console.log(this.addbusiness);
+      let _this = this;
+      if (this.bankNum != "" && this.identity != "") {
+        const url = this.httpsBasic.httpsBasic + "eguard/entry";
+        axios
+          .post(url, {
+            e_uuid: this.$route.params.e_uuid,
+            id_num: this.identity,
+            token: window.localStorage.getItem("operatingToken"),
+            location: JSON.stringify(this.addbusiness),
+            bank_card_num: this.bankNum,
+            id_img_p: this.id_img_p,
+            id_img_n: this.id_img_n,
+            bank_card_img: this.bank_card_img
           })
+          .then(function(res) {
+            // console.log(res)
+            _this.$message.success("提交成功");
+            setTimeout(() => {
+              window.scrollTo(0, 0);
+              _this.$router.push({ name: "Resourcelib" });
+            }, 2000);
+            // alert(JSON.stringify(res))
+          })
+          .catch(function(error) {
+            _this.$message.error(error);
+          });
       } else {
         _this.$message.warning("资料未填写完整");
       }
-      console.log(this.tel);
+      // console.log(this.tel);
     },
     async getbusiness() {
       const url = this.httpsBasic.httpsBasic + "business/selectBusinessList";
@@ -272,14 +273,15 @@ export default {
       params.append("token", window.localStorage.getItem("operatingToken"));
       const { data } = await axios.get(`${url}?${params.toString()}`);
       if (data.code == 1001) {
-        for (let i = 0; i < this.addbusiness.length; i++) {
-          this.addbusiness[i].businessList = data.data;
-        }
+        // for (let i = 0; i < this.addbusiness.length; i++) {
+        //   this.addbusiness[i].businessList = data.data;
+        // }
+        this.businessList = data.data;
       } else if (data.code == 1010) {
         this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
           callback: action => {
-             this.$router.push({ name: "Login" })
+            this.$router.push({ name: "Login" });
           }
         });
       } else {
@@ -294,14 +296,15 @@ export default {
       params.append("uuid", this.businessValue);
       const { data } = await axios.get(`${url}?${params.toString()}`);
       if (data.code == 1001) {
-        for (let i = 0; i < this.addbusiness.length; i++) {
-          this.addbusiness[i].shops = data.data;
-        }
+        // for (let i = 0; i < this.addbusiness.length; i++) {
+        //   this.addbusiness[i].shops = data.data;
+        // }
+        this.shops = data.data;
       } else if (data.code == 1010) {
         this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
           callback: action => {
-            this.$router.push({ name: "Login" })
+            this.$router.push({ name: "Login" });
           }
         });
       } else {
@@ -366,7 +369,7 @@ export default {
               isShowProgressTips: 1, // 默认为1，显示进度提示
               success: function(res) {
                 const result = res.serverId; // 返回图片的服务器端ID
-                 _this.id_img_p=result
+                _this.id_img_p = result;
                 // 判断设备
                 var xt = navigator.userAgent;
                 if (xt.indexOf("OS") > -1) {
@@ -386,7 +389,7 @@ export default {
         });
       });
     },
-async identitySideSrc() {
+    async identitySideSrc() {
       const _this = this;
       wx.ready(function() {
         wx.chooseImage({
@@ -400,7 +403,7 @@ async identitySideSrc() {
               isShowProgressTips: 1, // 默认为1，显示进度提示
               success: function(res) {
                 const result = res.serverId; // 返回图片的服务器端ID
-                 _this.id_img_n=result
+                _this.id_img_n = result;
                 // 判断设备
                 var xt = navigator.userAgent;
                 if (xt.indexOf("OS") > -1) {
@@ -434,7 +437,7 @@ async identitySideSrc() {
               isShowProgressTips: 1, // 默认为1，显示进度提示
               success: function(res) {
                 const result = res.serverId; // 返回图片的服务器端ID
-                   _this.bank_card_img=result
+                _this.bank_card_img = result;
                 // 判断设备
                 var xt = navigator.userAgent;
                 if (xt.indexOf("OS") > -1) {
@@ -453,7 +456,7 @@ async identitySideSrc() {
           }
         });
       });
-    },
+    }
   },
   mounted() {
     this.getbusiness();

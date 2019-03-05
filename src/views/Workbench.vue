@@ -9,6 +9,7 @@
     </header>
     <!-- 表单填写 -->
     <section class="formData ignore">
+      <!-- <span>*为必填项</span> -->
       <div>
         <label>
           <i>*</i>联系电话:
@@ -32,7 +33,7 @@
       </span>
       <div>
         <label>
-          <i>*</i>年龄：
+          <i></i>年龄：
         </label>
         <el-input v-model="age" placeholder="请输入年龄" type="number"></el-input>
       </div>
@@ -92,7 +93,6 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
-            
             ></el-date-picker>
             <div class="addworkexp" @click="addmodel(workexpcon.addtitle,index)">
               <img :src="workexpcon.addicon">
@@ -109,7 +109,7 @@
       </span>
       <div class="selectcheckbox dispositiontag">
         <label>
-          <i>*</i>性格标签:
+          <i></i>性格标签:
         </label>
         <el-checkbox-group class="selectlabel" v-model="checktag">
           <el-checkbox
@@ -188,6 +188,19 @@
           <el-radio :label="2">自主开发</el-radio>
           <!-- <el-radio :label="3">资源库</el-radio> -->
         </el-radio-group>
+      </div>
+      <div class="selectcheck">
+        <label>
+          <i>*</i>面试类型:
+        </label>
+        <el-select v-model="typeValue" placeholder="请选择">
+          <el-option
+            :key="index"
+            :label="type.name"
+            :value="type.name"
+            v-for="(type,index) in typeList"
+          ></el-option>
+        </el-select>
       </div>
       <el-row class="submitBtn borderNone">
         <el-button type="primary" @click="submitform">提交</el-button>
@@ -288,7 +301,9 @@ export default {
       businesses: [],
       businessLabel: ["配送", "运维", "物流"],
       businesstag: [],
-      is_die: 0
+      is_die: 0,
+      typeList: [{ name: "面访" }, { name: "电话" }, { name: "社交APP" }],
+      typeValue: ""
     };
   },
   watch: {
@@ -346,74 +361,60 @@ export default {
         this.wockexp[i].content = this.wockexp[i]["wockexpcontent"];
       }
       if (
-        this.tags != "" &&
+        // this.tags != "" &&
         this.name != "" &&
         this.tel != "" &&
         this.keyword != "" &&
         this.wockexp != "" &&
-        this.age != "" &&
+        // this.age != "" &&
         this.wockexp.start_time != "" &&
         this.wockexp.end_time != "" &&
         this.wockexp.content != "" &&
         this.businesstag != "" &&
         this.remark != "" &&
-        this.remark.length > 13
+        this.typeValue!=""
       ) {
         // this.compute=this.compute.join(',')
-
-        axios
-          .post(url, {
-            token: window.localStorage.getItem("operatingToken"),
-            origin: this.checkchannel,
-            phone: this.tel,
-            name: this.name,
-            sex: this.sex,
-            address: this.keyword,
-            address_l_l: this.selectTip.location,
-            work_experience: this.wockexp,
-            tag: this.tags,
-            remark: this.remark,
-            is_full_time: this.workTime,
-            able_work_time: this.compute,
-            age: this.age,
-            address_d: this.address_d,
-            trade: this.businesstag,
-            is_die: this.is_die
-          })
-          .then(function(response) {
-            if (response.data.code == 1001) {
-              // _this.$router.push("Workbench");
-              _this.$message.success("提交成功");
-              setTimeout(() => {
-                window.scrollTo(0, 0);
-                _this.$router.push({ name: "Resourcelib" });
-              }, 2000);
-              // setTimeout(() => {
-              //
-              //   _this.tel = ""; //电话
-              //   _this.name = ""; //姓名
-              //   _this.sex = 0; //性别
-              //   _this.keyword = ""; //居住地
-              //   _this.wockexp = ""; //工作经历
-              //   _this.remark = ""; //备注
-              //   _this.checkchannel = 0; //渠道
-              //   _this.jobtime = [];
-              //   _this.checktag = [];
-              //   _this.workTime = 1;
-              //   _this.age = "";
-              //   _this.is_die=0;
-              //   _this.checkbusiness=[];
-              //   _this.businesstag=[]
-              // }, 2000);
-            } else {
-              _this.$message.error(response.data.msg);
-            }
-            // console.log(response);
-          })
-          .catch(function(error) {
-            _this.$message.error(error);
-            // console.log(error);
-          });
+        if (this.remark.length > 13) {
+          axios
+            .post(url, {
+              token: window.localStorage.getItem("operatingToken"),
+              origin: this.checkchannel,
+              phone: this.tel,
+              name: this.name,
+              sex: this.sex,
+              address: this.keyword,
+              address_l_l: this.selectTip.location,
+              work_experience: this.wockexp,
+              tag: this.tags,
+              remark: this.remark,
+              is_full_time: this.workTime,
+              able_work_time: this.compute,
+              age: this.age,
+              address_d: this.address_d,
+              trade: this.businesstag,
+              is_die: this.is_die,
+              style:this.typeValue
+            })
+            .then(function(response) {
+              if (response.data.code == 1001) {
+                _this.$message.success("提交成功");
+                setTimeout(() => {
+                  window.scrollTo(0, 0);
+                  _this.$router.push({ name: "Resourcelib" });
+                }, 2000);
+              } else {
+                _this.$message.error(response.data.msg);
+              }
+              // console.log(response);
+            })
+            .catch(function(error) {
+              _this.$message.error(error);
+              // console.log(error);
+            });
+        } else {
+          _this.$message.warning("沟通记录至少为14个字符");
+        }
       } else {
         _this.$message.warning("资料未填写完整");
       }
@@ -539,12 +540,15 @@ export default {
 @import url("../style/basic/basics.less");
 @import url("../style/workbench.less");
 </style>
-<style lang="less"> 
+<style lang="less">
 .workbenchbox {
-.el-checkbox__label,
- .el-radio__label,
-.el-input,
- .el-textarea {
+  .formData .selectcheck label {
+    width: 29%;
+  }
+  .el-checkbox__label,
+  .el-radio__label,
+  .el-input,
+  .el-textarea {
     font-size: 16px;
     color: #556677;
   }
@@ -593,7 +597,7 @@ export default {
   .el-checkbox {
     margin-right: 15px;
   }
-.el-date-editor .el-range-input {
+  .el-date-editor .el-range-input {
     width: 40%;
   }
   .el-input__inner {
@@ -647,10 +651,20 @@ export default {
     width: 100%;
     text-align: center;
   }
-  .el-checkbox__label{line-height:26px}
-  .qudao>div{width:100%;}
-  .el-radio__label{min-width:46px;display: inline-block;}
-  .qudao .el-radio{margin-bottom:10px;}
+  .el-checkbox__label {
+    line-height: 26px;
+  }
+  .qudao > div {
+    width: 100%;
+  }
+  .el-radio__label {
+    min-width: 46px;
+    display: inline-block;
+  }
+  .qudao .el-radio {
+    margin-bottom: 10px;
+  }
 }
+.el-select .el-input .el-select__caret{display: block}
 </style>
 
