@@ -308,9 +308,7 @@ export default {
       this.getData();
     },
     detailsPage(uuid) {
-      // event.stopImmediatePropagation();
-      //   this.detailsID=uuid;
-      // console.log(uuid)
+        window.localStorage.setItem("uuid_details", uuid);
       this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
       // this.$router.push("resoutcelibdetails")
     },

@@ -456,6 +456,8 @@ export default {
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
         this.keyword = data.data.address; //居住地
+
+   
         // this.wockexp = data.data.work_experience; //工作经历
         if (data.data.work_experience != null && data.data.work_experience!="") {
           this.wockexp = data.data.work_experience; //工作经历
@@ -541,7 +543,8 @@ export default {
         this.remark = data.data.remark; //备注
         this.age = data.data.age;
         this.checkchannel = parseFloat(data.data.origin); //渠道
-        // console.log(_self.checktag);
+        this.businesstag = data.data.trade.split(",");
+        this.businesses = this.businesstag;
         data.data.is_full_time === "1"
           ? (this.workTime = 1)
           : (this.workTime = 0);

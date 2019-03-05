@@ -253,9 +253,13 @@ export default {
           }).then(function(res){
             // console.log(res)
              _this.$message.success("提交成功");
+               setTimeout(() => {
+                window.scrollTo(0, 0);
+                _this.$router.push({ name: "Resourcelib" });
+              }, 2000);
             // alert(JSON.stringify(res))
           }).catch(function(error){
-              alert(JSON.stringify(error))
+            _this.$message.error(error);
           })
       } else {
         _this.$message.warning("资料未填写完整");

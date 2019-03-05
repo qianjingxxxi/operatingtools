@@ -16,6 +16,8 @@ import Addvisit from "./views/Addvisit.vue";
 import Visit from "./views/statistics/Visit.vue";
 import  Quit from "./views/statistics/Quit.vue";
 import  Enpty from "./views/statistics/Enpty.vue";
+import Visitdetails from "./views/Visitdetails.vue";
+import Visitedit from "./views/Visitedit.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -121,6 +123,18 @@ export default new Router({
       name:'Quit',
       component:() =>
       import("./views/statistics/Quit.vue")
+    },
+    {
+      path:'/visitdetails',
+      name:'Visitdetails',
+      component:() =>
+      import("./views/Visitdetails.vue")
+    },
+    {
+      path:'/Visitedit',
+      name:'Visitedit',
+      component:()=>
+      import("./views/Visitedit.vue")
     }
   ]
 });

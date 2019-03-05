@@ -28,11 +28,7 @@
         ref="my_scroller"
         style="flex-grow: 1"
       >
-        <div
-          class="datalist ignore"
-          v-for="(item, index) in items"
-          v-bind:key="index"
-        >
+        <div class="datalist ignore" v-for="(item, index) in items" v-bind:key="index">
           <div class="basicInfo ignore">
             <div>
               <h3>{{item.eguard.name}}</h3>
@@ -58,8 +54,10 @@
           <div class="operation">
             <el-row>
               <el-button type="info" @click="detailsPage(item.eguard.uuid)" plain>查看详情</el-button>
-              <el-button type="warning" @click="interviewpage(item.eguard.uuid)" plain>面试</el-button>
-              <el-button type="primary" @click="editpage(item.eguard.uuid)" plain>编辑</el-button>
+              <div>
+                <el-button type="warning" @click="interviewpage(item.eguard.uuid)" plain>面试</el-button>
+                <el-button type="primary" @click="editpage(item.eguard.uuid)" plain>编辑</el-button>
+              </div>
             </el-row>
           </div>
         </div>
@@ -74,10 +72,17 @@
 </style>
 <style lang="less">
 .interviewBox {
-  .operation {
+  .operation > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+  }
+  .operation > div > div {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    width: 82%;
   }
   .el-button {
     padding: 6px 14px;
@@ -191,7 +196,7 @@ export default {
           }
         })
         .then(function(response) {
-             console.log(response);
+          //  console.log(response);
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
@@ -214,7 +219,7 @@ export default {
             _this.$alert("登录失效或过期，请重新登录", "登录失效", {
               confirmButtonText: "确定",
               callback: action => {
-                _this.$router.push({ name: "Login" })
+                _this.$router.push({ name: "Login" });
               }
             });
           } else {
@@ -247,8 +252,7 @@ export default {
       this.getData();
     },
     detailsPage(uuid) {
-      // event.stopImmediatePropagation();
-      // console.log(uuid)
+        window.localStorage.setItem("uuid_details", uuid);
       this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
       // this.$router.push("resoutcelibdetails")
     },
@@ -270,11 +274,11 @@ export default {
         params: { uuid: uuid }
       });
     },
-    enptypage(tel, name,e_uuid) {
+    enptypage(tel, name, e_uuid) {
       // event.stopImmediatePropagation();
       this.$router.push({
         name: "TakingWork",
-        params: { tel: tel, name: name,e_uuid:e_uuid }
+        params: { tel: tel, name: name, e_uuid: e_uuid }
       });
     },
     handleClick(tab, event) {
@@ -285,7 +289,9 @@ export default {
       parseFloat(month) > 9
         ? (month = month)
         : (month = "0" + parseFloat(month));
-      parseFloat(strDate)>9 ? strDate=strDate : strDate="0"+parseFloat(strDate)
+      parseFloat(strDate) > 9
+        ? (strDate = strDate)
+        : (strDate = "0" + parseFloat(strDate));
       const todayStart = String(year) + month + String(strDate) + "000000";
       const todayEnd = String(year) + month + String(strDate) + "235959";
       const preDate = new Date(date.getTime() - 24 * 60 * 60 * 1000); //昨日
@@ -295,7 +301,9 @@ export default {
         ? (monthpre = monthpre)
         : (monthpre = "0" + parseFloat(monthpre));
       let strDatepre = preDate.getDate();
-          parseFloat(strDatepre)>9 ? strDatepre=strDatepre : strDatepre="0"+parseFloat(strDatepre)
+      parseFloat(strDatepre) > 9
+        ? (strDatepre = strDatepre)
+        : (strDatepre = "0" + parseFloat(strDatepre));
       const yesterdayStart =
         String(yearpre) + monthpre + String(strDatepre) + "000000";
       const yesterdayend =
@@ -307,7 +315,9 @@ export default {
         ? (monthweek = monthweek)
         : (monthweek = "0" + parseFloat(monthweek));
       let strDateweek = weekDate.getDate();
-          parseFloat(strDateweek)>9 ? strDateweek=strDateweek : strDateweek="0"+parseFloat(strDateweek)
+      parseFloat(strDateweek) > 9
+        ? (strDateweek = strDateweek)
+        : (strDateweek = "0" + parseFloat(strDateweek));
       const weekStart =
         String(yearweek) + monthweek + String(strDateweek) + "000000";
       const monthDate = new Date(date.getTime() - 24 * 60 * 60 * 1000 * 30); //本月
@@ -317,7 +327,9 @@ export default {
         ? (monthmonth = monthmonth)
         : (monthmonth = "0" + parseFloat(monthmonth));
       let strDatemonth = monthDate.getDate();
-         parseFloat(strDatemonth)>9 ? strDatemonth=strDatemonth : strDatemonth="0"+parseFloat(strDatemonth)
+      parseFloat(strDatemonth) > 9
+        ? (strDatemonth = strDatemonth)
+        : (strDatemonth = "0" + parseFloat(strDatemonth));
       const monthStart =
         String(yearmonth) + monthmonth + String(strDatemonth) + "000000";
       switch (tab.label) {
@@ -354,11 +366,12 @@ export default {
     let month = date.getMonth() + 1;
     let strDate = date.getDate();
     parseFloat(month) > 9 ? (month = month) : (month = "0" + parseFloat(month));
-    parseFloat(strDate)>9 ? strDate=strDate : strDate="0"+parseFloat(strDate)
+    parseFloat(strDate) > 9
+      ? (strDate = strDate)
+      : (strDate = "0" + parseFloat(strDate));
     this.startTime = String(year) + month + String(strDate) + "000000";
     this.endTime = String(year) + month + String(strDate) + "235959";
     this.getData();
-
   },
   computed: {
     ...mapState({

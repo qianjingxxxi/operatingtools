@@ -275,14 +275,11 @@ export default {
       this.getData();
     },
     detailsPage(uuid) {
-      event.stopImmediatePropagation();
-      // this.detailsID=uuid;
-      // console.log(uuid)
+      window.localStorage.setItem("uuid_details", uuid);
       this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
       // this.$router.push("resoutcelibdetails")
     },
     interviewpage(uuid) {
-      event.stopImmediatePropagation();
       // console.log(uuid)
       this.$router.push({
         name: "Resourcelibinterview",
@@ -293,14 +290,12 @@ export default {
       this.$router.push({ name: "User" });
     },
     editpage(uuid) {
-      event.stopImmediatePropagation();
       this.$router.push({
         name: "Resourcelibeditpage",
         params: { uuid: uuid }
       });
     },
     visitpage(tel, name,uuid){
-      event.stopImmediatePropagation();
       this.$router.push({
         name: "Addvisit",
         params: { tel: tel, name: name,e_uuid:uuid }

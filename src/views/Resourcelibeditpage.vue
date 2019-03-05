@@ -621,6 +621,7 @@ export default {
 
         //    console.log(this.tagToggle)
         // }//性格标签
+        // console.log(data)
         this.bankNum = data.data.bank_card_num; //银行卡号
         this.identity = data.data.id_num; //身份证号
         this.identityFrount = data.data.id_img_p; //身份证正面
@@ -661,6 +662,8 @@ export default {
         this.remark = data.data.remark; //备注
         this.age = data.data.age;
         this.checkchannel = parseFloat(data.data.origin); //渠道
+         this.businesstag = data.data.trade.split(",");
+        this.businesses = this.businesstag;
         // console.log(_self.checktag);
         data.data.is_full_time === "1"
           ? (this.workTime = 1)
@@ -673,6 +676,13 @@ export default {
         } //可用时间
         this.tags = data.data.tag.split(",");
         this.checktag = this.tags;
+            // this.addbusiness=data.data.businesseguard
+        // console.log(data)
+        this.bankNum = data.data.bank_card_num; //银行卡号
+        this.identity = data.data.id_num; //身份证号
+        this.identityFrount = data.data.id_img_p; //身份证正面
+        this.identitySide = data.data.id_img_n; //身份证反面
+        this.bankcard = data.data.bank_card_img; //银行卡
         // console.log(this.tags)
         // for(let j=0;j<this.tags.length;j++){
 
@@ -685,12 +695,7 @@ export default {
             this.$router.push({ name: "Login" });
           }
         });
-        // this.addbusiness=data.data.businesseguard
-        this.bankNum = data.data.bank_card_num; //银行卡号
-        this.identity = data.data.id_num; //身份证号
-        this.identityFrount = data.data.id_img_p; //身份证正面
-        this.identitySide = data.data.id_img_n; //身份证反面
-        this.bankcard = data.data.bank_card_img; //银行卡
+    
       }
     },
     addmodel(add, index) {

@@ -5,7 +5,7 @@
       <a @click="backpage">
         <img src="../assets/backIcon.png">
       </a>
-      <p>拜访</p>
+      <p>编辑</p>
       <!-- <router-link tag="span" to="/Workbench">新增</router-link> -->
     </header>
     <section class="formData ignore">
@@ -118,6 +118,23 @@ export default {
     backpage() {
       this.$router.go(-1); //返回上一层
     },
+    async getData() {
+      const url = this.httpsBasic.httpsBasic + "visit/selectInfo";
+      const params = new URLSearchParams();
+      params.append("token", window.localStorage.getItem("operatingToken"));
+      params.append("uuid", this.$route.params.uuid);
+      const { data } = await axios.get(`${url}?${params.toString()}`);
+      if(data.code==1001){
+        this.typeValue=data.data.type//类型
+        this.goalValue=data.data.desitination//目的
+        this.content=data.data.content;//内容
+        this.visitImg=(data.data.imgs).split(',')//附件
+        this.businessValue=data.data.business
+      }else{
+         this.$message.error(data.msg);
+      }
+      console.log(data)
+    },
     async getbusiness() {
       const url = this.httpsBasic.httpsBasic + "business/selectBusinessList";
       const params = new URLSearchParams();
@@ -225,37 +242,43 @@ export default {
       });
     },
     submitform() {
-      const url = this.httpsBasic.httpsBasic + "eguard/visit";
+      const url = this.httpsBasic.httpsBasic + "visit/update";
       const _this = this;
-      axios
-        .post(url, {
-          e_uuid: this.$route.params.e_uuid,
+      let params={
+          uuid: this.$route.params.uuid,
           business: this.businessValue,
           type: this.typeValue,
           desitination: this.goalValue,
           content: this.content,
           imgs: this.ioslocId,
           token: window.localStorage.getItem("operatingToken")
-        })
+        }
+        if(this.ioslocId==""){
+            delete params.imgs
+        }
+      axios
+        .post(url, params)
         .then(function(res) {
           // alert(JSON.stringify(res));
-          if(re.data.code==1001){
-               _this.$message.success("提交成功");
-              setTimeout(() => {
-                window.scrollTo(0, 0);
-                _this.$router.push({ name: "Visit" });
-              }, 2000);
-          }else{
+          console.log(res)
+          if (re.data.code == 1001) {
+            _this.$message.success("提交成功");
+            setTimeout(() => {
+              window.scrollTo(0, 0);
+              _this.$router.push({ name: "Visit" });
+            }, 2000);
+          } else {
             _this.$message.error(response.data.msg);
           }
         })
         .catch(function(error) {
-           _this.$message.error(error);
+          _this.$message.error(error);
         });
     }
   },
   mounted() {
     this.getbusiness();
+    this.getData();
   }
 };
 </script>

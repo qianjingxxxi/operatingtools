@@ -5,7 +5,9 @@
       <a @click="backpage">
         <img src="../../assets/backIcon.png">
       </a>
-      <p>拜访记录<span>({{sum}})</span></p>
+      <p>拜访记录
+        <span>({{sum}})</span>
+      </p>
     </header>
     <div class="searchbox">
       <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -54,7 +56,7 @@
           </ul>
           <div class="operation">
             <el-row>
-              <el-button type="info" @click="detailsPage(item.eguard.uuid)" plain>查看详情</el-button>
+              <el-button type="info" @click="detailsPage(item.uuid,item.eguard.name)" plain>查看详情</el-button>
               <!-- <el-button
                 v-if="item.is_interview=='1' && item.is_entry=='0' ? true : false"
                 type="success"
@@ -65,19 +67,19 @@
                 <el-button
                   v-if="item.eguard.is_interview=='1' ? true : false"
                   type="primary"
-                  @click="editpage(item.eguard.uuid)"
+                  @click="editpage(item.uuid,item.eguard.name)"
                   plain
                 >编辑</el-button>
                 <el-button
                   v-if="item.eguard.is_interview=='1' ? true : false"
                   type="danger"
-                  @click="delpage(item.eguard.uuid,item.eguard.name)"
+                  @click="delpage(item.uuid,item.eguard.name)"
                   plain
                 >删除</el-button>
                 <el-button
                   v-if="item.eguard.is_interview=='1' && item.eguard.is_entry=='1' ? true : false"
                   type="success"
-                  @click="visitpage(item.eguard.phone,item.eguard.name,item.eguard.uuid)"
+                  @click="visitpage(item.eguard.phone,item.eguard.name,item.uuid)"
                   plain
                 >拜访</el-button>
               </div>
@@ -161,10 +163,10 @@
     margin-top: 190px;
     position: relative;
   }
-//   .charactertag .goutong {
-//     font-size: 26px;
-//     line-height: 32px;
-//   }
+  //   .charactertag .goutong {
+  //     font-size: 26px;
+  //     line-height: 32px;
+  //   }
 }
 .el-message-box {
   width: 90%;
@@ -190,6 +192,14 @@
     border: none;
   }
 }
+.el-message-box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  z-index: 9;
+  margin: 50% auto 0;
+}
 </style>
 
 <script>
@@ -211,7 +221,7 @@ export default {
       hasaddress: true,
       total: 0,
       activeName: "first",
-        sum: 0
+      sum: 0
     };
   },
   watch: {
@@ -245,12 +255,12 @@ export default {
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;
-               _this.sum = response.data.data.total_count;
+              _this.sum = response.data.data.total_count;
             } else {
               _this.items = _this.items.concat(response.data.data.list);
             }
 
-            console.log(_this.items);
+            // console.log(_this.items);
             for (let i = 0; i < _this.items.length; i++) {
               _this.items[i].address == ""
                 ? (_this.hasaddress = false)
@@ -305,15 +315,14 @@ export default {
       // this.$router.go(0)
       this.getData();
     },
-    detailsPage(uuid) {
-      event.stopImmediatePropagation();
-      //   this.detailsID=uuid;
-      // console.log(uuid)
-      // this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
-      // this.$router.push("resoutcelibdetails")
+    detailsPage(uuid, name) {
+      console.log(name);
+      this.$router.push({
+        name: "Visitdetails",
+        params: { uuid: uuid, name: name }
+      });
     },
     interviewpage(uuid) {
-      event.stopImmediatePropagation();
       // console.log(uuid)
       this.$router.push({
         name: "Resourcelibinterview",
@@ -323,15 +332,13 @@ export default {
     backpage() {
       this.$router.push({ name: "User" });
     },
-    editpage(uuid) {
-      event.stopImmediatePropagation();
+    editpage(uuid, name) {
       this.$router.push({
-        name: "Resourcelibeditpage",
-        params: { uuid: uuid }
+        name: "Visitedit",
+        params: { uuid: uuid, name: name }
       });
     },
     visitpage(tel, name, uuid) {
-      event.stopImmediatePropagation();
       this.$router.push({
         name: "Addvisit",
         params: { tel: tel, name: name, e_uuid: uuid }
@@ -415,7 +422,7 @@ export default {
       this.getData();
     },
     delpage(uuid, name) {
-      this.$alert("确定删除" + name + "的入职信息吗", "安全提示", {
+      this.$alert("确定删除" + name + "的拜访信息吗", "安全提示", {
         confirmButtonText: "确定",
         callback: action => {
           this.sureDel(uuid);
@@ -440,8 +447,8 @@ export default {
         });
     },
     delAgain(uuid) {
-      const _this=this
-      const url = this.httpsBasic.httpsBasic + "entryquit/delete";
+      const _this = this;
+      const url = this.httpsBasic.httpsBasic + "visit/delete";
       axios
         .post(url, {
           token: window.localStorage.getItem("operatingToken"),

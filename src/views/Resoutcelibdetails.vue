@@ -7,7 +7,7 @@
         <img src="../assets/backIcon.png">
       </a>
       <p>管家详情</p>
-      <span @click="editpage(datas.uuid)" v-if="datas.is_interview=='1' ? true : false">编辑</span>
+      <!-- <span @click="editpage(datas.uuid)" v-if="datas.is_interview=='1' ? true : false">编辑</span> -->
     </header>
     <hr>
     <!-- content -->
@@ -34,7 +34,12 @@
             type="success"
             plain
           >入职</el-button>
-          <el-button v-if="datas.is_entry=='1' ? true : false" type="warning" plain>拜访</el-button>
+          <el-button
+            @click="visitpage(datas.uuid,datas.phone,datas.name)"
+            v-if="datas.is_entry=='1' ? true : false"
+            type="warning"
+            plain
+          >拜访</el-button>
           <el-button
             @click="interviewpage(datas.uuid)"
             v-if="datas.is_entry=='0' ? true : false"
@@ -138,17 +143,21 @@
             <div class="tagline">
               <label class="tagtitle">入职业务:</label>
               <ul>
-                <li 
+                <li
                   class="addcolor"
                   v-for="(businessetxt,index) in datas.businesseguard"
                   :key="index"
                 >{{businessetxt.business.name}}</li>
               </ul>
             </div>
-            <div  v-if="datas.yhshop!=''  ? true : false" class="tagline">
+            <div v-if="datas.yhshop!=''  ? true : false" class="tagline">
               <label class="tagtitle">永辉门店:</label>
               <ul>
-                <li class="addcolor" v-for="(yhtxt,index) in datas.yhshop" :key="index">{{yhtxt.shop.shop_name}}</li>
+                <li
+                  class="addcolor"
+                  v-for="(yhtxt,index) in datas.yhshop"
+                  :key="index"
+                >{{yhtxt.shop.shop_name}}</li>
               </ul>
             </div>
             <div class="tagline">
@@ -245,6 +254,7 @@
     border-color: #333;
   }
 }
+.el-message-box{z-index: 9999!important;}
 </style>
 
 <script>
@@ -305,7 +315,8 @@ export default {
         .get(url, {
           params: {
             token: window.localStorage.getItem("operatingToken"),
-            uuid: this.$route.params.uuid
+            // uuid: this.$route.params.uuid
+            uuid:window.localStorage.getItem("uuid_details")
           }
         })
         .then(function(res) {
@@ -315,7 +326,7 @@ export default {
             _self.imgList.push(_self.datas.id_img_p);
             _self.imgList.push(_self.datas.bank_card_img);
             _self.tags = res.data.data.tag.split(",");
-            console.log(res);
+            // console.log(res);
             _self.datas.is_full_time == "1"
               ? (_self.showjobtime = false)
               : (_self.showjobtime = true);
@@ -346,18 +357,21 @@ export default {
         });
     },
     editpage(uuid) {
-      event.stopImmediatePropagation();
       this.$router.push({
         name: "Resourcelibeditpage",
         params: { uuid: uuid }
       });
     },
     interviewpage(uuid) {
-      event.stopImmediatePropagation();
-      // console.log(uuid)
       this.$router.push({
         name: "Resourcelibinterview",
         params: { uuid: uuid }
+      });
+    },
+    visitpage(tel, name, uuid) {
+      this.$router.push({
+        name: "Addvisit",
+        params: { tel: tel, name: name, e_uuid: uuid }
       });
     },
     enptypage(tel, name, e_uuid) {
@@ -413,10 +427,13 @@ export default {
       }
     },
     imgDetails() {
-      // WeixinJSBridge.invoke("imagePreview", {
-      //   urls: imgs,
-      //   current: nowImgurl
-      // });
+      // console.log(this.imgList);
+      for (let i = 0; i < this.imgList.length; i++) {
+        WeixinJSBridge.invoke("imagePreview", {
+          urls: this.imgList,
+          current: this.imgList[i]
+        });
+      }
     }
   },
   mounted() {
