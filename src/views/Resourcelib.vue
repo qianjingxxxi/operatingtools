@@ -71,7 +71,7 @@
                 @click="visitpage(item.phone,item.name,item.uuid)"
                 plain
               >拜访</el-button>
-              <el-button   v-if="item.is_entry=='0' ? true : false" type="warning" @click="interviewpage(item.uuid)" plain>面试</el-button>
+              <el-button type="warning" @click="interviewpage(item.uuid)" plain>面试</el-button>
               <el-button  v-if="item.is_interview=='1' ? true : false" type="primary" @click="editpage(item.uuid)" plain>编辑</el-button>
               </div>
             </el-row>
