@@ -83,7 +83,7 @@
         </div>
       </div>
       <el-row class="submitBtn borderNone">
-        <el-button type="primary" @click="submitform">提交</el-button>
+        <el-button type="primary" @click="submitform">{{submitname}}</el-button>
       </el-row>
     </section>
   </div>
@@ -110,7 +110,8 @@ export default {
       goalValue: "",
       content: "",
       visitImg: [],
-      ioslocId: [] //用于兼容ios的本地id列表 图片是base64格式的
+      ioslocId: [], //用于兼容ios的本地id列表 图片是base64格式的,
+      submitname:"提交"
     };
   },
   watch: {},
@@ -229,7 +230,9 @@ export default {
       // console.log(this.businessValue)
       const url = this.httpsBasic.httpsBasic + "eguard/visit";
       const _this = this;
-      axios
+    if(this.submitname=="提交"){
+      this.submitname="提交中...";
+        axios
         .post(url, {
           e_uuid: this.$route.params.e_uuid,
           business: this.businessValue,
@@ -243,17 +246,21 @@ export default {
             // alert(JSON.stringify(res));
           if(res.data.code==1001){
                _this.$message.success("提交成功");
+                _this.submitname="提交"
               setTimeout(() => {
                 window.scrollTo(0, 0);
                 _this.$router.push({ name: "Visit" });
               }, 2000);
           }else{
             _this.$message.error(res.data.msg);
+              _this.submitname="提交"
           }
         })
         .catch(function(error) {
            _this.$message.error(error);
+           _this.submitname="提交"
         });
+    }
     }
   },
   mounted() {

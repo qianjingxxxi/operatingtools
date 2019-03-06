@@ -92,7 +92,7 @@
         </div>
       </div>
       <el-row class="submitBtn borderNone">
-        <el-button type="primary" @click="submitform">提交</el-button>
+        <el-button type="primary" @click="submitform">{{submitname}}</el-button>
       </el-row>
     </section>
   </div>
@@ -206,7 +206,8 @@ export default {
       bankNum: "",
       id_img_n: "",
       id_img_p: "",
-      bank_card_img: ""
+      bank_card_img: "",
+      submitname: "提交"
     };
   },
   watch: {
@@ -235,36 +236,43 @@ export default {
       }
     },
     submitform: function() {
-      console.log(this.addbusiness);
-      let _this = this;
-      if (this.bankNum != "" && this.identity != "") {
-        const url = this.httpsBasic.httpsBasic + "eguard/entry";
-        axios
-          .post(url, {
-            e_uuid: this.$route.params.e_uuid,
-            id_num: this.identity,
-            token: window.localStorage.getItem("operatingToken"),
-            location: JSON.stringify(this.addbusiness),
-            bank_card_num: this.bankNum,
-            id_img_p: this.id_img_p,
-            id_img_n: this.id_img_n,
-            bank_card_img: this.bank_card_img
-          })
-          .then(function(res) {
-            // console.log(res)
-            _this.$message.success("提交成功");
-            setTimeout(() => {
-              window.scrollTo(0, 0);
-              _this.$router.push({ name: "Resourcelib" });
-            }, 2000);
-            // alert(JSON.stringify(res))
-          })
-          .catch(function(error) {
-            _this.$message.error(error);
-          });
-      } else {
-        _this.$message.warning("资料未填写完整");
+      // console.log(this.addbusiness);
+      if (this.submitname == "提交") {
+        this.submitname="提交中...";
+        let _this = this;
+        if (this.bankNum != "" && this.identity != "") {
+          const url = this.httpsBasic.httpsBasic + "eguard/entry";
+          axios
+            .post(url, {
+              e_uuid: this.$route.params.e_uuid,
+              id_num: this.identity,
+              token: window.localStorage.getItem("operatingToken"),
+              location: JSON.stringify(this.addbusiness),
+              bank_card_num: this.bankNum,
+              id_img_p: this.id_img_p,
+              id_img_n: this.id_img_n,
+              bank_card_img: this.bank_card_img
+            })
+            .then(function(res) {
+              // console.log(res)
+              _this.$message.success("提交成功");
+              _this.submitname="提交";
+              setTimeout(() => {
+                window.scrollTo(0, 0);
+                _this.$router.push({ name: "Resourcelib" });
+              }, 2000);
+              // alert(JSON.stringify(res))
+            })
+            .catch(function(error) {
+              _this.$message.error(error);
+                _this.submitname="提交";
+            });
+        } else {
+          _this.$message.warning("资料未填写完整");
+            _this.submitname="提交";
+        }
       }
+
       // console.log(this.tel);
     },
     async getbusiness() {

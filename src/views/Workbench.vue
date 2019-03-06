@@ -203,7 +203,7 @@
         </el-select>
       </div>
       <el-row class="submitBtn borderNone">
-        <el-button type="primary" @click="submitform">提交</el-button>
+        <el-button type="primary" @click="submitform">{{submitname}}</el-button>
       </el-row>
     </section>
   </div>
@@ -303,7 +303,8 @@ export default {
       businesstag: [],
       is_die: 0,
       typeList: [{ name: "面访" }, { name: "电话" }, { name: "社交APP" }],
-      typeValue: ""
+      typeValue: "",
+      submitname:"提交"
     };
   },
   watch: {
@@ -346,7 +347,9 @@ export default {
       }
     },
     submitform() {
-      let url = this.httpsBasic.httpsBasic + "interview/insert";
+      if(this.submitname=="提交"){
+        this.submitname="提交中...";
+        let url = this.httpsBasic.httpsBasic + "interview/insert";
       let _this = this;
       this.tags = this.checktag.join(",");
       this.businesstag = this.businesses.join(",");
@@ -399,25 +402,32 @@ export default {
             .then(function(response) {
               if (response.data.code == 1001) {
                 _this.$message.success("提交成功");
+                _this.submitname="提交"
                 setTimeout(() => {
                   window.scrollTo(0, 0);
                   _this.$router.push({ name: "Resourcelib" });
                 }, 2000);
               } else {
                 _this.$message.error(response.data.msg);
+                this.submitname="提交"
               }
               // console.log(response);
             })
             .catch(function(error) {
               _this.$message.error(error);
+              _this.submitname="提交"
               // console.log(error);
             });
         } else {
           _this.$message.warning("沟通记录至少为14个字符");
+          _this.submitname="提交"
         }
       } else {
         _this.$message.warning("资料未填写完整");
+        _this.submitname="提交"
       }
+      }
+      
     },
     async search(keyword) {
       const url = "https://restapi.amap.com/v3/assistant/inputtips";
