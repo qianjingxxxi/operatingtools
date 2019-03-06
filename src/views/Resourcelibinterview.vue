@@ -532,7 +532,7 @@ export default {
           uuid: this.$route.params.uuid
         }
       });
-       console.log(data)
+      //  console.log(data)
       if (data.code === 1001) {
         this.tipstoggle = false;
         this.hasdata = true;

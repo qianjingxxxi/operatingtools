@@ -462,9 +462,10 @@ export default {
       }
     },
      imgDetails(pic) {
+      //  console.log(this.imgList)
       // console.log(this.imgList);
        WeixinJSBridge.invoke("imagePreview", {
-          urls: this.visitImg,
+          urls: this.imgList,
           current: pic
         });
     }

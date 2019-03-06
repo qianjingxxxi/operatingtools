@@ -259,7 +259,8 @@ export default {
               _this.submitname="提交";
               setTimeout(() => {
                 window.scrollTo(0, 0);
-                _this.$router.push({ name: "Resourcelib" });
+                // _this.$router.push({ name: "Resourcelib" });
+                  _this.$router.go(-1); //返回上一层
               }, 2000);
               // alert(JSON.stringify(res))
             })
