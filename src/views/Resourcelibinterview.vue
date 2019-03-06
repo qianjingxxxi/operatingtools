@@ -188,8 +188,21 @@
           <!-- <el-radio :label="3">资源库</el-radio> -->
         </el-radio-group>
       </div>
+      <div class="selectcheck">
+        <label>
+          <i>*</i>面试类型:
+        </label>
+        <el-select v-model="typeValue" placeholder="请选择">
+          <el-option
+            :key="index"
+            :label="type.name"
+            :value="type.name"
+            v-for="(type,index) in typeList"
+          ></el-option>
+        </el-select>
+      </div>
       <el-row class="submitBtn borderNone">
-        <el-button type="primary"  @click="submitform">提交</el-button>
+        <el-button type="primary" @click="submitform">提交</el-button>
       </el-row>
     </section>
   </div>
@@ -217,6 +230,8 @@ export default {
       tagsbox.push(false);
     }
     return {
+      typeValue: "",
+      typeList: [{ name: "面访" }, { name: "电话" }, { name: "社交APP" }],
       sex: 0,
       workTime: 1,
       checktag: [],
@@ -355,7 +370,8 @@ export default {
         this.wockexp.content != "" &&
         this.businesstag != "" &&
         this.remark != "" &&
-        this.remark.length > 13
+        this.remark.length > 13 &&
+        this.typeValue != ""
       ) {
         // this.compute=this.compute.join(',')
         // console.log("Asxsdcd")
@@ -376,7 +392,8 @@ export default {
             age: this.age,
             address_d: this.address_d,
             trade: this.businesstag,
-            is_die: this.is_die
+            is_die: this.is_die,
+            style: this.typeValue
           })
           .then(function(response) {
             // console.log(response)
@@ -447,7 +464,7 @@ export default {
       });
 
       if (data.code === 1001) {
-      //  console.log(data.data);
+        //  console.log(data.data);
         // this.$message.success("已有该管家信息");
         this.tipstoggle = false;
         this.hasdata = true;
@@ -457,14 +474,16 @@ export default {
         this.sex = parseFloat(data.data.sex); //性别
         this.keyword = data.data.address; //居住地
 
-   
         // this.wockexp = data.data.work_experience; //工作经历
-        if (data.data.work_experience != null && data.data.work_experience!="") {
+        if (
+          data.data.work_experience != null &&
+          data.data.work_experience != ""
+        ) {
           this.wockexp = data.data.work_experience; //工作经历
-            this.wockexp = data.data.work_experience; //工作经历
-            for (let i = 0; i <  this.wockexp.length; i++) {
-             this.wockexp[i].age="添加";
-            this.wockexp[i].age=require("../assets/add.png");
+          this.wockexp = data.data.work_experience; //工作经历
+          for (let i = 0; i < this.wockexp.length; i++) {
+            this.wockexp[i].age = "添加";
+            this.wockexp[i].age = require("../assets/add.png");
           }
         } else {
           this.wockexp = [
@@ -484,6 +503,7 @@ export default {
         this.checktag = this.tags;
         this.age = data.data.age;
         this.is_die = parseFloat(data.data.is_die); //简历是否可用
+         this.typeValue=data.data.style//面试类型
         this.businesstag = data.data.trade.split(",");
         this.businesses = this.businesstag;
         data.data.is_full_time === "1"
@@ -512,7 +532,7 @@ export default {
           uuid: this.$route.params.uuid
         }
       });
-      //  console.log(data)
+       console.log(data)
       if (data.code === 1001) {
         this.tipstoggle = false;
         this.hasdata = true;
@@ -521,12 +541,16 @@ export default {
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
         this.keyword = data.data.address; //居住地
-        if (data.data.work_experience != null && data.data.work_experience!="") {
+        this.typeValue=data.data.style//面试类型
+        if (
+          data.data.work_experience != null &&
+          data.data.work_experience != ""
+        ) {
           this.wockexp = data.data.work_experience; //工作经历
-            this.wockexp = data.data.work_experience; //工作经历
-            for (let i = 0; i <  this.wockexp.length; i++) {
-             this.wockexp[i].age="添加";
-            this.wockexp[i].age=require("../assets/add.png");
+          this.wockexp = data.data.work_experience; //工作经历
+          for (let i = 0; i < this.wockexp.length; i++) {
+            this.wockexp[i].age = "添加";
+            this.wockexp[i].age = require("../assets/add.png");
           }
         } else {
           this.wockexp = [
@@ -561,11 +585,11 @@ export default {
 
         //    console.log(this.tagToggle)
         // }//性格标签
-      } else if (data.code == 1010 || data.code==1009) {
+      } else if (data.code == 1010 || data.code == 1009) {
         this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
           callback: action => {
-           this.$router.push({ name: "Login" })
+            this.$router.push({ name: "Login" });
           }
         });
       }
@@ -599,18 +623,21 @@ export default {
 @import url("../style/workbench.less");
 </style>
 <style lang="less">
-.mianshi{
-  .part-time-job > ul > li{height:32px;}
+.mianshi {
+  .formData .selectcheck>label{width: 29%;}
+  .part-time-job > ul > li {
+    height: 32px;
+  }
 }
 .resourcelibmianshi {
   .el-checkbox__label,
   .el-radio__label,
   .el-input,
- .el-textarea {
+  .el-textarea {
     font-size: 16px;
     color: #556677;
   }
- 
+
   .el-radio-group {
     line-height: normal;
   }
@@ -654,12 +681,12 @@ export default {
   }
   .ignore .el-date-editor .el-range-input {
     width: 40%;
-    font-size:14px;
+    font-size: 14px;
   }
   .el-range-editor.el-input__inner {
     width: 85%;
     padding: 3px 6px;
-     display: flex;
+    display: flex;
     flex-direction: row;
     align-items: center;
   }
@@ -700,18 +727,32 @@ export default {
   .wockexp > div .el-textarea__inner {
     margin-top: 4px;
   }
-    .el-checkbox__label{line-height:26px}
-  .qudao>div{width:100%;}
-  .el-radio__label{min-width:46px;display: inline-block;}
-  .qudao .el-radio{margin-bottom:10px;}
+  .el-checkbox__label {
+    line-height: 26px;
+  }
+  .qudao > div {
+    width: 100%;
+  }
+  .el-radio__label {
+    min-width: 46px;
+    display: inline-block;
+  }
+  .qudao .el-radio {
+    margin-bottom: 10px;
+  }
 }
-.el-picker-panel{
-  left: 0!important;
-    width: 100vw;
-    overflow-x: hidden;
+.el-picker-panel {
+  left: 0 !important;
+  width: 100vw;
+  overflow-x: hidden;
 }
-.el-date-range-picker .el-picker-panel__body{width: 100vw;min-width:100vw}
-.el-input__icon{width: 22px;}
+.el-date-range-picker .el-picker-panel__body {
+  width: 100vw;
+  min-width: 100vw;
+}
+.el-input__icon {
+  width: 22px;
+}
 </style>
 
 

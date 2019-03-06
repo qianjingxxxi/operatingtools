@@ -206,7 +206,7 @@
                   <span>{{quittxt.create_time_type_datetime}}</span>
                   <span>操作</span>
                   <br>
-                  <span>&nbsp&nbsp离职原因:</span>
+                  <span>    离职原因:</span>
                   <span>{{quittxt.content}}</span>
                 </li>
               </ul>
@@ -454,7 +454,8 @@ export default {
         this.againbox = false;
         setTimeout(() => {
           window.scrollTo(0, 0);
-          this.$router.push({ name: "Resourcelib" });
+          // this.$router.push({ name: "Resourcelib" });
+           this.$router.go(-1); //返回上一层
         }, 2000);
       } else {
         this.$message.error(data.msg);

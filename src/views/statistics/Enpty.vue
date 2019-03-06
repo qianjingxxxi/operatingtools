@@ -42,18 +42,18 @@
           <p class="address el-icon-location" v-if="hasaddress">{{item.eguard.address}}</p>
           <p class="district">{{item.eguard.address_d}}</p>
           <ul class="charactertag">
-            <li>
-              <label>性格标签：</label>
+            <!-- <li>
+              <label>所属门店：</label>
               <span>{{item.eguard.tag=="" ? "未添加" : item.eguard.tag}}</span>
-            </li>
+            </li> -->
             <li>
-              <label>适合业务：</label>
-              <span>{{item.eguard.trade=="" ? "未添加" : item.eguard.trade}}</span>
+              <label>入职时间：</label>
+              <span>{{item.eguard.create_time_type_datetime}}</span>
             </li>
-            <li class="goutong">
-              <!-- <label>沟通：</label> -->
-              <span>{{item.eguard.remark=="" ? "未填写" : item.eguard.remark}}</span>
-            </li>
+            <!-- <li>
+              <label>拜访次数：</label>
+              <span>{{item.eguard.create_time_type_datetime}}</span>
+            </li> -->
           </ul>
           <div class="operation">
             <el-row>
@@ -254,10 +254,12 @@ export default {
     search() {
       this.items = [];
       this.getData();
+      this.page=1;
     },
     checkedInterview() {
       this.items = [];
       this.getData();
+      this.page=1;
     }
   },
   methods: {
@@ -279,7 +281,7 @@ export default {
           }
         })
         .then(function(response) {
-          // console.log(response)
+          console.log(response)
           if (response.data.code == 1001) {
             if (_this.page == 1) {
               _this.items = response.data.data.list;

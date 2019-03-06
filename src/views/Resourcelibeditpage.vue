@@ -173,6 +173,19 @@
               <el-radio :label="1">否</el-radio>
             </el-radio-group>
           </span>
+          <div class="selectcheck">
+            <label>
+              <i>*</i>面试类型:
+            </label>
+            <el-select v-model="typeValue" placeholder="请选择">
+              <el-option
+                :key="index"
+                :label="type.name"
+                :value="type.name"
+                v-for="(type,index) in typeList"
+              ></el-option>
+            </el-select>
+          </div>
         </section>
       </transition>
       <!-- 入职资料 -->
@@ -285,6 +298,8 @@ export default {
       tagsbox.push(false);
     }
     return {
+      typeValue: "",
+      typeList: [{ name: "面访" }, { name: "电话" }, { name: "社交APP" }],
       sex: 0,
       workTime: 1,
       checktag: [],
@@ -445,11 +460,12 @@ export default {
         this.wockexp.start_time != "" &&
         this.wockexp.end_time != "" &&
         this.wockexp.content != "" &&
-        this.businesstag != ""
+        this.businesstag != "" &&
+        this.typeValue != ""
       ) {
         let params = "";
         // this.compute=this.compute.join(',')
-    
+
         if (parseFloat(this.isEntry) == 1) {
           if (this.bankNum != "" && this.identity != "") {
             params = {
@@ -473,31 +489,32 @@ export default {
               bank_card_num: this.bankNum,
               id_img_p: this.id_img_p,
               id_img_n: this.id_img_n,
-              bank_card_img: this.bank_card_img
+              bank_card_img: this.bank_card_img,
+              style: this.typeValue
             };
           } else {
             _this.$message.warning("资料未填写完整");
           }
-        }else{
-           params = {
-              token: window.localStorage.getItem("operatingToken"),
-              phone: this.tel,
-              name: this.name,
-              sex: this.sex,
-              address: this.keyword,
-              address_l_l: this.selectTip.location,
-              work_experience: this.wockexp,
-              tag: this.tags,
-              is_full_time: this.workTime,
-              able_work_time: this.compute,
-              age: this.age,
-              address_d: this.address_d,
-              trade: this.businesstag,
-              is_die: this.is_die,
-              uuid: this.$route.params.uuid,
-              id_num: this.identity,
-              location: JSON.stringify(this.addbusiness)
-            };
+        } else {
+          params = {
+            token: window.localStorage.getItem("operatingToken"),
+            phone: this.tel,
+            name: this.name,
+            sex: this.sex,
+            address: this.keyword,
+            address_l_l: this.selectTip.location,
+            work_experience: this.wockexp,
+            tag: this.tags,
+            is_full_time: this.workTime,
+            able_work_time: this.compute,
+            age: this.age,
+            address_d: this.address_d,
+            trade: this.businesstag,
+            is_die: this.is_die,
+            uuid: this.$route.params.uuid,
+            id_num: this.identity,
+            location: JSON.stringify(this.addbusiness)
+          };
         }
         if (this.id_img_p == "") {
           delete params.id_img_p;
@@ -627,6 +644,7 @@ export default {
         this.identityFrount = data.data.id_img_p; //身份证正面
         this.identitySide = data.data.id_img_n; //身份证反面
         this.bankcard = data.data.bank_card_img; //银行卡
+         this.typeValue=data.data.style//面试类型
       } else {
         // this.hasdata = false;
       }
@@ -649,6 +667,7 @@ export default {
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
         this.keyword = data.data.address; //居住地
+         this.typeValue=data.data.style//面试类型
         if (
           data.data.work_experience != null &&
           data.data.work_experience != ""
@@ -662,7 +681,7 @@ export default {
         this.remark = data.data.remark; //备注
         this.age = data.data.age;
         this.checkchannel = parseFloat(data.data.origin); //渠道
-         this.businesstag = data.data.trade.split(",");
+        this.businesstag = data.data.trade.split(",");
         this.businesses = this.businesstag;
         // console.log(_self.checktag);
         data.data.is_full_time === "1"
@@ -676,7 +695,7 @@ export default {
         } //可用时间
         this.tags = data.data.tag.split(",");
         this.checktag = this.tags;
-            // this.addbusiness=data.data.businesseguard
+        // this.addbusiness=data.data.businesseguard
         // console.log(data)
         this.bankNum = data.data.bank_card_num; //银行卡号
         this.identity = data.data.id_num; //身份证号
@@ -695,7 +714,6 @@ export default {
             this.$router.push({ name: "Login" });
           }
         });
-    
       }
     },
     addmodel(add, index) {
@@ -919,6 +937,7 @@ export default {
 </style>
 <style lang="less">
 .editpage {
+    .formData .selectcheck>label{width: 29%;}
   .el-checkbox__label,
   .el-radio__label,
   .el-input,

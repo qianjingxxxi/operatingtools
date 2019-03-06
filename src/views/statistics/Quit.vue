@@ -40,16 +40,16 @@
           <p class="district">{{item.eguard.address_d}}</p>
           <ul class="charactertag">
             <li>
-              <label>性格标签：</label>
-              <span>{{item.tag=="" ? "未添加" : item.eguard.tag}}</span>
+              <label>适合业务：</label>
+              <span>{{item.eguard.trade=="" ? "未添加" : item.eguard.trade}}</span>
+            </li>
+               <li>
+              <label>离职时间：</label>
+              <span>{{item.create_time_type_datetime}}</span>
             </li>
             <li>
-              <label>适合业务：</label>
-              <span>{{item.trade=="" ? "未添加" : item.eguard.trade}}</span>
-            </li>
-            <li class="goutong">
-              <!-- <label>沟通：</label> -->
-              <span>{{item.remark=="" ? "未填写" : item.eguard.remark}}</span>
+              <label>离职原因：</label>
+              <span>{{item.content=="" ? "未填写" : item.content}}</span>
             </li>
           </ul>
           <div class="operation">
@@ -247,10 +247,12 @@ export default {
     search() {
       this.items = [];
       this.getData();
+      this.page=1
     },
     checkedInterview() {
       this.items = [];
       this.getData();
+      this.page=1
     }
   },
   methods: {
