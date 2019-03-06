@@ -409,7 +409,8 @@ export default {
         params: { uuid: uuid }
       });
     },
-    visitpage(tel, name, uuid) {
+    visitpage(uuid,tel, name) {
+      // console.log(uuid)
       this.$router.push({
         name: "Addvisit",
         params: { tel: tel, name: name, e_uuid: uuid }
