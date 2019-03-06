@@ -71,13 +71,44 @@
                 <el-button
                   v-if="item.eguard.is_interview=='1' ? true : false"
                   type="danger"
-                  @click="delpage(item.eguard.uuid,item.eguard.name)"
+                  @click="delpage()"
                   plain
                 >删除</el-button>
             
               </div>
             </el-row>
           </div>
+            <!--离职 -->
+          <aside class="quitdelbox quitAgain" v-if="causeBox">
+            <div>
+              <div>
+                <h3 style="color:red">删除</h3>
+                <a class="el-icon-close" @click="closeAside"></a>
+              </div>
+              <p>是否删除该条离职记录</p>
+              <div>
+                <el-button size="small" @click="cancelbox">取消</el-button>
+                <el-button size="small" type="primary" @click="surecause(item.uuid)">确认</el-button>
+              </div>
+            </div>
+          </aside>
+          <!-- 再次确认离职 -->
+          <aside class="quitdelbox quitAgain" v-if="againbox">
+            <div>
+              <div>
+                <h3>
+                  <span class="el-icon-warning"></span>提示
+                </h3>
+                <a class="el-icon-close" @click="closeAside"></a>
+              </div>
+              <p>再次确认?</p>
+              <div>
+                <el-button size="small" @click="cancelbox">取消</el-button>
+                <el-button size="small" type="primary" @click="isQuit(item.uuid)">确认</el-button>
+              </div>
+            </div>
+          </aside>
+          <!-- end -->
         </div>
       </scroller>
     </div>
@@ -206,7 +237,10 @@ export default {
       hasaddress: true,
       total: 0,
       activeName: "first",
-        sum: 0
+        sum: 0,
+      cause: "",
+      causeBox: false,
+      againbox: false
     };
   },
   watch: {
@@ -409,66 +443,53 @@ export default {
       this.noDate = true; //重置数据判断
       this.getData();
     },
-    delpage(uuid, name) {
-      this.$alert("确定删除" + name + "的入职信息吗", "安全提示", {
-        confirmButtonText: "确定",
-        callback: action => {
-          this.sureDel(uuid);
-        }
-      });
-    },
-    sureDel(uuid) {
-      this.$confirm("此操作将永久删除该条入职信息, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.delAgain(uuid);
-        })
-        .catch(() => {
-          console.log("njncdj");
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
-    delAgain(uuid) {
-      const _this=this
-      const url = this.httpsBasic.httpsBasic + "entryquit/delete";
-      axios
-        .post(url, {
-          token: window.localStorage.getItem("operatingToken"),
-          uuid: uuid
-        })
-        .then(function(response) {
-          console.log(response);
-          if (response.data.code == 1001) {
-            _this.$message.success("删除成功");
-            _this.items = [];
-            _this.getData();
-          } else if (response.data.code == 1010 || response.data.code == 1009) {
-            _this.$alert("登录失效或过期，请重新登录", "登录失效", {
-              confirmButtonText: "确定",
-              callback: action => {
-                _this.$router.push({ name: "Login" });
-              }
-            });
-          } else {
-            _this.$message.error(response.data.msg);
-          }
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
     enptypage(tel, name,e_uuid) {
       event.stopImmediatePropagation();
       this.$router.push({
         name: "TakingWork",
         params: { tel: tel, name: name,e_uuid:e_uuid }
       });
+    },
+     cancelbox() {
+      this.$message("取消删除");
+      this.causeBox = false;
+      this.againbox = false;
+    },
+    closeAside() {
+      this.causeBox = false;
+      this.againbox = false;
+    },
+    delpage() {
+      this.causeBox = true;
+    },
+    surecause(uuid) {
+      this.causeBox = false;
+      this.againbox = true;
+    },
+    isQuit(uuid) {
+      let _this = this;
+      const url = this.httpsBasic.httpsBasic + "entryquit/delete";
+      axios
+        .post(url, {
+          token: window.localStorage.getItem("operatingToken"),
+          uuid: uuid
+        })
+        .then(function(res) {
+          if (res.data.code == 1001) {
+            _this.$message.success("删除成功");
+            _this.againbox = false;
+            setTimeout(() => {
+              window.scrollTo(0, 0);
+              // _this.$router.push({ name: "Interview" });
+              location.reload()
+            }, 2000);
+          } else {
+            _this.$message.error(res.data.msg);
+          }
+        })
+        .catch(function(error) {
+          _this.$message.error(error);
+        });
     },
   },
   mounted() {

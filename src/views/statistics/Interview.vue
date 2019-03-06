@@ -57,9 +57,45 @@
               <div>
                 <el-button type="warning" @click="interviewpage(item.eguard.uuid)" plain>面试</el-button>
                 <el-button type="primary" @click="editpage(item.eguard.uuid)" plain>编辑</el-button>
+                <el-button
+                  type="danger"
+                  @click="delpage(item.eguard.uuid,item.eguard.name)"
+                  plain
+                >删除</el-button>
               </div>
             </el-row>
           </div>
+          <!--离职 -->
+          <aside class="quitdelbox quitAgain" v-if="causeBox">
+            <div>
+              <div>
+                <h3 style="color:red">删除</h3>
+                <a class="el-icon-close" @click="closeAside"></a>
+              </div>
+              <p>是否删除该条面试记录</p>
+              <div>
+                <el-button size="small" @click="cancelbox">取消</el-button>
+                <el-button size="small" type="primary" @click="surecause(item.uuid)">确认</el-button>
+              </div>
+            </div>
+          </aside>
+          <!-- 再次确认离职 -->
+          <aside class="quitdelbox quitAgain" v-if="againbox">
+            <div>
+              <div>
+                <h3>
+                  <span class="el-icon-warning"></span>提示
+                </h3>
+                <a class="el-icon-close" @click="closeAside"></a>
+              </div>
+              <p>再次确认?</p>
+              <div>
+                <el-button size="small" @click="cancelbox">取消</el-button>
+                <el-button size="small" type="primary" @click="isQuit(item.uuid)">确认</el-button>
+              </div>
+            </div>
+          </aside>
+          <!-- end -->
         </div>
       </scroller>
     </div>
@@ -72,6 +108,13 @@
 </style>
 <style lang="less">
 .interviewBox {
+  .quitdelbox {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  .el-textarea {
+    width: 90%;
+    margin-bottom: 20px;
+  }
   .operation > div {
     display: flex;
     flex-direction: row;
@@ -177,7 +220,10 @@ export default {
       activeName: "first",
       startTime: "",
       endTime: "",
-      sum: 0
+      sum: 0,
+      cause: "",
+      causeBox: false,
+      againbox: false
     };
   },
   watch: {},
@@ -252,7 +298,7 @@ export default {
       this.getData();
     },
     detailsPage(uuid) {
-        window.localStorage.setItem("uuid_details", uuid);
+      window.localStorage.setItem("uuid_details", uuid);
       this.$router.push({ name: "Resoutcelibdetails", params: { uuid: uuid } });
       // this.$router.push("resoutcelibdetails")
     },
@@ -357,21 +403,67 @@ export default {
       this.page = 1;
       this.noDate = true; //重置数据判断
       this.getData();
+    },
+    cancelbox() {
+      this.$message("取消删除");
+      this.causeBox = false;
+      this.againbox = false;
+    },
+    closeAside() {
+      this.causeBox = false;
+      this.againbox = false;
+    },
+    delpage() {
+      this.causeBox = true;
+    },
+    surecause(uuid) {
+      this.causeBox = false;
+      this.againbox = true;
+    },
+    isQuit(uuid) {
+      let _this = this;
+      const url = this.httpsBasic.httpsBasic + "interview/delete";
+      axios
+        .post(url, {
+          token: window.localStorage.getItem("operatingToken"),
+          uuid: uuid
+        })
+        .then(function(res) {
+          if (res.data.code == 1001) {
+            _this.$message.success("删除成功");
+            _this.againbox = false;
+            setTimeout(() => {
+              window.scrollTo(0, 0);
+              // _this.$router.push({ name: "Interview" });
+              location.reload()
+            }, 2000);
+          } else {
+            _this.$message.error(res.data.msg);
+          }
+        })
+        .catch(function(error) {
+          _this.$message.error(error);
+        });
+    },
+    getDataAndTime() {
+      this.items = [];
+      const date = new Date();
+      const year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      parseFloat(month) > 9
+        ? (month = month)
+        : (month = "0" + parseFloat(month));
+      parseFloat(strDate) > 9
+        ? (strDate = strDate)
+        : (strDate = "0" + parseFloat(strDate));
+      this.startTime = String(year) + month + String(strDate) + "000000";
+      this.endTime = String(year) + month + String(strDate) + "235959";
+      this.getData();
     }
   },
   mounted() {
-    this.items = [];
-    const date = new Date();
-    const year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let strDate = date.getDate();
-    parseFloat(month) > 9 ? (month = month) : (month = "0" + parseFloat(month));
-    parseFloat(strDate) > 9
-      ? (strDate = strDate)
-      : (strDate = "0" + parseFloat(strDate));
-    this.startTime = String(year) + month + String(strDate) + "000000";
-    this.endTime = String(year) + month + String(strDate) + "235959";
-    this.getData();
+    this.getDataAndTime();
   },
   computed: {
     ...mapState({

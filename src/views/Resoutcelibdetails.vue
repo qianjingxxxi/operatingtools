@@ -166,8 +166,8 @@
             </div>
             <div class="tagline">
               <label class="tagtitle">身份证照片:</label>
-              <img @click="imgDetails" :src="datas.id_img_n" alt>
-              <img @click="imgDetails" :src="datas.id_img_p" alt>
+              <img @click="imgDetails(datas.id_img_n)" :src="datas.id_img_n" alt>
+              <img @click="imgDetails(datas.id_img_p)" :src="datas.id_img_p" alt>
             </div>
             <div class="tagline">
               <label class="tagtitle">银行卡账号:</label>
@@ -175,7 +175,7 @@
             </div>
             <div class="tagline">
               <label class="tagtitle">银行卡照片:</label>
-              <img @click="imgDetails" :src="datas.bank_card_img" alt>
+              <img @click="imgDetails(datas.bank_card_img)" :src="datas.bank_card_img" alt>
             </div>
             <div class="tagline line-none">
               <label class="tagtitle">入职记录:</label>
@@ -246,6 +246,7 @@
         </div>
       </div>
     </aside>
+    <!-- end -->
   </div>
 </template>
 <style scoped lang="less" >
@@ -450,7 +451,7 @@ export default {
       const { data } = await axios.post(`${url}?${params.toString()}`);
       if (data.code == 1001) {
         this.$message.success("离职成功");
-        this.againbox = true;
+        this.againbox = false;
         setTimeout(() => {
           window.scrollTo(0, 0);
           this.$router.push({ name: "Resourcelib" });
@@ -459,14 +460,12 @@ export default {
         this.$message.error(data.msg);
       }
     },
-    imgDetails() {
+     imgDetails(pic) {
       // console.log(this.imgList);
-      for (let i = 0; i < this.imgList.length; i++) {
-        WeixinJSBridge.invoke("imagePreview", {
-          urls: this.imgList,
-          current: this.imgList[i]
+       WeixinJSBridge.invoke("imagePreview", {
+          urls: this.visitImg,
+          current: pic
         });
-      }
     }
   },
   mounted() {

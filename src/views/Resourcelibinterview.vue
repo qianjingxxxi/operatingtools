@@ -1,5 +1,5 @@
 <template>
-  <div class="resourcelibmianshi">
+  <div class="resourcelibmianshi mianshi">
     <!-- 标题栏 -->
     <header>
       <a @click="backpage">
@@ -599,12 +599,15 @@ export default {
 @import url("../style/workbench.less");
 </style>
 <style lang="less">
+.mianshi{
+  .part-time-job > ul > li{height:32px;}
+}
 .resourcelibmianshi {
   .el-checkbox__label,
   .el-radio__label,
   .el-input,
  .el-textarea {
-    font-size: 18px;
+    font-size: 16px;
     color: #556677;
   }
  

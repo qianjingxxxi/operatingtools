@@ -46,7 +46,7 @@
         <ul class="enclosure">
           <!-- -->
           <li v-for="(urlSrc,index) in visitImg" :key="index">
-            <img :src="urlSrc">
+            <img :src="urlSrc"  @click="imgDetails(urlSrc)">
             <!-- <div>
                 <span>{{urlSrc.del}}</span>
             </div>-->
@@ -102,7 +102,7 @@ export default {
       const url = this.httpsBasic.httpsBasic + "visit/selectInfo";
       const params = new URLSearchParams();
       params.append("token", window.localStorage.getItem("operatingToken"));
-      console.log(this.$route.params.uuid)
+      // console.log(this.$route.params.uuid)
       params.append("uuid", this.$route.params.uuid);
       const { data } = await axios.get(`${url}?${params.toString()}`);
       if (data.code == 1001) {
@@ -121,11 +121,41 @@ export default {
       } else {
         this.$message.error(data.msg);
       }
-      console.log(data);
-    }
+      // console.log(data);
+    },
+      imgDetails(pic) {
+      // console.log(this.imgList);
+       WeixinJSBridge.invoke("imagePreview", {
+          urls: this.visitImg,
+          current: pic
+        });
+    },
+    getwx: function() {
+      let wechaturl = window.location.href.split("#")[0];
+      if (window.wechaturl !== undefined) {
+        wechaturl = window.wechaturl;
+      }
+      const url = this.httpsBasic.httpsBasicWx + "wechat/jssdk";
+      // alert(wxUrl)
+      axios
+        .post(url, {
+          url: wechaturl
+        })
+        .then(function(res) {
+          wx.config({
+            debug: false, // 开启调试模式,
+            appId: res.data.data.appId, // 必填，企业号的唯一标识，此处填写企业号corpid
+            timestamp: res.data.data.timestamp, // 必填，生成签名的时间戳
+            nonceStr: res.data.data.nonceStr, // 必填，生成签名的随机串
+            signature: res.data.data.signature, // 必填，签名，见附录1
+            jsApiList: res.data.data.jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+          });
+        });
+    },
   },
   mounted() {
     this.getData();
+     this.getwx();
   }
 };
 </script>
