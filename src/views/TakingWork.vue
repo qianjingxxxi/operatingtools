@@ -26,7 +26,7 @@
           <label>
             <i>*</i>所属业务:
           </label>
-          <el-select v-model="add.b_uuid" placeholder="请选择" @change="getUUID(add.b_uuid,indexVal)">
+          <el-select v-model="add.b_uuid"  placeholder="请选择" @change="getUUID(add.b_uuid,indexVal)">
             <el-option
               :key="business.uuid"
               :label="business.name"
@@ -43,7 +43,7 @@
           <label>
             <i>*</i>所属门店:
           </label>
-          <el-select v-model="add.c_uuids" multiple placeholder="请选择">
+          <el-select v-model="add.c_uuids" filterable multiple placeholder="请选择">
             <el-option
               v-for="(shop,index) in shops"
               :label="shop.shop_name"

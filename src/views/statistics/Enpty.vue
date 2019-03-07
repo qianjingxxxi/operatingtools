@@ -74,7 +74,7 @@
                 <el-button
                   v-if="item.eguard.is_interview=='1' ? true : false"
                   type="danger"
-                  @click="delpage()"
+                  @click="delpage(item.uuid)"
                   plain
                 >删除</el-button>
                 <el-button
@@ -85,7 +85,7 @@
               </div>
             </el-row>
           </div>
-          <!--离职 -->
+          <!--删除 -->
           <aside class="quitdelbox quitAgain" v-if="causeBox">
             <div>
               <div>
@@ -95,11 +95,11 @@
               <p>是否删除该条入职记录</p>
               <div>
                 <el-button size="small" @click="cancelbox">取消</el-button>
-                <el-button size="small" type="primary" @click="surecause(item.uuid)">确认</el-button>
+                <el-button size="small" type="primary" @click="surecause()">确认</el-button>
               </div>
             </div>
           </aside>
-          <!-- 再次确认离职 -->
+          <!-- 再次确认删除 -->
           <aside class="quitdelbox quitAgain" v-if="againbox">
             <div>
               <div>
@@ -111,7 +111,7 @@
               <p>再次确认?</p>
               <div>
                 <el-button size="small" @click="cancelbox">取消</el-button>
-                <el-button size="small" type="primary" @click="isQuit(item.uuid)">确认</el-button>
+                <el-button size="small" type="primary" @click="isQuit()">确认</el-button>
               </div>
             </div>
           </aside>
@@ -247,7 +247,8 @@ export default {
       sum: 0,
       cause: "",
       causeBox: false,
-      againbox: false
+      againbox: false,
+      delUUID:""
     };
   },
   watch: {
@@ -462,20 +463,21 @@ export default {
       this.causeBox = false;
       this.againbox = false;
     },
-    delpage() {
+    delpage(uuid) {
+      this.delUUID=uuid
       this.causeBox = true;
     },
-    surecause(uuid) {
+    surecause() {
       this.causeBox = false;
       this.againbox = true;
     },
-    isQuit(uuid) {
+    isQuit() {
       let _this = this;
       const url = this.httpsBasic.httpsBasic + "entryquit/delete";
       axios
         .post(url, {
           token: window.localStorage.getItem("operatingToken"),
-          uuid: uuid
+          uuid: this.delUUID
         })
         .then(function(res) {
           if (res.data.code == 1001) {
