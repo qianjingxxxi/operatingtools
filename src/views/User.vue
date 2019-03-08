@@ -41,7 +41,7 @@
           </a>
           <p>资源库</p>
         </li>
-        <!-- <li @click="imgsrc">
+        <!-- <li @click="onJob">
           <a>
             <img src="../assets/user/enpty.png" alt="interview">
           </a>
@@ -81,6 +81,9 @@ export default {
     },
     visitHref(){
       this.$router.push("Visit");
+    },
+    onJob(){
+      this.$router.push("Onjob");
     },
     getData() {
       let url =

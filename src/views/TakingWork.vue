@@ -43,7 +43,7 @@
           <label>
             <i>*</i>所属门店:
           </label>
-          <el-select v-model="add.c_uuids" filterable multiple placeholder="请选择">
+          <el-select v-model="add.c_uuids" filterable  placeholder="请选择">
             <el-option
               v-for="(shop,index) in shops"
               :label="shop.shop_name"

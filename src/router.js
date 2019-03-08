@@ -18,6 +18,7 @@ import  Quit from "./views/statistics/Quit.vue";
 import  Enpty from "./views/statistics/Enpty.vue";
 import Visitdetails from "./views/Visitdetails.vue";
 import Visitedit from "./views/Visitedit.vue";
+import Onjob from "./views/statistics/Onjob.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -131,10 +132,16 @@ export default new Router({
       import("./views/Visitdetails.vue")
     },
     {
-      path:'/Visitedit',
+      path:'/visitedit',
       name:'Visitedit',
       component:()=>
       import("./views/Visitedit.vue")
+    },
+    {
+      path:'/onjob',
+      name:'Onjob',
+      component:()=>
+      import("./views/statistics/Onjob.vue")
     }
   ]
 });
