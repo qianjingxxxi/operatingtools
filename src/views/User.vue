@@ -121,7 +121,7 @@ export default {
           date.getMonth() + 1 > 9
             ? (M = parseFloat(date.getMonth()) + 1)
             : (M = "0" + parseFloat(date.getMonth() + 1)),
-        D = parseFloat(date.getDate() > 9)
+        D = parseFloat(date.getDate())>9
           ? (D = parseFloat(date.getDate()))
           : (D = "0" + parseFloat(date.getDate())),
         start = Y + M + D + "000000",
