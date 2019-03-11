@@ -534,7 +534,8 @@ export default {
               _this.$message.success("编辑成功");
               setTimeout(() => {
                 window.scrollTo(0, 0);
-                _this.$router.push({ name: "Resourcelib" });
+                  this.$router.go(-1); //返回上一层
+                // _this.$router.push({ name: "Resourcelib" });
               }, 2000);
             } else {
               _this.$message.error(response.data.msg);
