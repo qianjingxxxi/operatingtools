@@ -26,7 +26,7 @@
           <label>
             <i>*</i>所属业务:
           </label>
-          <el-select v-model="add.b_uuid"  placeholder="请选择" @change="getUUID(add.b_uuid,indexVal)">
+          <el-select v-model="add.b_uuid" placeholder="请选择" @change="getUUID(add.b_uuid,indexVal)">
             <el-option
               :key="business.uuid"
               :label="business.name"
@@ -43,15 +43,17 @@
           <label>
             <i>*</i>所属门店:
           </label>
-          <el-select v-model="add.c_uuids" filterable  placeholder="请选择">
+          <el-select v-model="add.c_uuids" multiple
+    filterable  placeholder="请选择" @blur="blurShow" ref="chooseKpi">
             <el-option
               v-for="(shop,index) in shops"
               :label="shop.shop_name"
               :key="index"
               :name="shop.uuid"
-              :value="(shop.uuid).split(',')"
+              :value="shop.uuid"
             ></el-option>
           </el-select>
+  
         </div>
       </div>
       <div class="widthOhter">
@@ -207,7 +209,9 @@ export default {
       id_img_n: "",
       id_img_p: "",
       bank_card_img: "",
-      submitname: "提交"
+      submitname: "提交",
+      loading: false,
+      options4:[]
     };
   },
   watch: {
@@ -222,8 +226,14 @@ export default {
     }
   },
   methods: {
+    blurShow(){
+    this.$refs.chooseKpi.blur() 
+    },
     backpage: function() {
       this.$router.go(-1); //返回上一层
+    },
+    focusShow() {
+      // console.log("aa");
     },
     checkboxClick(e) {
       console.log(e);
@@ -239,7 +249,7 @@ export default {
     submitform: function() {
       //  console.log(this.addbusiness);
       if (this.submitname == "提交") {
-        this.submitname="提交中...";
+        this.submitname = "提交中...";
         let _this = this;
         if (this.bankNum != "" && this.identity != "") {
           const url = this.httpsBasic.httpsBasic + "eguard/entry";
@@ -257,21 +267,21 @@ export default {
             .then(function(res) {
               // console.log(res)
               _this.$message.success("提交成功");
-              _this.submitname="提交";
+              _this.submitname = "提交";
               setTimeout(() => {
                 window.scrollTo(0, 0);
                 // _this.$router.push({ name: "Resourcelib" });
-                  _this.$router.go(-1); //返回上一层
+                _this.$router.go(-1); //返回上一层
               }, 2000);
               // alert(JSON.stringify(res))
             })
             .catch(function(error) {
               _this.$message.error(error);
-                _this.submitname="提交";
+              _this.submitname = "提交";
             });
         } else {
           _this.$message.warning("资料未填写完整");
-            _this.submitname="提交";
+          _this.submitname = "提交";
         }
       }
 
@@ -310,6 +320,7 @@ export default {
         //   this.addbusiness[i].shops = data.data;
         // }
         this.shops = data.data;
+        this.restaurants = data.data;
       } else if (data.code == 1010) {
         this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
