@@ -83,7 +83,7 @@
         <label>
           <i>*</i>银行卡号:
         </label>
-        <el-input v-model="bankNum" placeholder="请输入身份证号:" value></el-input>
+        <el-input v-model="bankNum" placeholder="请输入银行卡号:" value></el-input>
       </div>
       <div class="labelTwoLine">
         <label>
