@@ -247,12 +247,12 @@ export default {
       }
     },
     submitform: function() {
-      //  console.log(this.addbusiness);
       if (this.submitname == "提交") {
         this.submitname = "提交中...";
         let _this = this;
-        if (this.bankNum != "" && this.identity != "") {
-          const url = this.httpsBasic.httpsBasic + "eguard/entry";
+        if (this.bankNum != "" && this.identity != "" && this.id_img_p!="" && this.id_img_n!="" && this.bank_card_img!="" && this.addbusiness[0]['c_uuids'].length>0 ) {
+          if(this.identity.length==18){
+             const url = this.httpsBasic.httpsBasic + "eguard/entry";
           axios
             .post(url, {
               e_uuid: this.$route.params.e_uuid,
@@ -279,6 +279,11 @@ export default {
               _this.$message.error(error);
               _this.submitname = "提交";
             });
+          }else{
+             _this.$message.warning("身份证号码不符合规范");
+             _this.submitname = "提交";
+          }
+         
         } else {
           _this.$message.warning("资料未填写完整");
           _this.submitname = "提交";
