@@ -9,7 +9,7 @@
       <span @click="submitform">提交</span>
     </header>
     <!-- 表单填写 -->
-    <div class="infoList">
+    <div class="infoList" v-loading="loading">
       <h2 @click="show1 = !show1">
         <span>基本资料</span>
         <img :src="!show1 ? arrowUp : arrowDown" alt>
@@ -393,7 +393,8 @@ export default {
       id_img_n: "",
       id_img_p: "",
       bank_card_img: "",
-      isEntry: 0
+      isEntry: 0,
+      loading: true
     };
   },
   watch: {
@@ -534,7 +535,7 @@ export default {
               _this.$message.success("编辑成功");
               setTimeout(() => {
                 window.scrollTo(0, 0);
-                  _this.$router.go(-1); //返回上一层
+                _this.$router.go(-1); //返回上一层
                 // _this.$router.push({ name: "Resourcelib" });
               }, 2000);
             } else {
@@ -645,7 +646,7 @@ export default {
         this.identityFrount = data.data.id_img_p; //身份证正面
         this.identitySide = data.data.id_img_n; //身份证反面
         this.bankcard = data.data.bank_card_img; //银行卡
-         this.typeValue=data.data.style//面试类型
+        this.typeValue = data.data.style; //面试类型
       } else {
         // this.hasdata = false;
       }
@@ -668,7 +669,7 @@ export default {
         this.name = data.data.name; //姓名
         this.sex = parseFloat(data.data.sex); //性别
         this.keyword = data.data.address; //居住地
-         this.typeValue=data.data.style//面试类型
+        this.typeValue = data.data.style; //面试类型
         if (
           data.data.work_experience != null &&
           data.data.work_experience != ""
@@ -708,7 +709,9 @@ export default {
 
         //    console.log(this.tagToggle)
         // }//性格标签
+        this.loading = false;
       } else if (data.code == 1010 || data.code == 1009) {
+        this.loading = false;
         this.$alert("登录失效或过期，请重新登录", "登录失效", {
           confirmButtonText: "确定",
           callback: action => {
@@ -938,7 +941,9 @@ export default {
 </style>
 <style lang="less">
 .editpage {
-    .formData .selectcheck>label{width: 29%;}
+  .formData .selectcheck > label {
+    width: 29%;
+  }
   .el-checkbox__label,
   .el-radio__label,
   .el-input,

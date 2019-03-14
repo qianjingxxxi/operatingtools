@@ -23,6 +23,9 @@
         :on-refresh="refresh"
         ref="my_scroller"
         style="flex-grow: 1"
+         v-loading="loading"
+          element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
       >
         <div
           class="datalist ignore"
@@ -182,7 +185,8 @@ export default {
       checkedInterview: false,
       isInterview: 0,
       hasaddress:true,
-      total:0
+      total:0,
+      loading:true
     };
   },
   watch: {
@@ -216,6 +220,7 @@ export default {
         })
         .then(function(response) {
           if (response.data.code == 1001) {
+             _this.loading=false
             if (_this.page == 1) {
               _this.items = response.data.data.list;
               _this.total=response.data.data.total_count

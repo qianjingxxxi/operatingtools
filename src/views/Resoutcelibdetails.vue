@@ -11,7 +11,10 @@
     </header>
     <hr>
     <!-- content -->
-    <section class="container fontsize">
+    <section
+      class="container fontsize"
+      v-loading="loading"
+    >
       <div class="resoutcelibinfo">
         <!-- <a class="detailsHeader">
           <img src="../assets/details.png" alt>
@@ -206,7 +209,7 @@
                   <span>{{quittxt.create_time_type_datetime}}</span>
                   <span>操作</span>
                   <br>
-                  <span>    离职原因:</span>
+                  <span>离职原因:</span>
                   <span>{{quittxt.content}}</span>
                 </li>
               </ul>
@@ -320,7 +323,8 @@ export default {
       imgList: [],
       cause: "",
       causeBox: false,
-      againbox: false
+      againbox: false,
+      loading: true
     };
   },
   methods: {
@@ -351,7 +355,7 @@ export default {
     },
     getData() {
       const url = this.httpsBasic.httpsBasic + "eguard/selectInfo";
-      const _self = this;
+      const _this = this;
       axios
         .get(url, {
           params: {
@@ -362,22 +366,23 @@ export default {
         })
         .then(function(res) {
           if (res.data.code == 1001) {
-            _self.datas = res.data.data;
-            _self.imgList.push(_self.datas.id_img_n);
-            _self.imgList.push(_self.datas.id_img_p);
-            _self.imgList.push(_self.datas.bank_card_img);
-            _self.tags = res.data.data.tag.split(",");
+            _this.datas = res.data.data;
+            _this.imgList.push(_this.datas.id_img_n);
+            _this.imgList.push(_this.datas.id_img_p);
+            _this.imgList.push(_this.datas.bank_card_img);
+            _this.tags = res.data.data.tag.split(",");
             //  console.log(res);
-            _self.datas.is_full_time == "1"
-              ? (_self.showjobtime = false)
-              : (_self.showjobtime = true);
+            _this.datas.is_full_time == "1"
+              ? (_this.showjobtime = false)
+              : (_this.showjobtime = true);
             // console.log(_this.tags)
-            for (let i = 0; i < _self.datas.able_work_time.length; i++) {
-              // console.log( _self.datas.able_work_time[i])
-              if (_self.datas.able_work_time[i] == "1") {
-                _self.checkState[i] = true;
+            for (let i = 0; i < _this.datas.able_work_time.length; i++) {
+              // console.log( _this.datas.able_work_time[i])
+              if (_this.datas.able_work_time[i] == "1") {
+                _this.checkState[i] = true;
               }
             }
+            _this.loading = false;
           } else if (response.data.code == 1010 || response.data.code == 1009) {
             _this.$alert("登录失效或过期，请重新登录", "登录失效", {
               confirmButtonText: "确定",
@@ -388,13 +393,16 @@ export default {
                 });
               }
             });
+            _this.loading = false;
           } else {
-            _self.$message.error(res.data.msg);
+            _this.loading = false;
+            _this.$message.error(res.data.msg);
           }
           // console.log(res);
         })
         .catch(function(error) {
-          _self.$message.error(error);
+          _this.loading = false;
+          _this.$message.error(error);
         });
     },
     editpage(uuid) {
@@ -409,7 +417,7 @@ export default {
         params: { uuid: uuid }
       });
     },
-    visitpage(uuid,tel, name) {
+    visitpage(uuid, tel, name) {
       // console.log(uuid)
       this.$router.push({
         name: "Addvisit",
@@ -456,19 +464,19 @@ export default {
         setTimeout(() => {
           window.scrollTo(0, 0);
           // this.$router.push({ name: "Resourcelib" });
-           this.$router.go(-1); //返回上一层
+          this.$router.go(-1); //返回上一层
         }, 2000);
       } else {
         this.$message.error(data.msg);
       }
     },
-     imgDetails(pic) {
+    imgDetails(pic) {
       //  console.log(this.imgList)
       // console.log(this.imgList);
-       WeixinJSBridge.invoke("imagePreview", {
-          urls: this.imgList,
-          current: pic
-        });
+      WeixinJSBridge.invoke("imagePreview", {
+        urls: this.imgList,
+        current: pic
+      });
     }
   },
   mounted() {
