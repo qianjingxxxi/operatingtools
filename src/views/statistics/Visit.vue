@@ -471,7 +471,7 @@ export default {
       this.againbox = false;
     },
     delpage(uuid) {
-      thid.delUUID=uuid
+      this.delUUID=uuid
       this.causeBox = true;
     },
     surecause() {
