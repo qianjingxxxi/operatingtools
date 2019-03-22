@@ -383,7 +383,7 @@ export default {
             .post(url, {
               token: window.localStorage.getItem("operatingToken"),
               origin: this.checkchannel,
-              phone: this.tel,
+              phone: (this.tel).trim(),
               name: this.name,
               sex: this.sex,
               address: this.keyword,

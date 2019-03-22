@@ -371,7 +371,7 @@ export default {
             _this.imgList.push(_this.datas.id_img_p);
             _this.imgList.push(_this.datas.bank_card_img);
             _this.tags = res.data.data.tag.split(",");
-            //  console.log(res);
+              console.log(res);
             _this.datas.is_full_time == "1"
               ? (_this.showjobtime = false)
               : (_this.showjobtime = true);
