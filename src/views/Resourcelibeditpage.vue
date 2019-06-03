@@ -581,7 +581,6 @@ export default {
         this.tips[index]["district"] + this.tips[index]["address"];
       this.hasdata = true;
       this.tipstoggle = false;
-      //  console.log(this.hasdata)
       if (this.selectTip.location.length > 0) {
       } else {
         // this.$message.error("请输入详细地址");
