@@ -366,7 +366,7 @@ export default {
       createTime: "",
       checkbusiness: [false, false, false],
       businesses: [],
-      businessLabel: ["配送", "运维", "物流"],
+      businessLabel: ["配送", "运维", "物流","保洁"],
       businesstag: [],
       is_die: 0,
       show1: true,

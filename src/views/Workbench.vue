@@ -146,13 +146,13 @@
               <li>星期六</li>
               <li>星期日</li>
             </ul>
-
             <el-checkbox-group class="job-check" v-model="jobtime">
               <el-checkbox
                 :label="index"
                 :checked="checkState[index]"
                 v-for="(jobcheck,index) in checkState"
                 v-bind:key="index"
+                :touchmove="checkState[index]"
               ></el-checkbox>
             </el-checkbox-group>
           </div>
@@ -299,12 +299,12 @@ export default {
       createTime: "",
       checkbusiness: [false, false, false],
       businesses: [],
-      businessLabel: ["配送", "运维", "物流"],
+      businessLabel: ["配送", "运维", "物流","保洁"],
       businesstag: [],
       is_die: 0,
       typeList: [{ name: "面访" }, { name: "电话" }, { name: "社交APP" }],
       typeValue: "",
-      submitname:"提交"
+      submitname: "提交"
     };
   },
   watch: {
@@ -324,6 +324,9 @@ export default {
     keyword: function() {
       // event.stopImmediatePropagation();
       this.debounce();
+    },
+    jobtime() {
+      console.log(this.jobtime);
     }
   },
   methods: {
@@ -347,87 +350,86 @@ export default {
       }
     },
     submitform() {
-      if(this.submitname=="提交"){
-        this.submitname="提交中...";
+      if (this.submitname == "提交") {
+        this.submitname = "提交中...";
         let url = this.httpsBasic.httpsBasic + "interview/insert";
-      let _this = this;
-      this.tags = this.checktag.join(",");
-      this.businesstag = this.businesses.join(",");
-      // 全职or兼职
-      this.jobtime.forEach(v => {
-        this.compute[v] = "1";
-      });
+        let _this = this;
+        this.tags = this.checktag.join(",");
+        this.businesstag = this.businesses.join(",");
+        // 全职or兼职
+        this.jobtime.forEach(v => {
+          this.compute[v] = "1";
+        });
 
-      for (let i = 0; i < this.wockexp.length; i++) {
-        this.wockexp[i].start_time = this.wockexp[i]["wockexptime"][0];
-        this.wockexp[i].end_time = this.wockexp[i]["wockexptime"][1];
-        this.wockexp[i].content = this.wockexp[i]["wockexpcontent"];
-      }
-      if (
-        // this.tags != "" &&
-        this.name != "" &&
-        this.tel != "" &&
-        this.keyword != "" &&
-        this.wockexp != "" &&
-        // this.age != "" &&
-        this.wockexp.start_time != "" &&
-        this.wockexp.end_time != "" &&
-        this.wockexp.content != "" &&
-        this.businesstag != "" &&
-        this.remark != "" &&
-        this.typeValue!=""
-      ) {
-        // this.compute=this.compute.join(',')
-        if (this.remark.length > 13) {
-          axios
-            .post(url, {
-              token: window.localStorage.getItem("operatingToken"),
-              origin: this.checkchannel,
-              phone: (this.tel).trim(),
-              name: this.name,
-              sex: this.sex,
-              address: this.keyword,
-              address_l_l: this.selectTip.location,
-              work_experience: this.wockexp,
-              tag: this.tags,
-              remark: this.remark,
-              is_full_time: this.workTime,
-              able_work_time: this.compute,
-              age: this.age,
-              address_d: this.address_d,
-              trade: this.businesstag,
-              is_die: this.is_die,
-              style:this.typeValue
-            })
-            .then(function(response) {
-              if (response.data.code == 1001) {
-                _this.$message.success("提交成功");
-                _this.submitname="提交"
-                setTimeout(() => {
-                  window.scrollTo(0, 0);
-                  _this.$router.push({ name: "Resourcelib" });
-                }, 2000);
-              } else {
-                _this.$message.error(response.data.msg);
-                this.submitname="提交"
-              }
-              // console.log(response);
-            })
-            .catch(function(error) {
-              _this.$message.error(error);
-              _this.submitname="提交"
-              // console.log(error);
-            });
-        } else {
-          _this.$message.warning("沟通记录至少为14个字符");
-          _this.submitname="提交"
+        for (let i = 0; i < this.wockexp.length; i++) {
+          this.wockexp[i].start_time = this.wockexp[i]["wockexptime"][0];
+          this.wockexp[i].end_time = this.wockexp[i]["wockexptime"][1];
+          this.wockexp[i].content = this.wockexp[i]["wockexpcontent"];
         }
-      } else {
-        _this.$message.warning("资料未填写完整");
-        _this.submitname="提交"
+        if (
+          // this.tags != "" &&
+          this.name != "" &&
+          this.tel != "" &&
+          this.keyword != "" &&
+          this.wockexp != "" &&
+          // this.age != "" &&
+          this.wockexp.start_time != "" &&
+          this.wockexp.end_time != "" &&
+          this.wockexp.content != "" &&
+          this.businesstag != "" &&
+          this.remark != "" &&
+          this.typeValue != ""
+        ) {
+          // this.compute=this.compute.join(',')
+          if (this.remark.length > 13) {
+            axios
+              .post(url, {
+                token: window.localStorage.getItem("operatingToken"),
+                origin: this.checkchannel,
+                phone: this.tel.trim(),
+                name: this.name,
+                sex: this.sex,
+                address: this.keyword,
+                address_l_l: this.selectTip.location,
+                work_experience: this.wockexp,
+                tag: this.tags,
+                remark: this.remark,
+                is_full_time: this.workTime,
+                able_work_time: this.compute,
+                age: this.age,
+                address_d: this.address_d,
+                trade: this.businesstag,
+                is_die: this.is_die,
+                style: this.typeValue
+              })
+              .then(function(response) {
+                if (response.data.code == 1001) {
+                  _this.$message.success("提交成功");
+                  _this.submitname = "提交";
+                  setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    _this.$router.push({ name: "Resourcelib" });
+                  }, 2000);
+                } else {
+                  _this.$message.error(response.data.msg);
+                  this.submitname = "提交";
+                }
+                // console.log(response);
+              })
+              .catch(function(error) {
+                _this.$message.error(error);
+                _this.submitname = "提交";
+                // console.log(error);
+              });
+          } else {
+            _this.$message.warning("沟通记录至少为14个字符");
+            _this.submitname = "提交";
+          }
+        } else {
+          _this.$message.warning("资料未填写完整");
+          _this.submitname = "提交";
+        }
       }
-      }
-      
     },
     async search(keyword) {
       const url = "https://restapi.amap.com/v3/assistant/inputtips";
@@ -675,6 +677,8 @@ export default {
     margin-bottom: 10px;
   }
 }
-.el-select .el-input .el-select__caret{display: block}
+.el-select .el-input .el-select__caret {
+  display: block;
+}
 </style>
 
