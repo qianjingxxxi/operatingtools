@@ -6,7 +6,6 @@
  <style>
     #app{background: #fff}
  </style>
- 
 <script>
 export default {
   name: 'App',
