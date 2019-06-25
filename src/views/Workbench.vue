@@ -163,8 +163,8 @@
           <i></i>是否置入死海:
         </label>
         <el-radio-group v-model="is_die">
-          <el-radio :label="0">是</el-radio>
-          <el-radio :label="1">否</el-radio>
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">否</el-radio>
         </el-radio-group>
       </span>
       <div>
