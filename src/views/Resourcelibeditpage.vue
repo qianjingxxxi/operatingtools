@@ -166,7 +166,7 @@
           </span>
           <span class="job-time">
             <label>
-              <i></i>是否可用:
+              <i></i>是否置入死海:
             </label>
             <el-radio-group v-model="is_die">
               <el-radio :label="0">是</el-radio>
